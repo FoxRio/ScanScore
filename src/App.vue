@@ -1,0 +1,63 @@
+<template>
+  <div>
+    <h1> {{ title }}</h1>
+  </div>
+  <div class="description">
+    <p>{{ appDescription }}</p>
+  </div>
+<div>
+  <button @click="open" v-if="!creatingTest">Create new test</button>
+  <button @click="open" v-if="!creatingTest">Grade an existing test</button>
+</div>
+  <CreateTest v-if="creatingTest" @collapse="handleCollapse"/>
+  <GradeTest v-if="gradingTest" @collapse="handleCollapse"/>
+</template>
+
+<script>
+// import Modal from './components/Modal-component.vue';
+import CreateTest from './components/CreateTest.vue';
+import GradeTest from './components/GradeTest.vue';
+
+export default {
+  name: 'App',
+  components: {
+    CreateTest,
+    GradeTest,
+  },
+  data() {
+    return {
+      creatingTest: false,
+      gradingTest: false,
+      title: 'Scan App',
+      appDescription: 'Short description of what this is. Short description of what this is.Short description of what this is.Short description of what this is.Short description of what this is.Short description of what this is.Short description of what this is.',
+    };
+  },
+  methods: {
+    open() {
+      this.creatingTest = true;
+      console.log(this.creatingTest);
+    },
+    handleCollapse() {
+      this.creatingTest = false;
+      console.log(this.creatingTest);
+    },
+  },
+};
+</script>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+
+.description {
+  width: 400px;
+  padding: 20px;
+  margin: 100px auto;
+}
+</style>
