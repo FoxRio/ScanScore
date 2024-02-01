@@ -6,12 +6,12 @@
   <div class="description">
     <p>{{ appDescription }}</p>
   </div>
-<div>
-  <button @click="open" v-if="!creatingTest">Create new test</button>
-  <button @click="open" v-if="!creatingTest">Grade an existing test</button>
-</div>
-  <CreateTest v-if="creatingTest" @collapse="handleCollapse"/>
-  <GradeTest v-if="gradingTest" @collapse="handleCollapse"/>
+  <div>
+    <button @click="openCreating" v-if="!creatingTest && !gradingTest">Create new test</button>
+    <button @click="openGrading" v-if="!gradingTest && !creatingTest">Grade an existing test</button>
+  </div>
+  <CreateTest v-if="creatingTest && !gradingTest" @collapse="handleCollapse" />
+  <GradeTest v-if="gradingTest && !creatingTest" @collapse="handleCollapse" />
 </template>
 
 <script>
@@ -34,12 +34,18 @@ export default {
     };
   },
   methods: {
-    open() {
+    openCreating() {
       this.creatingTest = true;
-      console.log(this.creatingTest);
+      // console.log('creatingTest', this.creatingTest);
+      // console.log('gradingTest", this.gradingTest);
+    },
+    openGrading() {
+      this.gradingTest = true;
+      console.log(this.gradingTest);
     },
     handleCollapse() {
       this.creatingTest = false;
+      this.gradingTest = false;
       console.log(this.creatingTest);
     },
   },
