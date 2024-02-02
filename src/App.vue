@@ -8,7 +8,7 @@
   </div>
   <div>
     <button @click="openCreating" v-if="!creatingTest && !gradingTest">Create new test</button>
-    <button @click="openGrading" v-if="!gradingTest && !creatingTest">Grade an existing test</button>
+    <button @click="openGrading" v-if="!gradingTest && !creatingTest">Grade existing test</button>
   </div>
   <CreateTest v-if="creatingTest && !gradingTest" @collapse="handleCollapse" />
   <GradeTest v-if="gradingTest && !creatingTest" @collapse="handleCollapse" />
@@ -58,8 +58,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: whitesmoke;
   margin-top: 60px;
+  background-color: #2c3e50;
 }
 
 .description {
