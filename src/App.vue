@@ -36,23 +36,32 @@ export default {
   methods: {
     openCreating() {
       this.creatingTest = true;
-      // console.log('creatingTest', this.creatingTest);
-      // console.log('gradingTest", this.gradingTest);
+      console.log('creatingTest', this.creatingTest);
+      console.log('gradingTest', this.gradingTest);
     },
     openGrading() {
       this.gradingTest = true;
-      console.log(this.gradingTest);
+      console.log('creatingTest', this.creatingTest);
+      console.log('gradingTest', this.gradingTest);
     },
     handleCollapse() {
       this.creatingTest = false;
       this.gradingTest = false;
-      console.log(this.creatingTest);
+      console.log('creatingTest', this.creatingTest);
+      console.log('gradingTest', this.gradingTest);
     },
   },
 };
 </script>
 
 <style>
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -61,6 +70,8 @@ export default {
   color: whitesmoke;
   margin-top: 60px;
   background-color: #2c3e50;
+  height: 100%;
+  width: 100%;
 }
 
 .description {
