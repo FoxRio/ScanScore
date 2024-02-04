@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1> {{ title }}</h1>
-    <h2>Sveiks, roland. Deploy test 2</h2>
+    <h2>Sveiks, roland. Deploy test 3</h2>
   </div>
   <div class="description">
     <p>{{ appDescription }}</p>
