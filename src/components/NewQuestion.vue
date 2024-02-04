@@ -2,8 +2,8 @@
   <div class="newQuestionComponent">
     <!-- Your content for the new question component -->
     <form action="#" method="post">
-      <label for="taskDescription">Please input the question / task</label>
-      <input type="text" id="taskDescription" name="taskDescription">
+      <label for="taskDescription">Please input the question / task>
+      <input type="text" id="taskDescription" name="taskDescription"></label>
     </form>
   </div>
 </template>
