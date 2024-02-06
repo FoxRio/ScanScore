@@ -6,23 +6,20 @@
     <div class="description">
       <p>Here you can create a new Test that will be outputed as a .docx download</p>
     </div>
-    <div>
-      <div v-for="(question, index) in questions" :key="index">
-        <NewQuestionComponent />
-      </div>
-      <button @click="addNewQuestionPromt">Add new question</button>
+    <div class="documentForm">
+      <FormComponent />
     </div>
-    <div>
-      <button v-if="testHasQuestions" @click="generateDocument">Generate Document</button>
-    </div>
+    <!-- <button @click="addNewQuestionPromt">Add new question</button> -->
+  </div>
+  <div>
+    <button v-if="testHasQuestions" @click="generateDocument">Generate Document</button>
+  </div>
 
-    <div>
-      <!-- <form action="#" method="post">
+  <div>
+    <!-- <form action="#" method="post">
         <label for="taskDescription">Please input the question / task</label>
         <input type="text" id="taskDescription" name="taskDescription">
       </form> -->
-
-    </div>
 
   </div>
 </template>
@@ -35,11 +32,12 @@ import {
 
 import { saveAs } from 'file-saver';
 
-import NewQuestionComponent from './NewQuestion.vue';
+// import NewQuestionComponent from './NewQuestion.vue';
+import FormComponent from './FormComponent.vue';
 
 export default {
   components: {
-    NewQuestionComponent,
+    FormComponent,
   },
   data() {
     return {
@@ -51,11 +49,12 @@ export default {
     collapse() {
       this.$emit('collapse');
     },
-    addNewQuestionPromt() {
-      // Add a new question component to the array when the button is clicked
-      this.testHasQuestions = true;
-      this.questions.push({});
-    },
+    // addNewQuestionPromt() {
+    //   // Add a new question component to the array when the button is clicked
+    //   this.testHasQuestions = true;
+    //   this.questions.push({});
+    //   console.log(this.questions);
+    // },
     async generateDocument() {
       const doc = new Document({
         sections: [
