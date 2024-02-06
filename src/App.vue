@@ -60,6 +60,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+  background-color: #2c3e50;
 }
 
 #app {
@@ -67,16 +68,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: whitesmoke;
-  margin-top: 60px;
-  background-color: #2c3e50;
+  color: rgb(10, 23, 11);
   height: 100%;
   width: 100%;
 }
 
 .description {
   width: 400px;
-  padding: 20px;
   margin: 100px auto;
 }
 </style>
