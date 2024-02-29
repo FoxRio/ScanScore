@@ -1,15 +1,16 @@
 <template>
   <div class="question-container">
+    <button type="button" @click="handleDeleteClick(questionNumber - 1)">Delete</button>
     <label :for="id" class="question-label">Please enter Question {{ questionNumber }}:
-      <textarea :id="id" :name="name" :value="questionText" class="question-textarea"></textarea>
+      <textarea :id="name" :name="name" :value="questionText" v-model="questionText" class="question-textarea"
+        required></textarea>
     </label>
     <div class="answer-container">
       <div v-for="index in 4" :key="index">
         <label :for="'answer-' + index">Answer {{ index }}:
-          <input type="text" :id="'answer-' + index" :name="'answer-' + index">
+          <input type="text" :id="'answer-' + index" :name="'answer-' + index" required>
           <label :for="'correct-answer-' + index">Correct Answer
             <input type="checkbox" :id="'correct-answer-' + index" :name="'correct-answer-' + index"></label>
-
         </label>
       </div>
     </div>
@@ -29,6 +30,10 @@ export default {
     };
   },
   methods: {
+    handleDeleteClick(questionIndex) {
+      console.log('Delete button clicked for question index:', questionIndex);
+      this.$emit('delete-row', questionIndex); // Emitting the delete-row event
+    },
   },
 };
 </script>

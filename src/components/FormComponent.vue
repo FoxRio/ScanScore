@@ -1,8 +1,10 @@
 <template>
   <div class="createDocumentForm">
     <form @submit.prevent="handleSubmit" id="createNewDocumentForm">
-      <div v-for="(question, index) in questions" :key="index">
-        <NewQuestion :id="'question-' + index" :name="'question-' + index" :questionNumber="index + 1" />
+      <div v-for="(question, index) in questions" :key="question.name">
+        <!-- <button type="button" @click="deleteQuestion(index)">Delete Question</button> -->
+        <NewQuestion :id="question.name" :name="question.name" :questionNumber="index + 1"
+          :questionfilleldText="question.text" @delete-row="deleteThisRow(index)" />
       </div>
       <button type="button" @click="addNewQuestionPrompt">Add New Question</button>
       <button v-if="testHasQuestions" type="submit">Submit</button>
@@ -29,15 +31,21 @@ export default {
     collapse() {
       this.$emit('collapse');
     },
+    deleteThisRow(index) {
+      // Remove the question at the specified index from the questions array
+      console.log(this.questions.name);
+      console.log('deleteQuestion', index);
+      this.questions.splice(index, 1);
+      console.log(this.questions);
+    },
     addNewQuestionPrompt() {
       // Add a new question component to the array when the button is clicked
       this.testHasQuestions = true;
-      this.questions.push({ text: '', answerChoices: ['', '', '', ''], correctAnswer: 0 });
-      console.log(this.questions);
+      const newElementId = this.questions.length;
+      this.questions.push({ name: `question${newElementId}`, text: 'ddefault text' });
     },
     async handleSubmit() {
       const formElement = document.getElementById('createNewDocumentForm');
-      console.log(formElement);
       const formData = new FormData(formElement);
       formData.forEach((value, key) => {
         console.log(`${key}: ${value}`);
