@@ -1,108 +1,51 @@
 <template>
   <div class="question-container">
-    <button type="button" @click="handleDeleteClick(questionNumber - 1)">Delete</button>
-    <label :for="id" class="question-label">Please enter Question {{ questionNumber }}:
-      <textarea :id="name" :name="name" :value="questionText" v-model="questionText" class="question-textarea"
-        required></textarea>
-    </label>
-    <div class="answer-container">
-      <div v-for="index in 4" :key="index">
-        <label :for="'answer-' + index">Answer {{ index }}:
-          <input type="text" :id="'answer-' + index" :name="'answer-' + index" required>
-          <label :for="'correct-answer-' + index">Correct Answer
-            <input type="checkbox" :id="'correct-answer-' + index" :name="'correct-answer-' + index"></label>
-        </label>
-      </div>
+    <p>{{ questionData.questionText }}</p>
+    <div v-for="(answer, index) in questionData.answers" :key="index" :class="{ 'correct-answer': answer.correct }">
+      {{ answer.text }}
     </div>
+    <button @click="deleteQuestion" class="delete-button">Delete</button>
   </div>
 </template>
 
 <script>
 export default {
-  props: {
-    id: String,
-    name: String,
-    questionNumber: Number,
-    questionText: String,
-  },
-  data() {
-    return {
-    };
-  },
+  props: ['questionData'],
   methods: {
-    handleDeleteClick(questionIndex) {
-      console.log('Delete button clicked for question index:', questionIndex);
-      this.$emit('delete-row', questionIndex); // Emitting the delete-row event
+    deleteQuestion() {
+      this.$emit('deleteEvent');
     },
   },
 };
 </script>
 
-<style scoped >
-.question-container>label,
-.answer-container {
+<style scoped>
+.question-container {
   margin-bottom: 20px;
-  color: black;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-.question-label {
+.question-container p {
   font-weight: bold;
+  margin-bottom: 10px;
 }
 
-.question-textarea {
-  width: 100%;
-  height: 100px;
-  padding: 8px;
-  margin-top: 5px;
-  resize: vertical;
+.correct-answer {
+  background-color: lightgreen;
 }
 
-.answer-container {
-  margin-top: 10px;
+.delete-button {
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-input[type="text"] {
-  width: 100%;
-  margin-top: 5px;
-  padding: 8px;
+.delete-button:hover {
+  background-color: #c82333;
 }
-
-select {
-  width: 100%;
-  margin-top: 5px;
-  padding: 8px;
-}
-
-/*
-.newQuestionComponent {
-  display: flex;
-  justify - content: center;
-  align - items: center;
-  height: 30vh;
-}
-
-form {
-  display: flex;
-  flex: 1;
-  flex - direction: column;
-  align - items: center;
-  max - width: 400px;
-  height: 20vh;
-}
-
-label {
-  margin - bottom: 8px;
-  color: #333;
-  height: 100 %;
-}
-
-textarea {
-  flex: 1;
-  min - width: 400px;
-  height: 90 %;
-  resize: vertical;
-  overflow - y: auto;
-  padding: 5px;
-  box - sizing: border - box;
-}********/
 </style>
