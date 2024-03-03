@@ -7,26 +7,21 @@
       <p>Here you can create a new Test that will be outputed as a .docx download</p>
     </div>
     <div class="documentForm">
-      <FormComponent />
+      <FormComponent @updatedQuestions="updateParent"/>
     </div>
     <!-- <button @click="addNewQuestionPromt">Add new question</button> -->
   </div>
-  <div>
+  <div class="genereateDocumentButtonDiv">
     <button v-if="testHasQuestions" @click="generateDocument">Generate Document</button>
+    <button @click="loghasQ">HASQUESTIONS?></button>
   </div>
-
   <div>
-    <!-- <form action="#" method="post">
-        <label for="taskDescription">Please input the question / task</label>
-        <input type="text" id="taskDescription" name="taskDescription">
-      </form> -->
-
   </div>
 </template>
 
 <script>
 import {
-  Document, Paragraph, Packer, TextRun,
+  Document, Paragraph, Packer,
 }
   from 'docx';
 
@@ -42,39 +37,51 @@ export default {
   data() {
     return {
       testHasQuestions: false,
-      questions: [],
+      questionsArray: [],
     };
   },
   methods: {
+    updateParent(variable, questions) {
+      console.log('--------emit successy----------');
+      this.testHasQuestions = variable;
+      this.questionsArray = questions;
+      console.log(this.testHasQuestions);
+      console.log('--------QUESTIONS ARRAY EMITED----------');
+      console.log(this.questionsArray[0]);
+    },
     collapse() {
       this.$emit('collapse');
     },
-    // addNewQuestionPromt() {
-    //   // Add a new question component to the array when the button is clicked
-    //   this.testHasQuestions = true;
-    //   this.questions.push({});
-    //   console.log(this.questions);
-    // },
+    loghasQ() {
+      console.log(this.testHasQuestions);
+    },
     async generateDocument() {
-      const doc = new Document({
-        sections: [
-          {
-            properties: {},
-            children: [
-              new Paragraph({
-                children: [
-                  new TextRun('Dear User,'),
-                ],
-              }),
-              new Paragraph({
-                children: [
-                  new TextRun('\nBest regards,'),
-                  new TextRun('\nThose who are now in your walls'),
-                ],
-              }),
-            ],
-          },
-        ],
+      console.log('generate docx');
+      // eslint-disable-next-line
+      let doc = new Document();
+      console.log('generate docx');
+      this.questionsArray.forEach((question, index) => {
+        console.log(question, index);
+        // Create a paragraph for the question text
+        const questionParagraph = new Paragraph({
+          children: [{ text: `Question ${index + 1}: ${question.questionText}` }],
+        });
+
+        // Add the question paragraph to the document
+        doc.addParagraph(questionParagraph);
+
+        // Iterate over the answers for the current question
+        Object.values(question.answers).forEach((answer, answerIndex) => {
+          // Create a paragraph for each answer
+          const answerParagraph = new Paragraph({
+            children: [{ text: `Answer ${answerIndex + 1}: ${answer.text}` }],
+            // Example: Highlight the correct answer in green
+            style: {
+              color: answer.correct ? 'green' : 'black',
+            },
+          });
+          doc.addParagraph(answerParagraph);
+        });
       });
 
       try {

@@ -2,27 +2,27 @@
   <div class="createDocumentForm">
     <form @submit.prevent="addNewQuestionPrompt" id="createNewDocumentForm">
       <label :for="id" class="question-label">Please enter Question:
-        <textarea :id="name" :name="name" required placeholder="Write your question here..." v-model="questionText"
+        <textarea :id="name" :name="name" required :placeholder="placeholderQText" v-model="questionText"
           class="question-textarea"></textarea>
       </label>
       <div class="answer-container">
         <label for="answer1"> Answer:
-          <input type=" text" id="answer1" name="answer1" v-model="answer1">
+          <input type=" text" id="answer1" name="answer1" :placeholder="placeholderAText" v-model="answer1">
           <label for="correctanswer1">This is the correct answer
             <input type="checkbox" id="correctanswer1" v-model="isChecked1">
           </label></label>
         <label for="answer2"> Answer:
-          <input type=" text" id="answer1" name="answer2" v-model="answer2" required>
+          <input type=" text" id="answer1" name="answer2" :placeholder="placeholderAText" v-model="answer2" required>
           <label for="correctanswer2">This is the correct answer
             <input type="checkbox" id="correctanswer2" v-model="isChecked2">
           </label></label>
         <label for="answer3"> Answer:
-          <input type=" text" id="answer3" name="answer3" v-model="answer3" required>
+          <input type=" text" id="answer3" name="answer3" :placeholder="placeholderAText" v-model="answer3" required>
           <label for="correctanswer3">This is the correct answer
             <input type="checkbox" id="correctanswer3" v-model="isChecked3">
           </label></label>
         <label for="answer4"> Answer:
-          <input type=" text" id="answer4" name="answer4" v-model="answer4" required>
+          <input type=" text" id="answer4" name="answer4"  :placeholder="placeholderAText" v-model="answer4" required>
           <label for="correctanswer4">This is the correct answer
             <input type="checkbox" id="correctanswer4" v-model="isChecked4">
           </label></label>
@@ -35,8 +35,18 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import NewQuestion from './NewQuestion.vue';
+
+const emit = defineEmits(['updatedQuestions']);
+
+function updateHasQuestions(value) {
+  emit('updatedQuestions', value);
+}
+defineExpose({ updateHasQuestions });
+</script>
+
+<script >
 
 export default {
   components: {
@@ -44,17 +54,19 @@ export default {
   },
   data() {
     return {
-      questionText: null,
-      answer1: null,
-      answer2: null,
-      answer3: null,
-      answer4: null,
-      isChecked1: false,
+      questionText: process.env.NODE_ENV === 'production' ? null : 'TEST QUESTION x',
+      answer1: process.env.NODE_ENV === 'production' ? null : 'TEST ANSWER 1',
+      answer2: process.env.NODE_ENV === 'production' ? null : 'TEST ANSWER 2',
+      answer3: process.env.NODE_ENV === 'production' ? null : 'TEST ANSWER 3',
+      answer4: process.env.NODE_ENV === 'production' ? null : 'TEST ANSWER 4',
+      isChecked1: process.env.NODE_ENV !== 'production',
       isChecked2: false,
       isChecked3: false,
       isChecked4: false,
       testHasQuestions: false,
       questions: [],
+      placeholderQText: process.env.NODE_ENV === 'production' ? 'Write your question here...' : 'TEST QUESTION x',
+      placeholderAText: process.env.NODE_ENV === 'production' ? 'Write your answer here...' : 'TEST ANSWER x',
     };
   },
   methods: {
@@ -65,11 +77,13 @@ export default {
       // Remove the question at the specified index from the questions array
       console.log('deleteQuestion', index);
       this.questions.splice(index, 1);
-      console.log(this.questions);
+      this.testHasQuestions = this.questions.length > 0;
+      this.$emit('updatedQuestions', this.testHasQuestions, this.questions);
     },
     addNewQuestionPrompt() {
       // Add a new question component to the array when the button is clicked
       if (this.questionText && (this.answer1 || this.answer2 || this.answer3 || this.answer4)) {
+        console.log('--------BEFORE CREATING QUESTION----------');
         const question = {
           questionText: this.questionText,
           answers: {
@@ -91,19 +105,25 @@ export default {
             },
           },
         };
-        this.testHasQuestions = true;
+        console.log('--------Pushing to questions array----------');
         this.questions.push(question);
-        this.questionText = null;
-        this.answer1 = null;
-        this.answer2 = null;
-        this.answer3 = null;
-        this.answer4 = null;
-        this.isChecked1 = false;
+        this.testHasQuestions = true;
+        this.$emit('updatedQuestions', true, this.questions);
+        console.log('--------AFTER EMIT----------');
+        this.questionText = process.env.NODE_ENV === 'production' ? null : 'TEST QUESTION x';
+        this.answer1 = process.env.NODE_ENV === 'production' ? null : 'TEST ANSWER 1';
+        this.answer2 = process.env.NODE_ENV === 'production' ? null : 'TEST ANSWER 2';
+        this.answer3 = process.env.NODE_ENV === 'production' ? null : 'TEST ANSWER 3';
+        this.answer4 = process.env.NODE_ENV === 'production' ? null : 'TEST ANSWER 4';
+        this.isChecked1 = process.env.NODE_ENV !== 'production';
         this.isChecked2 = false;
         this.isChecked3 = false;
         this.isChecked4 = false;
+        console.log('--------RESET DONE----------');
+        return 0;
       }
       alert('Question Not Added, Please input a question text and at least one answer!');
+      return 0;
     },
     async handleSubmit() {
       const formElement = document.getElementById('createNewDocumentForm');
