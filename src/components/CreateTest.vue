@@ -13,7 +13,6 @@
   </div>
   <div class="genereateDocumentButtonDiv">
     <button v-if="testHasQuestions" @click="generateDocument">Generate Document</button>
-    <button @click="loghasQ">HASQUESTIONS?></button>
   </div>
   <div>
   </div>
@@ -21,7 +20,7 @@
 
 <script>
 import {
-  Document, Paragraph, Packer,
+  Document, Paragraph, Packer, Table, TableRow, TableCell, Header, HeadingLevel,
 }
   from 'docx';
 
@@ -42,46 +41,34 @@ export default {
   },
   methods: {
     updateParent(variable, questions) {
-      console.log('--------emit successy----------');
       this.testHasQuestions = variable;
       this.questionsArray = questions;
-      console.log(this.testHasQuestions);
-      console.log('--------QUESTIONS ARRAY EMITED----------');
-      console.log(this.questionsArray[0]);
     },
     collapse() {
       this.$emit('collapse');
     },
-    loghasQ() {
-      console.log(this.testHasQuestions);
-    },
-    async generateDocument() {
-      console.log('generate docx');
-      // eslint-disable-next-line
-      let doc = new Document();
-      console.log('generate docx');
-      this.questionsArray.forEach((question, index) => {
-        console.log(question, index);
-        // Create a paragraph for the question text
-        const questionParagraph = new Paragraph({
-          children: [{ text: `Question ${index + 1}: ${question.questionText}` }],
-        });
-
-        // Add the question paragraph to the document
-        doc.addParagraph(questionParagraph);
-
-        // Iterate over the answers for the current question
-        Object.values(question.answers).forEach((answer, answerIndex) => {
-          // Create a paragraph for each answer
-          const answerParagraph = new Paragraph({
-            children: [{ text: `Answer ${answerIndex + 1}: ${answer.text}` }],
-            // Example: Highlight the correct answer in green
-            style: {
-              color: answer.correct ? 'green' : 'black',
+    generateDocument() {
+      const buildParagraph = () => {
+        const paragraphArray = [];
+        for (let i = 0; i < this.questionsArray.length; i++) {
+          paragraphArray.push(new Paragraph({ text: this.questionsArray[i].questionText }));
+        }
+        return paragraphArray;
+      };
+      let doc = new Document({
+        sections: [
+          {
+            headers: {
+              default: new Header({
+                children: [new Paragraph('Page heading')],
+              }),
             },
-          });
-          doc.addParagraph(answerParagraph);
-        });
+            children: [
+              new Paragraph({ text: 'My Essay', heading: HeadingLevel.HEADING_2 }),
+              ...buildParagraph(), // paragraphs are not coming through
+            ],
+          },
+        ],
       });
 
       try {
@@ -93,6 +80,7 @@ export default {
         console.error('Error generating document:', error);
       }
     },
+
   },
 };
 </script>
