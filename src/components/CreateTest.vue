@@ -20,7 +20,7 @@
 
 <script>
 import {
-  Document, Paragraph, Packer, Table, TableRow, TableCell, Header, HeadingLevel,
+  Document, Paragraph, Packer, Table, TableRow, TableCell, Header, HeadingLevel, WidthType,
 }
   from 'docx';
 
@@ -48,24 +48,71 @@ export default {
       this.$emit('collapse');
     },
     generateDocument() {
-      const buildParagraph = () => {
-        const paragraphArray = [];
-        for (let i = 0; i < this.questionsArray.length; i++) {
-          paragraphArray.push(new Paragraph({ text: this.questionsArray[i].questionText }));
+      // const buildParagraph = () => {
+      //   const paragraphArray = [];
+      //   for (let i = 0; i < this.questionsArray.length; i += 1) {
+      //     paragraphArray.push(new Paragraph({ text: this.questionsArray[i].questionText }));
+      //   }
+      //   return paragraphArray;
+      // };
+      const buildRows = () => {
+        const rowArray = [];
+        for (let i = 0; i < this.questionsArray.length; i += 1) {
+          rowArray.push(
+            new TableRow({
+              children: [new TableCell({
+                children: [new Paragraph({ text: this.questionsArray[i].questionText })],
+                columnSpan: 4,
+                cantSplit: true,
+              }),
+              ],
+              width: {
+                size: 100,
+                type: WidthType.PERCENTAGE, // Set the table width to be a percentage of the page width
+              },
+            }),
+            new TableRow({
+              children: [
+                new TableCell({ children: [new Paragraph({ text: this.questionsArray[i].answers.answer1 })] }),
+                new TableCell({ children: [new Paragraph({ text: this.questionsArray[i].answers.answer2 })] }),
+                new TableCell({ children: [new Paragraph({ text: this.questionsArray[i].answers.answer3 })] }),
+                new TableCell({ children: [new Paragraph({ text: this.questionsArray[i].answers.answer4 })] }),
+              ],
+              width: {
+                size: 25,
+                type: WidthType.PERCENTAGE,
+              },
+              cantSplit: true,
+            }),
+          );
         }
-        return paragraphArray;
+        return rowArray;
       };
-      let doc = new Document({
+      const doc = new Document({
         sections: [
           {
             headers: {
               default: new Header({
-                children: [new Paragraph('Page heading')],
+                children: [
+                  new Paragraph('Prasmju pārbaude'),
+                  new Paragraph({ text: 'Name:                            \n Surname:                            \n Class:      ' }),
+                ],
+
               }),
             },
             children: [
-              new Paragraph({ text: 'My Essay', heading: HeadingLevel.HEADING_2 }),
-              ...buildParagraph(), // paragraphs are not coming through
+
+              new Table({
+                width: {
+                  size: 100,
+                  type: WidthType.PERCENTAGE,
+                },
+                rows: [
+                  ...buildRows(),
+                ],
+              }),
+              new Paragraph({ text: 'Please fill in the correct answers in the answer sheet', heading: HeadingLevel.HEADING_2 }),
+              // ...buildParagraph(), // paragraphs are not coming through
             ],
           },
         ],

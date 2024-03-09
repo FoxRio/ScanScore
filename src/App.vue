@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1> {{ title }}</h1>
-    <h2>Sveiks, roland. Deploy test 3</h2>
+    <h2>WELL EAT MY BEANS, RUB MY BUTT AND CALL ME A GENIE, THAT THERES SUSSY FEEF</h2>
   </div>
   <div class="description">
     <p>{{ appDescription }}</p>
@@ -29,7 +29,7 @@ export default {
     return {
       creatingTest: false,
       gradingTest: false,
-      title: 'Scan App',
+      title: 'ScanApp',
       appDescription: 'Short description of what this is. Short description of what this is.Short description of what this is.Short description of what this is.Short description of what this is.Short description of what this is.Short description of what this is.',
     };
   },
