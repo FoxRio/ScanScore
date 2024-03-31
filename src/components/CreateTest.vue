@@ -7,7 +7,7 @@
       <p>Here you can create a new Test that will be outputed as a .docx download</p>
     </div>
     <div class="documentForm">
-      <FormComponent @updatedQuestions="updateParent"/>
+      <FormComponent @updatedQuestions="updateParent" />
     </div>
     <!-- <button @click="addNewQuestionPromt">Add new question</button> -->
   </div>
@@ -29,6 +29,8 @@ import { saveAs } from 'file-saver';
 // import NewQuestionComponent from './NewQuestion.vue';
 import FormComponent from './FormComponent.vue';
 
+const QRCode = require('qrcode');
+
 export default {
   components: {
     FormComponent,
@@ -46,6 +48,27 @@ export default {
     },
     collapse() {
       this.$emit('collapse');
+    },
+
+    generateAnswersSheet() {
+      let text = '';
+      for (let i = 0; i < this.questionsArray.length; i += 1) {
+        const question = this.questionsArray[i];
+        // eslint-disable-next-line
+        const answers = question.answers;
+        let questionResult = '';
+
+        Object.keys(answers).forEach((key) => {
+          questionResult += answers[key].correct ? '1' : '0';
+        });
+
+        text += `Q${questionResult}`;
+      }
+
+      console.log(text);
+      (async () => {
+        console.log(await QRCode.toDataURL(text));
+      })();
     },
     generateDocument() {
       // const buildParagraph = () => {
@@ -122,6 +145,7 @@ export default {
         Packer.toBlob(doc).then((blob) => {
           // saveAs from FileSaver will download the file
           saveAs(blob, 'pipebomb.docx');
+          this.generateAnswersSheet();
         });
       } catch (error) {
         console.error('Error generating document:', error);
