@@ -20,7 +20,7 @@
 
 <script>
 import {
-  Document, Paragraph, Packer, Table, TableRow, TableCell, Header, HeadingLevel, WidthType,
+  Document, Paragraph, Packer, Table, TableRow, TableCell, Header, HeadingLevel, WidthType, ImageRun,
 }
   from 'docx';
 
@@ -59,6 +59,7 @@ export default {
         let questionResult = '';
 
         Object.keys(answers).forEach((key) => {
+          console.log(answers[key]);
           questionResult += answers[key].correct ? '1' : '0';
         });
 
@@ -66,18 +67,87 @@ export default {
       }
 
       console.log(text);
-      (async () => {
-        console.log(await QRCode.toDataURL(text));
-      })();
+
+      let blobx;
+      // Generate QR code directly in the browser
+      QRCode.toDataURL(text, { errorCorrectionLevel: 'H' })
+        .then(async (url) => {
+          const res = await fetch(url);
+          return res.blob();
+        })
+        .then((generatedBlob) => {
+          blobx = generatedBlob;
+          // Now you can use the 'blob' variable as needed
+          console.log('QR code image generated as Blob:', blobx);
+        });
+
+      // let ansQrCode; // Define the variable outside the function scope
+      // const outputStream = fs.createWriteStream('qrcode.png');
+      // const options = {
+      //   errorCorrectionLevel: 'H', // High error correction level
+      //   margin: 2, // Set the margin to 2 modules
+      //   color: {
+      //     dark: '#000000', // Dark color for modules
+      //     light: '#ffffff', // Light color for background
+      //   },
+      // };
+
+      // // Generate and write the QR code image to the stream
+      // QRCode.toFileStream(outputStream, text, options)
+      //   .then(() => {
+      //     console.log('QR code image generated and written to qrcode.png');
+      //   })
+      //   .catch((error) => {
+      //     console.error('Error generating QR code:', error);
+      //   });
+      // (async () => {
+      //   ansQrCode = await QRCode.toFileStream(text, { type: 'image/png' });
+
+      //   // You can use ansQrCode here
+      // })();
+      // console.log(ansQrCode);
+      const doc = new Document({
+        sections: [
+          {
+            headers: {
+              default: new Header({
+                children: [
+                  new Paragraph('Prasmju pārbaude'),
+                  new Paragraph({ text: 'Name:                            \n Surname:                            \n Class:      ' }),
+                ],
+
+              }),
+            },
+            children: [
+              new Paragraph({
+                children: [
+                  new ImageRun({
+                    type: 'png',
+                    data: [blobx],
+                    transformation: {
+                      width: 200,
+                      height: 200,
+                    },
+                  }),
+                ],
+              }),
+              new Paragraph({ text: 'Please fill in the correct answers in the answer sheet', heading: HeadingLevel.HEADING_2 }),
+              // ...buildParagraph(), // paragraphs are not coming through
+            ],
+          },
+        ],
+      });
+
+      try {
+        Packer.toBlob(doc).then((blob) => {
+          // saveAs from FileSaver will download the file
+          saveAs(blob, 'panswers.docx');
+        });
+      } catch (error) {
+        console.error('Error generating document:', error);
+      }
     },
     generateDocument() {
-      // const buildParagraph = () => {
-      //   const paragraphArray = [];
-      //   for (let i = 0; i < this.questionsArray.length; i += 1) {
-      //     paragraphArray.push(new Paragraph({ text: this.questionsArray[i].questionText }));
-      //   }
-      //   return paragraphArray;
-      // };
       const buildRows = () => {
         const rowArray = [];
         for (let i = 0; i < this.questionsArray.length; i += 1) {
