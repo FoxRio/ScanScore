@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "default": "scanscore-6cbf7"
+  },
+  "dataconnectEmulatorConfig": {
+    "postgres": {
+      "localConnectionString": "postgresql://localhost:5432?sslmode=disable"
+    }
+  }
+}
