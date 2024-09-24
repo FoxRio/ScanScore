@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <h1> {{ title }}</h1>
     <h2>WELL EAT MY BEANS, RUB MY BUTT AND CALL ME A GENIE, THAT THERES SUSSY FEEF</h2>
@@ -12,18 +12,32 @@
   </div>
   <CreateTest v-if="creatingTest && !gradingTest" @collapse="handleCollapse" />
   <GradeTest v-if="gradingTest && !creatingTest" @collapse="handleCollapse" />
+</template> -->
+
+<template>
+  <h1>Hello App! This is where I will implement navbar</h1>
+  <NavBar />
+  <p>
+    <strong>Current route path:</strong> {{ $route.fullPath }}
+  </p>
+
+  <main>
+    <RouterView />
+  </main>
 </template>
 
 <script>
 // import Modal from './components/Modal-component.vue';
 import CreateTest from './components/CreateTest.vue';
 import GradeTest from './components/GradeTest.vue';
+import NavBar from './components/NavBar.vue';
 
 export default {
   name: 'App',
   components: {
     CreateTest,
     GradeTest,
+    NavBar,
   },
   data() {
     return {
