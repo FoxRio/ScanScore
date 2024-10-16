@@ -1,11 +1,39 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/HomeView.vue';
+import Register from '../views/RegisterView.vue';
+import Login from '../views/LoginView.vue';
 import Landing from '../views/LandingView.vue';
 import AvailableTests from '../views/AvailableTestsView.vue';
 import { auth } from '../firebase'; // Import Firebase authentication
+import GetCreatedTests from '../views/GetCreatedTests.vue';
 
 const routes = [
   {
+    path: '/my-tests',
+    name: 'Mytests',
+    component: GetCreatedTests,
+    meta: {
+      requiresAuth: false, // Home page is accessible to everyone
+    },
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register,
+    meta: {
+      requiresAuth: false, // Home page is accessible to everyone
+    },
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    meta: {
+      requiresAuth: false, // Home page is accessible to everyone
+    },
+  },
+  {
+
     path: '/',
     name: 'Home',
     component: Home,
@@ -18,7 +46,7 @@ const routes = [
     name: 'AvailableTests',
     component: AvailableTests,
     meta: {
-      requiresAuth: false,
+      requiresAuth: true,
     },
   },
 
@@ -47,6 +75,7 @@ router.beforeEach((to, from, next) => {
 
   // If route requires authentication and user is not logged in, redirect to home
   if (requiresAuth && !currentUser) {
+    console.log('Failed authorisation. Insufficient Permisions');
     next('/');
   } else {
     next(); // Proceed to the route

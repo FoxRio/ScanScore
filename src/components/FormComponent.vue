@@ -1,31 +1,46 @@
 <template>
   <div class="createDocumentForm">
     <form @submit.prevent="addNewQuestionPrompt" id="createNewDocumentForm">
-      <label :for="id" class="question-label">Please enter Question:
-        <textarea :id="name" :name="name" required :placeholder="placeholderQText" v-model="questionText"
-          class="question-textarea"></textarea>
+      <label :for="titleId" class="title-label">Title:
+        <input type="text" :id="titleId" v-model="title" required placeholder="Enter the title" />
       </label>
+
+      <label :for="descriptionId" class="description-label">Description:
+        <textarea :id="descriptionId" v-model="description" placeholder="Enter the description"></textarea>
+      </label>
+
+      <label :for="questionId" class="question-label">Please enter Question:
+        <textarea :id="questionId" v-model="questionText" required :placeholder="placeholderQText" class="question-textarea"></textarea>
+      </label>
+
       <div class="answer-container">
         <label for="answer1"> Answer:
-          <input type=" text" id="answer1" name="answer1" :placeholder="placeholderAText" v-model="answer1">
+          <input type="text" id="answer1" v-model="answer1" :placeholder="placeholderAText" required />
           <label for="correctanswer1">This is the correct answer
-            <input type="checkbox" id="correctanswer1" v-model="isChecked1">
-          </label></label>
+            <input type="checkbox" id="correctanswer1" v-model="isChecked1" />
+          </label>
+        </label>
+
         <label for="answer2"> Answer:
-          <input type=" text" id="answer1" name="answer2" :placeholder="placeholderAText" v-model="answer2" required>
+          <input type="text" id="answer2" v-model="answer2" :placeholder="placeholderAText" required />
           <label for="correctanswer2">This is the correct answer
-            <input type="checkbox" id="correctanswer2" v-model="isChecked2">
-          </label></label>
+            <input type="checkbox" id="correctanswer2" v-model="isChecked2" />
+          </label>
+        </label>
+
         <label for="answer3"> Answer:
-          <input type=" text" id="answer3" name="answer3" :placeholder="placeholderAText" v-model="answer3" required>
+          <input type="text" id="answer3" v-model="answer3" :placeholder="placeholderAText" required />
           <label for="correctanswer3">This is the correct answer
-            <input type="checkbox" id="correctanswer3" v-model="isChecked3">
-          </label></label>
+            <input type="checkbox" id="correctanswer3" v-model="isChecked3" />
+          </label>
+        </label>
+
         <label for="answer4"> Answer:
-          <input type=" text" id="answer4" name="answer4"  :placeholder="placeholderAText" v-model="answer4" required>
+          <input type="text" id="answer4" v-model="answer4" :placeholder="placeholderAText" required />
           <label for="correctanswer4">This is the correct answer
-            <input type="checkbox" id="correctanswer4" v-model="isChecked4">
-          </label></label>
+            <input type="checkbox" id="correctanswer4" v-model="isChecked4" />
+          </label>
+        </label>
       </div>
       <button type="button" @click="addNewQuestionPrompt">Add This Question</button>
     </form>
@@ -54,6 +69,8 @@ export default {
   },
   data() {
     return {
+      title: '',
+      description: '',
       questionText: process.env.NODE_ENV === 'production' ? null : 'TEST QUESTION x',
       answer1: process.env.NODE_ENV === 'production' ? null : 'TEST ANSWER 1',
       answer2: process.env.NODE_ENV === 'production' ? null : 'TEST ANSWER 2',
@@ -154,8 +171,12 @@ export default {
         //   },
         // );
         this.questions.push(question);
+        this.testMetadata = {
+          title: this.title,
+          description: this.description,
+        };
         this.testHasQuestions = true;
-        this.$emit('updatedQuestions', true, this.questions);
+        this.$emit('updatedQuestions', true, this.questions, this.testMetadata);
         console.log('--------AFTER EMIT----------');
         this.questionText = process.env.NODE_ENV === 'production' ? null : 'TEST QUESTION x';
         this.answer1 = process.env.NODE_ENV === 'production' ? null : 'TEST ANSWER 1';
@@ -188,6 +209,49 @@ export default {
   max-width: 600px;
   margin: 0 auto;
   border: 1px solid #ccc;
+  padding: 20px; /* Add padding for better spacing */
+  border-radius: 8px; /* Rounded corners */
+  background-color: #f9f9f9; /* Light background for contrast */
+}
+
+.title-label,
+.description-label,
+.question-label {
+  font-weight: bold;
+  margin-bottom: 5px; /* Space below labels */
+}
+
+input[type="text"],
+textarea {
+  width: calc(100% - 20px); /* Full width minus padding */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px; /* Space below inputs */
+}
+
+.question-textarea {
+  height: 100px; /* Adjust height as needed */
+}
+
+.answer-container {
+  margin-bottom: 20px;
+}
+
+.answer-container label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.answer-container input[type="text"] {
+  width: calc(100% - 30px); /* Adjust width as needed */
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.answer-container input[type="checkbox"] {
+  margin-left: 10px;
 }
 
 .add-question-button,
@@ -207,41 +271,6 @@ export default {
 .add-question-button:hover,
 .submit-button:hover {
   background-color: #45a049;
-}
-
-.question-label {
-  font-weight: bold;
-}
-
-.question-textarea {
-  width: 90%;
-  height: 100px;
-  /* Adjust height as needed */
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 8px;
-  margin-bottom: 20px;
-}
-
-.answer-container {
-  margin-bottom: 20px;
-}
-
-.answer-container label {
-  display: block;
-  margin-bottom: 10px;
-}
-
-.answer-container input[type="text"] {
-  width: calc(100% - 30px);
-  /* Adjust width as needed */
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.answer-container input[type="checkbox"] {
-  margin-left: 10px;
 }
 
 button {

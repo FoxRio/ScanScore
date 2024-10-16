@@ -6,7 +6,7 @@ import { auth } from './firebase';
 let app;
 
 // Listen for auth state changes
-auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged(() => { // user
   if (!app) {
     // Initialize the app after Firebase auth state is determined
     app = createApp(App);
