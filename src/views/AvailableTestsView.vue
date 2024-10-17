@@ -22,12 +22,16 @@
 </template>
 
 <script>
+
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+
 import {
   Document, Paragraph, Packer, Table, TableRow, TableCell, Header, HeadingLevel, WidthType, ImageRun, TextRun,
 } from 'docx';
 
 import { saveAs } from 'file-saver';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { auth } from '../firebase';
+
 import FormComponent from '../components/FormComponent.vue';
 
 const QRCode = require('qrcode');
@@ -124,6 +128,10 @@ export default {
         });
     },
     async saveToFirebase() {
+      const userId = auth.currentUser ? auth.currentUser.uid : null;
+      console.log('User ID:', userId);
+      this.testFileData.userId = auth.currentUser.uid;
+      this.testFileData.createdAt = new Date();
       const db = getFirestore();
       try {
         const docRef = await addDoc(collection(db, 'tests'), this.testFileData);

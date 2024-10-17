@@ -9,7 +9,10 @@
 </template>
 
 <script>
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import {
+  getFirestore, collection, query, where, getDocs,
+} from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 export default {
   data() {
@@ -19,8 +22,18 @@ export default {
   },
   async mounted() {
     const db = getFirestore();
-    const querySnapshot = await getDocs(collection(db, 'tests'));
-    this.tests = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const auth = getAuth();
+    const userId = auth.currentUser ? auth.currentUser.uid : null;
+
+    if (userId) {
+      // Query to get only the tests created by the authenticated user
+      const testsQuery = query(collection(db, 'tests'), where('ownerId', '==', userId));
+      const querySnapshot = await getDocs(testsQuery);
+      this.tests = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    } else {
+      console.error('User is not authenticated');
+      // Handle unauthenticated state (e.g., redirect to login)
+    }
   },
   methods: {
     editTest(id) {

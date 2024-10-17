@@ -10,7 +10,7 @@
   <div class="dropdown">
         <button class="dropbtn">Profile</button>
         <div class="dropdown-content">
-          <RouterLink to="/available-tests">My Tests</RouterLink>
+          <RouterLink to="/my-tests">My Tests</RouterLink>
           <RouterLink to="/info">Info</RouterLink>
           <RouterLink to="/settings">Settings</RouterLink>
         </div>
