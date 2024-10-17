@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import CheckPermisionsView from '../views/CheckPermisionsView.vue';
 import Home from '../views/HomeView.vue';
 import Register from '../views/RegisterView.vue';
 import Login from '../views/LoginView.vue';
@@ -28,6 +29,14 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+    meta: {
+      requiresAuth: false, // Home page is accessible to everyone
+    },
+  },
+  {
+    path: '/check',
+    name: 'Check',
+    component: CheckPermisionsView,
     meta: {
       requiresAuth: false, // Home page is accessible to everyone
     },

@@ -12,7 +12,7 @@
 import {
   getFirestore, collection, query, where, getDocs,
 } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { auth } from '../firebase';
 
 export default {
   data() {
@@ -22,23 +22,26 @@ export default {
   },
   async mounted() {
     const db = getFirestore();
-    const auth = getAuth();
     const userId = auth.currentUser ? auth.currentUser.uid : null;
+    console.log('User ID:', userId);
 
     if (userId) {
       // Query to get only the tests created by the authenticated user
-      const testsQuery = query(collection(db, 'tests'), where('ownerId', '==', userId));
+      const testsQuery = query(collection(db, 'tests'), where('userId', '==', userId));
       const querySnapshot = await getDocs(testsQuery);
       this.tests = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     } else {
       console.error('User is not authenticated');
-      // Handle unauthenticated state (e.g., redirect to login)
+      this.goToHome();
     }
   },
   methods: {
     editTest(id) {
       // Redirect to edit page or load test for editing
       this.$router.push({ name: 'EditTest', params: { id } });
+    },
+    goToHome() {
+      this.$router.push('/');
     },
   },
 };
