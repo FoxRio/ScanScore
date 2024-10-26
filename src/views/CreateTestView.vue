@@ -1,44 +1,61 @@
 <template>
   <div class="createNewTest">
     <div>
-      <button @click="collapse" class="collapse">collapse</button>
+      <button @click="collapse" class="collapse">Collapse</button>
     </div>
     <div class="description">
-      <p>Here you can create a new Test that will be outputed as a .docx download</p>
+      <p>Here you can create a new Test that will be outputted as a .docx download</p>
     </div>
     <div class="documentForm">
       <FormComponent @updatedQuestions="updateParent" />
     </div>
-    <!-- <button @click="addNewQuestionPromt">Add new question</button> -->
-  </div>
-  <div class="genereateDocumentButtonDiv">
-    <button v-if="testHasQuestions" @click="generateDocument">Generate Document</button>
-  </div>
-  <div>
-    <button @click ="getQuestions">Get questions</button>
-  </div>
-  <div>
+
+    <h2>Questions</h2>
+    <div v-for="(question, index) in testFileData.questions" :key="index">
+      <div v-if="editingIndex !== index">
+        <DisplayedQuestion
+          :questionData="question"
+          @deleteEvent="deleteQuestion(index)"
+          @editEvent="editQuestion(index)"
+        />
+      </div>
+      <div v-else>
+        <QuestionEditComponent
+          :questionData="question"
+          @updateQuestion="updateQuestion(index, $event)"
+          @cancelEdit="cancelEdit"
+        />
+      </div>
+    </div>
+
+    <div class="generateDocumentButtonDiv">
+      <button v-if="testHasQuestions" @click="generateDocument">Generate Document</button>
+    </div>
+    <div>
+      <button @click="getQuestions">Get questions</button>
+    </div>
   </div>
 </template>
 
 <script>
-
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
-
 import {
   Document, Paragraph, Packer, Table, TableRow, TableCell, Header, HeadingLevel, WidthType, ImageRun, TextRun,
 } from 'docx';
 
 import { saveAs } from 'file-saver';
 import { auth } from '../firebase';
-
 import FormComponent from '../components/FormComponent.vue';
+import DisplayedQuestion from '../components/DisplayedQuestion.vue';
+import QuestionEditComponent from '../components/QuestionEditComponent.vue'; // Import your edit question component
 
 const QRCode = require('qrcode');
 
 export default {
   components: {
     FormComponent,
+    DisplayedQuestion,
+    QuestionEditComponent,
   },
   data() {
     return {
@@ -49,15 +66,30 @@ export default {
         questions: [],
       },
       questionsArray: [],
+      editingIndex: null, // Track the index of the question being edited
     };
   },
   methods: {
     updateParent(variable, questions, testMeta) {
-      this.testHasQuestions = variable;
-      this.testFileData.title = testMeta.title;
-      this.testFileData.description = testMeta.description;
-      this.testFileData.questions = questions;
-      this.questionsArray = questions;
+      this.testHasQuestions = variable || false;
+      this.testFileData.title = testMeta?.title || '';
+      this.testFileData.description = testMeta?.description || '';
+      this.testFileData.questions = questions || [];
+      this.questionsArray = questions || [];
+    },
+    deleteQuestion(index) {
+      this.testFileData.questions.splice(index, 1);
+      this.testHasQuestions = this.testFileData.questions.length > 0; // Update state if there are questions
+    },
+    editQuestion(index) {
+      this.editingIndex = index; // Set the index of the question to edit
+    },
+    updateQuestion(index, updatedQuestion) {
+      this.$set(this.testFileData.questions, index, updatedQuestion);
+      this.editingIndex = null; // Reset editing index after update
+    },
+    cancelEdit() {
+      this.editingIndex = null; // Reset editing index on cancel
     },
     collapse() {
       this.$emit('collapse');

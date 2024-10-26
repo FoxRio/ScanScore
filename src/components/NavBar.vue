@@ -4,7 +4,7 @@
   <nav>
     <RouterLink to="/">Go to Home</RouterLink>
     <RouterLink to="/about">Go to About</RouterLink>
-    <RouterLink to="/available-tests">Create a Test</RouterLink>
+    <RouterLink to="/create-test">Create a Test</RouterLink>
 
   </nav>
   <div class="dropdown">

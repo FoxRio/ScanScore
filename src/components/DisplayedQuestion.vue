@@ -5,6 +5,7 @@
       {{ answer.text }}
     </div>
     <button @click="deleteQuestion" class="delete-button">Delete</button>
+    <button @click="editQuestion" class="edit-button">Edit</button>
   </div>
 </template>
 
@@ -14,6 +15,9 @@ export default {
   methods: {
     deleteQuestion() {
       this.$emit('deleteEvent');
+    },
+    editQuestion() {
+      this.$emit('editEvent'); // Emit an event to the parent component to switch to edit mode
     },
   },
 };
@@ -47,5 +51,18 @@ export default {
 
 .delete-button:hover {
   background-color: #c82333;
+}
+
+.edit-button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-button:hover {
+  background-color: #0056b3;
 }
 </style>

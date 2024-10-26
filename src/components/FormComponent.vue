@@ -44,14 +44,14 @@
       </div>
       <button type="button" @click="addNewQuestionPrompt">Add This Question</button>
     </form>
-    <div v-for="(question, index) in questions" :key="index">
+    <!-- <div v-for="(question, index) in questions" :key="index">
       <NewQuestion :questionData="question" @deleteEvent="deleteQuestion(index)" />
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script setup>
-import NewQuestion from './NewQuestion.vue';
+// import NewQuestion from './DisplayedQuestion.vue';
 
 const emit = defineEmits(['updatedQuestions']);
 
@@ -65,7 +65,7 @@ defineExpose({ updateHasQuestions });
 
 export default {
   components: {
-    NewQuestion,
+    // NewQuestion,
   },
   data() {
     return {

@@ -4,9 +4,10 @@ import Home from '../views/HomeView.vue';
 import Register from '../views/RegisterView.vue';
 import Login from '../views/LoginView.vue';
 import Landing from '../views/LandingView.vue';
-import AvailableTests from '../views/AvailableTestsView.vue';
+import CreateTest from '../views/CreateTestView.vue';
 import { auth } from '../firebase'; // Import Firebase authentication
 import GetCreatedTests from '../views/GetCreatedTests.vue';
+import EditTest from '../views/EditTestView.vue'; // Import the EditTest component
 
 const routes = [
   {
@@ -14,7 +15,7 @@ const routes = [
     name: 'Mytests',
     component: GetCreatedTests,
     meta: {
-      requiresAuth: false, // Home page is accessible to everyone
+      requiresAuth: false,
     },
   },
   {
@@ -22,7 +23,7 @@ const routes = [
     name: 'Register',
     component: Register,
     meta: {
-      requiresAuth: false, // Home page is accessible to everyone
+      requiresAuth: false,
     },
   },
   {
@@ -30,7 +31,7 @@ const routes = [
     name: 'Login',
     component: Login,
     meta: {
-      requiresAuth: false, // Home page is accessible to everyone
+      requiresAuth: false,
     },
   },
   {
@@ -38,27 +39,25 @@ const routes = [
     name: 'Check',
     component: CheckPermisionsView,
     meta: {
-      requiresAuth: false, // Home page is accessible to everyone
+      requiresAuth: false,
     },
   },
   {
-
     path: '/',
     name: 'Home',
     component: Home,
     meta: {
-      requiresAuth: false, // Home page is accessible to everyone
+      requiresAuth: false,
     },
   },
   {
-    path: '/available-tests',
-    name: 'AvailableTests',
-    component: AvailableTests,
+    path: '/create-test',
+    name: 'CreateTest',
+    component: CreateTest,
     meta: {
       requiresAuth: true,
     },
   },
-
   {
     path: '/about',
     component: Landing,
@@ -68,8 +67,16 @@ const routes = [
     },
   },
   {
+    path: '/edit-test/:id',
+    name: 'EditTest',
+    component: EditTest,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: '/:catchAll(.*)',
-    redirect: '/', // Redirect any unknown routes to the home page
+    redirect: '/',
   },
 ];
 
@@ -82,12 +89,11 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const { currentUser } = auth;
 
-  // If route requires authentication and user is not logged in, redirect to home
   if (requiresAuth && !currentUser) {
     console.log('Failed authorisation. Insufficient Permisions');
     next('/');
   } else {
-    next(); // Proceed to the route
+    next();
   }
 });
 
