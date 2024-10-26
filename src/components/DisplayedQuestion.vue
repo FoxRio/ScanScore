@@ -19,11 +19,9 @@ export default {
     editQuestion() {
       this.$emit('editEvent'); // Emit an event to the parent component to switch to edit mode
     },
-  },
+  }, // // TODO: THERE IS STILL ISSUE WITH EDITING. NEED TO MAKE SURE THAT CANCEL EDIT IS WORKING and also thatsave button is working.
 };
 </script>
-
-// TODO THERE IS STILL ISSUE WITH EDITING. NEED TO MAKE SURE THAT CANCEL EDIT IS WORKING and also thatsave button is working.
 
 <style scoped>
 .question-container {
