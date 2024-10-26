@@ -27,16 +27,16 @@ export default {
         try {
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
-            this.message = "Document data: " + JSON.stringify(docSnap.data());
+            // this.message = "Document data: " + JSON.stringify(docSnap.data());
           } else {
-            this.message = "No such document!";
+            // this.message = "No such document!";
           }
         } catch (error) {
-          console.error("Error getting document:", error);
+          console.error('Error getting document:', error);
           if (error.code === 'permission-denied') {
             this.message = 'User does not have permission to access this document.';
           } else {
-            this.message = 'An error occurred: ' + error.message;
+            // this.message = 'An error occurred: ' + error.message;
           }
         }
       } else {
