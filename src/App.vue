@@ -15,8 +15,6 @@
 </template> -->
 
 <template>
-  <h1>Hello App! This is where I will implement navbar</h1>
-  <SignOutButton />
   <NavBar />
   <p>
     <strong>Current route path:</strong> {{ $route.fullPath }}
@@ -30,13 +28,13 @@
 <script>
 // import Modal from './components/Modal-component.vue';
 import NavBar from './components/NavBar.vue';
-import SignOutButton from './components/SignOutButton.vue';
+// import SignOutButton from './components/SignOutButton.vue';
 
 export default {
   name: 'App',
   components: {
     NavBar,
-    SignOutButton,
+    // SignOutButton,
   },
   data() {
     return {

@@ -7,6 +7,7 @@ import Landing from '../views/LandingView.vue';
 import AvailableTests from '../views/AvailableTestsView.vue';
 import { auth } from '../firebase'; // Import Firebase authentication
 import GetCreatedTests from '../views/GetCreatedTests.vue';
+import AItestView from '..components/AIGeneratedQuestion.vue';
 
 const routes = [
   {
@@ -16,6 +17,14 @@ const routes = [
     meta: {
       requiresAuth: false, // Home page is accessible to everyone
     },
+  },
+  {
+    path: '/test-view',
+    name: 'TestView',
+    component: AItestView,
+    meta: {
+      requiresAuth: false,
+    }
   },
   {
     path: '/register',

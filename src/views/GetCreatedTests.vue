@@ -4,13 +4,14 @@
     <div v-for="test in tests" :key="test.id">
       <h2>{{ test.title }}</h2>
       <button @click="editTest(test.id)">Edit</button>
+      <button @click="deleteTest(test.id)">Delete</button>
     </div>
   </div>
 </template>
 
 <script>
 import {
-  getFirestore, collection, query, where, getDocs,
+  getFirestore, collection, query, where, getDocs, deleteDoc, doc,
 } from 'firebase/firestore';
 import { auth } from '../firebase';
 
@@ -29,7 +30,7 @@ export default {
       // Query to get only the tests created by the authenticated user
       const testsQuery = query(collection(db, 'tests'), where('userId', '==', userId));
       const querySnapshot = await getDocs(testsQuery);
-      this.tests = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      this.tests = querySnapshot.docs.map((docx) => ({ id: docx.id, ...docx.data() }));
     } else {
       console.error('User is not authenticated');
       this.goToHome();
@@ -42,6 +43,14 @@ export default {
     },
     goToHome() {
       this.$router.push('/');
+    },
+    async deleteTest(id) {
+      const db = getFirestore();
+      if (confirm('Are you sure you want to delete this test?')) {
+        await deleteDoc(doc(db, 'tests', id));
+        console.log('Test deleted successfully');
+        this.tests = this.tests.filter((test) => test.id !== id);
+      }
     },
   },
 };
