@@ -20,7 +20,7 @@
 
 <script>
 import {
-  Document, Paragraph, Packer, Table, TableRow, TableCell, Header, HeadingLevel, WidthType, ImageRun,
+  Document, Paragraph, Packer, Table, TableRow, TableCell, Header, HeadingLevel, WidthType, ImageRun, TextWrappingType, TextWrappingSide,
 }
   from 'docx';
 
@@ -49,9 +49,19 @@ export default {
     collapse() {
       this.$emit('collapse');
     },
-
-    generateAnswersSheet() {
-      let text = '';
+    dataURItoBlob(dataURI) {
+      const byteString = atob(dataURI.split(',')[1]);
+      const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i += 1) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([ab], { type: mimeString });
+      return blob;
+    },
+    async generateAnswersSheet() {
+      let text = `${this.questionsArray.length}`;
       for (let i = 0; i < this.questionsArray.length; i += 1) {
         const question = this.questionsArray[i];
         // eslint-disable-next-line
@@ -65,47 +75,9 @@ export default {
 
         text += `Q${questionResult}`;
       }
+      const base64ImageData = await QRCode.toDataURL(text);
+      const QRblob = await fetch(base64ImageData).then((response) => response.blob());
 
-      console.log(text);
-
-      let blobx;
-      // Generate QR code directly in the browser
-      QRCode.toDataURL(text, { errorCorrectionLevel: 'H' })
-        .then(async (url) => {
-          const res = await fetch(url);
-          return res.blob();
-        })
-        .then((generatedBlob) => {
-          blobx = generatedBlob;
-          // Now you can use the 'blob' variable as needed
-          console.log('QR code image generated as Blob:', blobx);
-        });
-
-      // let ansQrCode; // Define the variable outside the function scope
-      // const outputStream = fs.createWriteStream('qrcode.png');
-      // const options = {
-      //   errorCorrectionLevel: 'H', // High error correction level
-      //   margin: 2, // Set the margin to 2 modules
-      //   color: {
-      //     dark: '#000000', // Dark color for modules
-      //     light: '#ffffff', // Light color for background
-      //   },
-      // };
-
-      // // Generate and write the QR code image to the stream
-      // QRCode.toFileStream(outputStream, text, options)
-      //   .then(() => {
-      //     console.log('QR code image generated and written to qrcode.png');
-      //   })
-      //   .catch((error) => {
-      //     console.error('Error generating QR code:', error);
-      //   });
-      // (async () => {
-      //   ansQrCode = await QRCode.toFileStream(text, { type: 'image/png' });
-
-      //   // You can use ansQrCode here
-      // })();
-      // console.log(ansQrCode);
       const doc = new Document({
         sections: [
           {
@@ -122,11 +94,22 @@ export default {
               new Paragraph({
                 children: [
                   new ImageRun({
-                    type: 'png',
-                    data: [blobx],
+                    data: QRblob,
                     transformation: {
-                      width: 200,
-                      height: 200,
+                      width: 50,
+                      height: 50,
+                    },
+                    floating: {
+                      horizontalPosition: {
+                        offset: 0,
+                      },
+                      verticalPosition: {
+                        offset: 0,
+                      },
+                      wrap: {
+                        type: TextWrappingType.SQUARE,
+                        side: TextWrappingSide.BOTH_SIDES,
+                      },
                     },
                   }),
                 ],
@@ -212,9 +195,9 @@ export default {
       });
 
       try {
-        Packer.toBlob(doc).then((blob) => {
+        Packer.toBlob(doc).then(() => {
           // saveAs from FileSaver will download the file
-          saveAs(blob, 'pipebomb.docx');
+          // saveAs(blob, 'pipebomb.docx');
           this.generateAnswersSheet();
         });
       } catch (error) {

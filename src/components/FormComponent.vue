@@ -61,7 +61,7 @@ function updateHasQuestions(value) {
 defineExpose({ updateHasQuestions });
 </script>
 
-<script >
+<script>
 
 export default {
   components: {
@@ -123,53 +123,53 @@ export default {
           },
         };
         console.log('--------Pushing to questions array----------');
-        // this.questions.push(
-        //   {
-        //     questionText: 'What is the capital of France?',
-        //     answers: {
-        //       answer1: { text: 'Paris', correct: true },
-        //       answer2: { text: 'London', correct: false },
-        //       answer3: { text: 'Berlin', correct: false },
-        //       answer4: { text: 'Rome', correct: false },
-        //     },
-        //   },
-        //   {
-        //     questionText: 'Which planet is known as the Red Planet?',
-        //     answers: {
-        //       answer1: { text: 'Mars', correct: true },
-        //       answer2: { text: 'Venus', correct: false },
-        //       answer3: { text: 'Jupiter', correct: false },
-        //       answer4: { text: 'Saturn', correct: false },
-        //     },
-        //   },
-        //   {
-        //     questionText: 'Who painted the Mona Lisa?',
-        //     answers: {
-        //       answer1: { text: 'Leonardo da Vinci', correct: true },
-        //       answer2: { text: 'Vincent van Gogh', correct: false },
-        //       answer3: { text: 'Pablo Picasso', correct: false },
-        //       answer4: { text: 'Michelangelo', correct: false },
-        //     },
-        //   },
-        //   {
-        //     questionText: 'What is the tallest mountain in the world?',
-        //     answers: {
-        //       answer1: { text: 'Mount Everest', correct: true },
-        //       answer2: { text: 'Mount Kilimanjaro', correct: false },
-        //       answer3: { text: 'K2', correct: false },
-        //       answer4: { text: 'Mount Fuji', correct: false },
-        //     },
-        //   },
-        //   {
-        //     questionText: 'What is the chemical symbol for water?',
-        //     answers: {
-        //       answer1: { text: 'H2O', correct: true },
-        //       answer2: { text: 'CO2', correct: false },
-        //       answer3: { text: 'O2', correct: false },
-        //       answer4: { text: 'NaCl', correct: false },
-        //     },
-        //   },
-        // );
+        this.questions.push(
+          {
+            questionText: 'What is the capital of France?',
+            answers: {
+              answer1: { text: 'Paris', correct: true },
+              answer2: { text: 'London', correct: false },
+              answer3: { text: 'Berlin', correct: false },
+              answer4: { text: 'Rome', correct: false },
+            },
+          },
+          {
+            questionText: 'Which planet is known as the Red Planet?',
+            answers: {
+              answer1: { text: 'Mars', correct: true },
+              answer2: { text: 'Venus', correct: false },
+              answer3: { text: 'Jupiter', correct: false },
+              answer4: { text: 'Saturn', correct: false },
+            },
+          },
+          {
+            questionText: 'Who painted the Mona Lisa?',
+            answers: {
+              answer1: { text: 'Leonardo da Vinci', correct: true },
+              answer2: { text: 'Vincent van Gogh', correct: false },
+              answer3: { text: 'Pablo Picasso', correct: false },
+              answer4: { text: 'Michelangelo', correct: false },
+            },
+          },
+          {
+            questionText: 'What is the tallest mountain in the world?',
+            answers: {
+              answer1: { text: 'Mount Everest', correct: true },
+              answer2: { text: 'Mount Kilimanjaro', correct: false },
+              answer3: { text: 'K2', correct: false },
+              answer4: { text: 'Mount Fuji', correct: false },
+            },
+          },
+          {
+            questionText: 'What is the chemical symbol for water?',
+            answers: {
+              answer1: { text: 'H2O', correct: true },
+              answer2: { text: 'CO2', correct: false },
+              answer3: { text: 'O2', correct: false },
+              answer4: { text: 'NaCl', correct: false },
+            },
+          },
+        );
         this.questions.push(question);
         this.testMetadata = {
           title: this.title,
