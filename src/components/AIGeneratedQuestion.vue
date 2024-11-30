@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { generateContent } from './firebase'; // Adjust the path as necessary
+// import { generateContent } from './firebase'; // Adjust the path as necessary
 
 export default {
   data() {
@@ -31,19 +31,19 @@ export default {
     };
   },
   methods: {
-    async generateQuestion() {
-      this.error = null; // Reset error state
-      try {
-        const prompt = `Generate a multiple choice question about ${this.userInput}. Provide the question text and four answer options, with one correct answer.`;
-        const generatedContent = await generateContent(prompt);
+    // async generateQuestion() {
+    //   this.error = null; // Reset error state
+    //   try {
+    //     const prompt = `Generate a multiple choice question about ${this.userInput}. Provide the question text and four answer options, with one correct answer.`;
+    //     const generatedContent = await generateContent(prompt);
 
-        // Parse the AI's response into the desired format
-        this.question = this.parseQuestion(generatedContent);
-      } catch (error) {
-        this.error = 'Failed to generate question. Please try again.';
-        console.error(error);
-      }
-    },
+    //     // Parse the AI's response into the desired format
+    //     this.question = this.parseQuestion(generatedContent);
+    //   } catch (error) {
+    //     this.error = 'Failed to generate question. Please try again.';
+    //     console.error(error);
+    //   }
+    // },
     parseQuestion(content) {
       // Example parsing logic; this should match the format returned by your AI model
       return {

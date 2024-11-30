@@ -203,8 +203,12 @@ export default {
       } catch (error) {
         console.error('Error generating document:', error);
       }
+      confirmCreation();
     },
-
+    confirmCreation() {
+      alert('Document created');
+      this.$router.push('/my-tests');
+    },
   },
 };
 </script>

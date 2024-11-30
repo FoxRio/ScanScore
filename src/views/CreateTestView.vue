@@ -29,6 +29,7 @@
     </div>
 
     <div class="generateDocumentButtonDiv">
+      <div v-if="titleError" class="error-message">Title is required.</div>
       <button v-if="testHasQuestions" @click="generateDocument">Generate Document</button>
     </div>
     <div>
@@ -67,6 +68,7 @@ export default {
       },
       questionsArray: [],
       editingIndex: null, // Track the index of the question being edited
+      titleError: false,
     };
   },
   methods: {
@@ -85,8 +87,11 @@ export default {
       this.editingIndex = index; // Set the index of the question to edit
     },
     updateQuestion(index, updatedQuestion) {
-      this.$set(this.testFileData.questions, index, updatedQuestion);
-      this.editingIndex = null; // Reset editing index after update
+      // Update the specific question in the array directly
+      this.testFileData.questions[index] = updatedQuestion;
+
+      // Reset editing index after the update
+      this.editingIndex = null;
     },
     cancelEdit() {
       this.editingIndex = null; // Reset editing index on cancel
@@ -176,6 +181,13 @@ export default {
     },
     generateDocument() {
       console.log(this.testFileData);
+      if (this.testFileData.title.trim() === '') {
+        this.titleError = true; // Show error message
+        return;
+      }
+      console.log('all good');
+      this.titleError = false;
+
       this.saveToFirebase();
       const buildRows = () => {
         const rowArray = [];
@@ -252,6 +264,7 @@ export default {
       } catch (error) {
         console.error('Error generating document:', error);
       }
+      this.$router.push('/my-tests');
     },
     getQuestions() {
       console.log('Questions:');
@@ -313,5 +326,11 @@ export default {
 .collapse,
 .createNewTest button:hover {
   background-color: #2980b9;
+}
+
+.error-message {
+  color: red;
+  font-size: 1rem;
+  margin-top: 5px;
 }
 </style>

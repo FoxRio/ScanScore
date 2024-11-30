@@ -1,11 +1,11 @@
 <template>
-  <div v-if="isAuthenticated">
-    <button @click="signOutUser">Sign Out</button>
+  <div v-if="!isAuthenticated">
+    <button @click="redirectToLogin">Sign In</button>
   </div>
 </template>
 
 <script>
-import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -13,13 +13,13 @@ export default {
   setup() {
     const auth = getAuth();
     const isAuthenticated = ref(false);
-    const router = useRouter(); // Get the router instance
-    const signOutUser = async () => {
+    const router = useRouter();
+
+    const redirectToLogin = () => {
       try {
-        await signOut(auth); // Sign out the user
-        router.push('/');
+        router.push('/login');
       } catch (error) {
-        console.error('Sign out error:', error);
+        console.error('Sign in error:', error);
       }
     };
 
@@ -32,7 +32,7 @@ export default {
 
     return {
       isAuthenticated,
-      signOutUser,
+      redirectToLogin,
     };
   },
 };
@@ -40,7 +40,7 @@ export default {
 
 <style scoped>
 button {
-  background-color: #f44336; /* Red */
+  background-color: #4caf50; /* Green */
   color: white;
   border: none;
   padding: 10px 15px;
@@ -48,6 +48,6 @@ button {
   border-radius: 5px;
 }
 button:hover {
-  background-color: #d32f2f; /* Darker Red */
+  background-color: #388e3c; /* Darker Green */
 }
 </style>

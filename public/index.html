@@ -23,17 +23,27 @@
       to avoid connecting the SDK to running emulators.
     -->
   <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
+  <style>
+    #loading-screen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-size: 1.5rem;
+      background-color: #0a1b41c7;
+    }
+  </style>
 </head>
-
 <body>
-  <!-- <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <button id="goButton">GO</button>
-    </div> -->
-  <div id="app"></div> <!-- Vue will mount the app here -->
-  </div>
+  <div id="loading-screen">Loading...</div>
+  <div id="app" style="display: none;"></div>
+  <script type="module" src="/src/main.js"></script>
+  <script>
+    // Remove the loading screen when the app is mounted
+    window.addEventListener('firebase-initialized', () => {
+      document.getElementById('loading-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+    });
+  </script>
 </body>
-
 </html>

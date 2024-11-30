@@ -6,7 +6,7 @@
       </label>
 
       <label :for="descriptionId" class="description-label">Description:
-        <textarea :id="descriptionId" v-model="description" placeholder="Enter the description"></textarea>
+        <textarea :id="descriptionId" v-model="description" required  placeholder="Enter the description"></textarea>
       </label>
 
       <label :for="questionId" class="question-label">Please enter Question:
@@ -84,6 +84,7 @@ export default {
       questions: [],
       placeholderQText: process.env.NODE_ENV === 'production' ? 'Write your question here...' : 'TEST QUESTION x',
       placeholderAText: process.env.NODE_ENV === 'production' ? 'Write your answer here...' : 'TEST ANSWER x',
+      titleError: false,
     };
   },
   methods: {
@@ -100,7 +101,7 @@ export default {
     addNewQuestionPrompt() {
       // Add a new question component to the array when the button is clicked
       if (this.questionText && (this.answer1 || this.answer2 || this.answer3 || this.answer4)) {
-        console.log('--------BEFORE CREATING QUESTION----------');
+        // console.log('--------BEFORE CREATING QUESTION----------');
         const question = {
           questionText: this.questionText,
           answers: {
@@ -122,7 +123,7 @@ export default {
             },
           },
         };
-        console.log('--------Pushing to questions array----------');
+        // console.log('--------Pushing to questions array----------');
         this.questions.push(
           {
             questionText: 'What is the capital of France?',
@@ -155,7 +156,7 @@ export default {
             questionText: 'What is the tallest mountain in the world?',
             answers: {
               answer1: { text: 'Mount Everest', correct: true },
-              answer2: { text: 'Mount Kilimanjaro', correct: false },
+              answer2: { text: 'Mount Kilimanjaro', correct: true },
               answer3: { text: 'K2', correct: false },
               answer4: { text: 'Mount Fuji', correct: false },
             },
@@ -187,7 +188,6 @@ export default {
         this.isChecked2 = false;
         this.isChecked3 = false;
         this.isChecked4 = false;
-        console.log('--------RESET DONE----------');
         return 0;
       }
       alert('Question Not Added, Please input a question text and at least one answer!');
@@ -195,6 +195,7 @@ export default {
     },
     async handleSubmit() {
       const formElement = document.getElementById('createNewDocumentForm');
+      console.log('Form submitted with the following data:', formElement);
       const formData = new FormData(formElement);
       formData.forEach((value, key) => {
         console.log(`${key}: ${value}`);

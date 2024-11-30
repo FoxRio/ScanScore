@@ -5,8 +5,8 @@
     <RouterLink to="/">Go to Home</RouterLink>
     <RouterLink to="/about">Go to About</RouterLink>
     <RouterLink to="/create-test">Create a Test</RouterLink>
+    <SignInButton />
 
-  </nav>
   <div class="dropdown">
         <button class="dropbtn">Profile</button>
         <div class="dropdown-content">
@@ -23,13 +23,15 @@
 
 <script>
 import SignOutButton from './SignOutButton.vue';
+import SignInButton from './SignInButton.vue';
 
 export default {
-  name: 'Navbar',
+  name: 'NavbarComponent',
   components: {
     SignOutButton,
+    SignInButton,
   },
-}
+};
 </script>
 
 <style scoped>

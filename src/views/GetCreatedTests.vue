@@ -46,6 +46,7 @@ export default {
     },
     async deleteTest(id) {
       const db = getFirestore();
+      // eslint-disable-next-line no-restricted-globals
       if (confirm('Are you sure you want to delete this test?')) {
         await deleteDoc(doc(db, 'tests', id));
         console.log('Test deleted successfully');

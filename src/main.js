@@ -1,16 +1,15 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import router from './router'; // Import the router
+import router from './router';
 import { auth } from './firebase';
 
 let app;
 
-// Listen for auth state changes
-auth.onAuthStateChanged(() => { // user
+auth.onAuthStateChanged(() => {
   if (!app) {
-    // Initialize the app after Firebase auth state is determined
     app = createApp(App);
     app.use(router);
     app.mount('#app');
+    window.dispatchEvent(new Event('firebase-initialized'));
   }
 });

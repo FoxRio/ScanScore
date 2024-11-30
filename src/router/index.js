@@ -8,7 +8,7 @@ import CreateTest from '../views/CreateTestView.vue';
 import { auth } from '../firebase'; // Import Firebase authentication
 import GetCreatedTests from '../views/GetCreatedTests.vue';
 import EditTest from '../views/EditTestView.vue'; // Import the EditTest component
-import AItestView from '..components/AIGeneratedQuestion.vue';
+import AItestView from '../components/AIGeneratedQuestion.vue';
 
 const routes = [
   {
@@ -25,7 +25,7 @@ const routes = [
     component: AItestView,
     meta: {
       requiresAuth: false,
-    }
+    },
   },
   {
     path: '/test-view',
@@ -33,7 +33,7 @@ const routes = [
     component: AItestView,
     meta: {
       requiresAuth: false,
-    }
+    },
   },
   {
     path: '/register',
@@ -80,7 +80,7 @@ const routes = [
     component: Landing,
     name: 'Landing',
     meta: {
-      requiresAuth: true,
+      requiresAuth: false,
     },
   },
   {
