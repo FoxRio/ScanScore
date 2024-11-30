@@ -12,7 +12,7 @@
     "core-js": "^3.8.3",
     "docx": "^8.5.0",
     "file-saver": "^2.0.5",
-    "firebase": "^10.13.1",
+    "firebase": "^10.14.1",
     "fs": "^0.0.1-security",
     "qrcode": "^1.5.3",
     "vue": "^3.2.13",

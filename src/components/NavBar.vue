@@ -13,18 +13,88 @@
           <RouterLink to="/my-tests">My Tests</RouterLink>
           <RouterLink to="/info">Info</RouterLink>
           <RouterLink to="/settings">Settings</RouterLink>
+          <SignOutButton />
         </div>
-    </div>
+      </div>
+    </nav>
+    <div class="content"></div>
   </div>
-
 </template>
 
-<!-- <script>
+<script>
+import SignOutButton from './SignOutButton.vue';
+
 export default {
-  methods: {
-    goToLanding() {
-      this.$router.push('/about');
-    },
+  name: 'Navbar',
+  components: {
+    SignOutButton,
   },
-};
-</script> -->
+}
+</script>
+
+<style scoped>
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #333;
+  padding: 1rem;
+  position: fixed; /* Fixes the navbar to the top */
+  top: 0; /* Positions it at the top of the viewport */
+  width: 100%; /* Makes it span the full width of the screen */
+  z-index: 1000; /* Ensures it's above other content */
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  padding: 14px 20px;
+  transition: background-color 0.3s;
+}
+
+.navbar a:hover {
+  background-color: #575757;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropbtn {
+  background-color: #333;
+  color: white;
+  padding: 14px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+/* Add margin-top to the content to respect the navbar */
+.content {
+  margin-top: 100px; /* Adjust this value based on your navbar height */
+}
+</style>
