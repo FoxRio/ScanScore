@@ -264,6 +264,7 @@ export default {
       } catch (error) {
         console.error('Error generating document:', error);
       }
+      console.log('Document generated');
       this.$router.push('/my-tests');
     },
     getQuestions() {

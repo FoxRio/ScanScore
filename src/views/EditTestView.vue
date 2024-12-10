@@ -39,7 +39,9 @@
 </template>
 
 <script>
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import {
+  getFirestore, doc, getDoc, updateDoc,
+} from 'firebase/firestore';
 import NewQuestion from '../components/DisplayedQuestion.vue';
 
 export default {
@@ -78,13 +80,11 @@ export default {
     },
 
     async updateTest() {
+      console.log(this.test);
       const db = getFirestore();
       try {
-        await db.collection('tests').doc(this.testId).update({
-          title: this.test.title,
-          description: this.test.description,
-          questions: this.test.questions,
-        });
+        const docRef = doc(db, 'tests', this.testId);
+        await updateDoc(docRef, this.test);
         alert('Test updated successfully!');
         this.$router.push({ name: 'Mytests' }); // Redirect after updating
       } catch (error) {
