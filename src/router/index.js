@@ -9,6 +9,8 @@ import { auth } from '../firebase'; // Import Firebase authentication
 import GetCreatedTests from '../views/GetCreatedTests.vue';
 import EditTest from '../views/EditTestView.vue'; // Import the EditTest component
 import AItestView from '../components/AIGeneratedQuestion.vue';
+import Settings from '../views/SettingsView.vue';
+import Goodbye from '../views/GoodbyeView.vue';
 
 const routes = [
   {
@@ -89,6 +91,22 @@ const routes = [
     component: EditTest,
     meta: {
       requiresAuth: true,
+    },
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/goodbye',
+    name: 'Goodbye',
+    component: Goodbye,
+    meta: {
+      requiresAuth: false,
     },
   },
   {

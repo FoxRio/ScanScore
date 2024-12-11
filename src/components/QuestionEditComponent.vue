@@ -60,16 +60,19 @@ export default {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+
 .question-container {
   margin-bottom: 20px;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  background-color: #f5fff6; /* Background color */
 }
 
 .question-container p {
   font-weight: bold;
   margin-bottom: 10px;
+  color: #0638b8; /* Text color */
 }
 
 .correct-answer {
@@ -78,7 +81,7 @@ export default {
 
 .delete-button {
   padding: 8px 16px;
-  background-color: #dc3545;
+  background-color: #d44e00; /* Primary color */
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -86,6 +89,41 @@ export default {
 }
 
 .delete-button:hover {
-  background-color: #c82333;
+  background-color: #c83d00; /* Darker shade for hover */
+}
+
+.edit-button {
+  padding: 8px 16px;
+  background-color: #007bff; /* Edit button color */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-button:hover {
+  background-color: #0056b3;
+}
+
+.save-button {
+  padding: 8px 16px;
+  background-color: #28a745; /* Green for Save */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background-color: #218838;
+}
+
+.cancel-button {
+  padding: 8px 16px;
+  background-color: #ffc107; /* Yellow for Cancel */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: p
 }
 </style>

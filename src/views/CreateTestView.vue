@@ -1,8 +1,5 @@
 <template>
   <div class="createNewTest">
-    <div>
-      <button @click="collapse" class="collapse">Collapse</button>
-    </div>
     <div class="description">
       <p>Here you can create a new Test that will be outputted as a .docx download</p>
     </div>
@@ -95,9 +92,6 @@ export default {
     },
     cancelEdit() {
       this.editingIndex = null; // Reset editing index on cancel
-    },
-    collapse() {
-      this.$emit('collapse');
     },
     async saveToFirebase() {
       const userId = auth.currentUser ? auth.currentUser.uid : null;
@@ -257,8 +251,8 @@ export default {
       try {
         Packer.toBlob(docx).then((blob) => {
           console.log('Blob:', blob);
-          // saveAs(blob, 'pipebomb.docx');
-          // this.generateAnswersSheet();
+          saveAs(blob, 'pipebomb.docx');
+          this.generateAnswersSheet();
         });
       } catch (error) {
         console.error('Error generating document:', error);
@@ -296,12 +290,6 @@ export default {
   position: relative;
 }
 
-.collapse {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-
 .createNewTest>div {
   margin-bottom: 15px;
 }
@@ -310,7 +298,6 @@ export default {
   color: #333;
 }
 
-.collapse,
 .createNewTest button {
   background-color: #3498db;
   color: #fff;
@@ -324,7 +311,6 @@ export default {
   margin: 0px;
 }
 
-.collapse,
 .createNewTest button:hover {
   background-color: #2980b9;
 }

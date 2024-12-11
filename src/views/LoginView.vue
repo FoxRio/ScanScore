@@ -52,7 +52,13 @@ export default {
   margin: auto;
   padding: 20px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
+  background-color: #f5fff6; /* Background color */
+}
+
+h1 {
+  text-align: center;
+  color: #0638b8; /* Text color */
 }
 
 .input-container {
@@ -65,6 +71,7 @@ export default {
   font-size: 1rem;
   margin-bottom: 5px;
   font-weight: bold;
+  color: #0638b8; /* Text color */
 }
 
 .input-field {
@@ -73,26 +80,29 @@ export default {
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 100%;
-  box-sizing: border-box; /* Ensures padding doesn't affect width */
+  box-sizing: border-box;
+  background-color: #ffffff;
 }
 
 button {
   padding: 10px 20px;
   font-size: 1rem;
-  background-color: #4CAF50;
+  background-color: #d44e00; /* Primary color */
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  width: 100%;
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #b43e00; /* Darker shade of primary color for hover */
 }
 
 .error {
   color: red;
   font-size: 0.875rem;
+  text-align: center;
 }
 
 .register {
@@ -100,27 +110,14 @@ button:hover {
   margin-top: 15px;
 }
 
-a:link {
-  color: green;
+.register a {
+  color: #0638b8; /* Text color */
   background-color: transparent;
   text-decoration: none;
 }
 
-a:visited {
-  color: pink;
-  background-color: transparent;
-  text-decoration: none;
-}
-
-a:hover {
-  color: red;
-  background-color: transparent;
-  text-decoration: underline;
-}
-
-a:active {
-  color: yellow;
-  background-color: transparent;
+.register a:hover {
+  color: #d44e00; /* Primary color for hover */
   text-decoration: underline;
 }
 </style>

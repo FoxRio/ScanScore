@@ -88,9 +88,6 @@ export default {
     };
   },
   methods: {
-    collapse() {
-      this.$emit('collapse');
-    },
     deleteQuestion(index) {
       // Remove the question at the specified index from the questions array
       console.log('deleteQuestion', index);
@@ -124,53 +121,56 @@ export default {
           },
         };
         // console.log('--------Pushing to questions array----------');
-        this.questions.push(
-          {
-            questionText: 'What is the capital of France?',
-            answers: {
-              answer1: { text: 'Paris', correct: true },
-              answer2: { text: 'London', correct: false },
-              answer3: { text: 'Berlin', correct: false },
-              answer4: { text: 'Rome', correct: false },
+        if (process.env.NODE_ENV !== 'production') {
+          this.questions.push(
+            {
+              questionText: 'What is the capital of France?',
+              answers: {
+                answer1: { text: 'Paris', correct: true },
+                answer2: { text: 'London', correct: false },
+                answer3: { text: 'Berlin', correct: false },
+                answer4: { text: 'Rome', correct: false },
+              },
             },
-          },
-          {
-            questionText: 'Which planet is known as the Red Planet?',
-            answers: {
-              answer1: { text: 'Mars', correct: true },
-              answer2: { text: 'Venus', correct: false },
-              answer3: { text: 'Jupiter', correct: false },
-              answer4: { text: 'Saturn', correct: false },
+            {
+              questionText: 'Which planet is known as the Red Planet?',
+              answers: {
+                answer1: { text: 'Mars', correct: true },
+                answer2: { text: 'Venus', correct: false },
+                answer3: { text: 'Jupiter', correct: false },
+                answer4: { text: 'Saturn', correct: false },
+              },
             },
-          },
-          {
-            questionText: 'Who painted the Mona Lisa?',
-            answers: {
-              answer1: { text: 'Leonardo da Vinci', correct: true },
-              answer2: { text: 'Vincent van Gogh', correct: false },
-              answer3: { text: 'Pablo Picasso', correct: false },
-              answer4: { text: 'Michelangelo', correct: false },
+            {
+              questionText: 'Who painted the Mona Lisa?',
+              answers: {
+                answer1: { text: 'Leonardo da Vinci', correct: true },
+                answer2: { text: 'Vincent van Gogh', correct: false },
+                answer3: { text: 'Pablo Picasso', correct: false },
+                answer4: { text: 'Michelangelo', correct: false },
+              },
             },
-          },
-          {
-            questionText: 'What is the tallest mountain in the world?',
-            answers: {
-              answer1: { text: 'Mount Everest', correct: true },
-              answer2: { text: 'Mount Kilimanjaro', correct: true },
-              answer3: { text: 'K2', correct: false },
-              answer4: { text: 'Mount Fuji', correct: false },
+            {
+              questionText: 'What is the tallest mountain in the world?',
+              answers: {
+                answer1: { text: 'Mount Everest', correct: true },
+                answer2: { text: 'Mount Kilimanjaro', correct: true },
+                answer3: { text: 'K2', correct: false },
+                answer4: { text: 'Mount Fuji', correct: false },
+              },
             },
-          },
-          {
-            questionText: 'What is the chemical symbol for water?',
-            answers: {
-              answer1: { text: 'H2O', correct: true },
-              answer2: { text: 'CO2', correct: false },
-              answer3: { text: 'O2', correct: false },
-              answer4: { text: 'NaCl', correct: false },
+            {
+              questionText: 'What is the chemical symbol for water?',
+              answers: {
+                answer1: { text: 'H2O', correct: true },
+                answer2: { text: 'CO2', correct: false },
+                answer3: { text: 'O2', correct: false },
+                answer4: { text: 'NaCl', correct: false },
+              },
             },
-          },
-        );
+          );
+        }
+        console.log('question', question);
         this.questions.push(question);
         this.testMetadata = {
           title: this.title,
@@ -188,6 +188,7 @@ export default {
         this.isChecked2 = false;
         this.isChecked3 = false;
         this.isChecked4 = false;
+        console.log('questions', this.questions);
         return 0;
       }
       alert('Question Not Added, Please input a question text and at least one answer!');
@@ -212,7 +213,7 @@ export default {
   border: 1px solid #ccc;
   padding: 20px; /* Add padding for better spacing */
   border-radius: 8px; /* Rounded corners */
-  background-color: #f9f9f9; /* Light background for contrast */
+  background-color: #f5fff6; /* Background color updated */
 }
 
 .title-label,
@@ -220,6 +221,7 @@ export default {
 .question-label {
   font-weight: bold;
   margin-bottom: 5px; /* Space below labels */
+  color: #0638b8; /* Text color updated */
 }
 
 input[type="text"],
@@ -242,6 +244,7 @@ textarea {
 .answer-container label {
   display: block;
   margin-bottom: 10px;
+  color: #0638b8; /* Text color updated */
 }
 
 .answer-container input[type="text"] {
@@ -261,7 +264,7 @@ textarea {
   width: 100%;
   margin-top: 15px;
   padding: 10px;
-  background-color: #4caf50;
+  background-color: #d44e00; /* Primary color for buttons */
   color: white;
   border: none;
   border-radius: 5px;
@@ -271,12 +274,12 @@ textarea {
 
 .add-question-button:hover,
 .submit-button:hover {
-  background-color: #45a049;
+  background-color: #ba4300; /* Darkened primary color for hover */
 }
 
 button {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #d44e00; /* Primary color for buttons */
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -285,6 +288,6 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #ba4300; /* Darkened primary color for hover */
 }
 </style>

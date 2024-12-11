@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p>HELLO TO MY NAVBAR</p>
   <nav>
     <RouterLink to="/">Go to Home</RouterLink>
     <RouterLink to="/about">Go to About</RouterLink>

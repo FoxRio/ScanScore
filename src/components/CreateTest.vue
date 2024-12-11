@@ -213,7 +213,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .createNewTest {
   width: 70%;
   max-width: 600px;
@@ -222,14 +222,8 @@ export default {
   border: 1px solid #ddd;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  background-color: #f5fff6; /* Updated background color */
   position: relative;
-}
-
-.collapse {
-  position: absolute;
-  top: 10px;
-  right: 10px;
 }
 
 .createNewTest>div {
@@ -237,12 +231,11 @@ export default {
 }
 
 .createNewTest p {
-  color: #333;
+  color: #0638b8; /* Updated text color */
 }
 
-.collapse,
 .createNewTest button {
-  background-color: #3498db;
+  background-color: #d44e00; /* Primary color */
   color: #fff;
   padding: 10px 15px;
   border: none;
@@ -250,12 +243,12 @@ export default {
   cursor: pointer;
 }
 
-.description {
-  margin: 0px;
+.createNewTest button:hover {
+  background-color: #b43e00; /* Darker shade for hover */
 }
 
-.collapse,
-.createNewTest button:hover {
-  background-color: #2980b9;
+.generateDocumentButtonDiv {
+  text-align: center;
+  margin-top: 20px;
 }
 </style>

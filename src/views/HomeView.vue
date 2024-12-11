@@ -96,13 +96,15 @@ export default {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  background-color: #f5fff6; /* Background color */
 }
 
 .hero {
-  background-color: #2c3e50;
+  background-color: #d44e00; /* Primary color */
   color: white;
   padding: 50px 20px;
   text-align: center;
+  border-radius: 8px;
 }
 
 .hero h1 {
@@ -117,7 +119,7 @@ export default {
 
 .hero button {
   padding: 10px 20px;
-  background-color: #28a745;
+  background-color: #0638b8; /* Text color for buttons */
   color: white;
   border: none;
   border-radius: 5px;
@@ -125,18 +127,18 @@ export default {
 }
 
 .hero button:hover {
-  background-color: #218838;
+  background-color: #052d7a; /* Darker shade of the text color for hover */
 }
 
 .features {
   padding: 40px 20px;
   text-align: center;
-  background-color: #2c3e50;
 }
 
 .features h2 {
   font-size: 2rem;
   margin-bottom: 20px;
+  color: #0638b8; /* Text color */
 }
 
 .feature-list {
@@ -146,12 +148,13 @@ export default {
 }
 
 .feature {
-  background-color: #33364dc9;
+  background-color: #ffffff;
   border-radius: 10px;
   padding: 20px;
   margin: 10px;
   width: 22%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #0638b8; /* Text color */
 }
 
 .feature h3 {
@@ -162,11 +165,13 @@ export default {
 .testimonials {
   padding: 40px 20px;
   text-align: center;
+  background-color: #f5fff6; /* Background color */
 }
 
 .testimonials h2 {
   font-size: 2rem;
   margin-bottom: 20px;
+  color: #0638b8; /* Text color */
 }
 
 .testimonial {
@@ -182,7 +187,7 @@ export default {
 
 .cta {
   padding: 40px 20px;
-  background-color: #2c3e50;
+  background-color: #d44e00; /* Primary color */
   color: white;
   text-align: center;
 }
@@ -199,7 +204,7 @@ export default {
 
 .cta button {
   padding: 10px 20px;
-  background-color: #28a745;
+  background-color: #0638b8; /* Text color for buttons */
   color: white;
   border: none;
   border-radius: 5px;
@@ -207,6 +212,6 @@ export default {
 }
 
 .cta button:hover {
-  background-color: #218838;
+  background-color: #052d7a; /* Darker shade of text color for hover */
 }
 </style>

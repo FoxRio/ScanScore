@@ -11,9 +11,6 @@ export default {
 
   },
   methods: {
-    collapse() {
-      this.$emit('collapse');
-    },
   },
 };
 </script>
@@ -31,12 +28,6 @@ export default {
   position: relative;
 }
 
-.collapse {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-
 .gradeTest>div {
   margin-bottom: 15px;
 }
@@ -45,7 +36,6 @@ export default {
   color: #333;
 }
 
-.collapse,
 .gradeTest button {
   background-color: #3498db;
   color: #fff;
@@ -59,7 +49,6 @@ export default {
   margin: 10px;
 }
 
-.collapse,
 .gradeTest button:hover {
   background-color: #2980b9;
 }
