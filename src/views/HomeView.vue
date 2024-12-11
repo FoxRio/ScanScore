@@ -44,7 +44,7 @@
     </section>
 
     <!-- Call to Action Section -->
-    <section class="cta">
+    <section class="cta" v-if="!isLoggedIn">
       <h2>Ready to Get Started?</h2>
       <p>Sign up today and start creating your first test!</p>
       <button @click="goToSignUp">Sign Up</button>
@@ -53,13 +53,39 @@
 </template>
 
 <script>
+import { auth } from '../firebase'; // Import Firebase authentication
+
 export default {
+  data() {
+    return {
+      isLoggedIn: false,
+    };
+  },
+  created() {
+    // Check if the user is logged in
+    this.checkLoginStatus();
+  },
   methods: {
-    goToCreatePage() {
-      this.$router.push('/register'); // Redirect to the test creation page
+    // Check if the user is logged in
+    checkLoginStatus() {
+      const user = auth.currentUser; // Get the current user from Firebase authentication
+      if (user) {
+        this.isLoggedIn = true; // User is logged in
+      } else {
+        this.isLoggedIn = false; // User is not logged in
+      }
     },
+    // Redirect to the test creation page
+    goToCreatePage() {
+      if (this.isLoggedIn) {
+        this.$router.push('/create-test'); // Redirect logged-in users directly to /create-test
+      } else {
+        this.$router.push('/register'); // Redirect to register if not logged in
+      }
+    },
+    // Redirect to the registration page
     goToSignUp() {
-      this.$router.push('/register'); // Redirect to the registration page
+      this.$router.push('/register');
     },
   },
 };
