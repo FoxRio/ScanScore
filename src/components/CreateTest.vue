@@ -203,7 +203,7 @@ export default {
       } catch (error) {
         console.error('Error generating document:', error);
       }
-      confirmCreation();
+      // confirmCreation();
     },
     confirmCreation() {
       alert('Document created');
