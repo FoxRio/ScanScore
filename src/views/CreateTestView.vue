@@ -185,7 +185,6 @@ export default {
         this.titleError = true; // Show error message
         return;
       }
-      console.log('all good');
       this.titleError = false;
 
       this.saveToFirebase();

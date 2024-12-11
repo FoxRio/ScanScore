@@ -1,0 +1,22 @@
+[debug] [2024-12-11T09:34:56.485Z] ----------------------------------------------------------------------
+[debug] [2024-12-11T09:34:56.486Z] Command:       /usr/bin/node /usr/local/bin/firebase deploy
+[debug] [2024-12-11T09:34:56.487Z] CLI Version:   13.28.0
+[debug] [2024-12-11T09:34:56.487Z] Platform:      linux
+[debug] [2024-12-11T09:34:56.487Z] Node Version:  v18.19.1
+[debug] [2024-12-11T09:34:56.487Z] Time:          Wed Dec 11 2024 11:34:56 GMT+0200 (Eastern European Standard Time)
+[debug] [2024-12-11T09:34:56.487Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-12-11T09:34:56.540Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-12-11T09:34:56.541Z] > authorizing via signed-in user (davis.krasts@gmail.com)
+[debug] [2024-12-11T09:34:56.541Z] [iam] checking project scanscore-6cbf7 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2024-12-11T09:34:56.542Z] Checked if tokens are valid: true, expires at: 1733913155434
+[debug] [2024-12-11T09:34:56.542Z] Checked if tokens are valid: true, expires at: 1733913155434
+[debug] [2024-12-11T09:34:56.543Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/scanscore-6cbf7:testIamPermissions [none]
+[debug] [2024-12-11T09:34:56.543Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/scanscore-6cbf7:testIamPermissions x-goog-quota-user=projects/scanscore-6cbf7
+[debug] [2024-12-11T09:34:56.543Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/scanscore-6cbf7:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2024-12-11T09:34:57.336Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/scanscore-6cbf7:testIamPermissions 200
+[debug] [2024-12-11T09:34:57.336Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/scanscore-6cbf7:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2024-12-11T09:34:57.336Z] Checked if tokens are valid: true, expires at: 1733913155434
+[debug] [2024-12-11T09:34:57.336Z] Checked if tokens are valid: true, expires at: 1733913155434
+[debug] [2024-12-11T09:34:57.336Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/scanscore-6cbf7/serviceAccounts/scanscore-6cbf7@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2024-12-11T09:34:57.336Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/scanscore-6cbf7/serviceAccounts/scanscore-6cbf7@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
