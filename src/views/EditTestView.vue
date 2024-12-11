@@ -24,10 +24,21 @@
 
         <h2>Questions</h2>
         <div v-for="(question, index) in test.questions" :key="index">
-          <NewQuestion
-            :questionData="question"
-            @deleteEvent="deleteQuestion(index)"
-          />
+          <!-- Display question or edit form based on editingIndex -->
+          <div v-if="editingIndex !== index">
+            <NewQuestion
+              :questionData="question"
+              @deleteEvent="deleteQuestion(index)"
+              @editEvent="editQuestion(index)"
+            />
+          </div>
+          <div v-else>
+            <QuestionEditComponent
+              :questionData="question"
+              @updateQuestion="updateQuestion(index, $event)"
+              @cancelEdit="cancelEdit"
+            />
+          </div>
         </div>
 
         <button @click="addQuestion" type="button">Add Question</button>
@@ -43,11 +54,13 @@ import {
   getFirestore, doc, getDoc, updateDoc,
 } from 'firebase/firestore';
 import NewQuestion from '../components/DisplayedQuestion.vue';
+import QuestionEditComponent from '../components/QuestionEditComponent.vue'; // Import the edit component
 
 export default {
   name: 'EditTest',
   components: {
     NewQuestion,
+    QuestionEditComponent,
   },
   data() {
     return {
@@ -57,7 +70,8 @@ export default {
         questions: [],
       },
       loading: true,
-      testId: null, // Store the test ID here
+      testId: null,
+      editingIndex: null,
     };
   },
   methods: {
@@ -112,6 +126,17 @@ export default {
           { text: '', correct: false },
         ],
       });
+      this.editQuestion(this.test.questions.length - 1); // Edit the newly added question
+    },
+    editQuestion(index) {
+      this.editingIndex = index; // Set the index of the question to edit
+    },
+    updateQuestion(index, updatedQuestion) {
+      // Update the specific question in the array directly
+      this.test.questions[index] = updatedQuestion;
+
+      // Reset editing index after the update
+      this.editingIndex = null;
     },
   },
   mounted() {
