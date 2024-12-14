@@ -1,28 +1,19 @@
 module.exports = {
+  root: true,
   env: {
-    es6: true,
     node: true,
   },
-  parserOptions: {
-    "ecmaVersion": 2018,
-  },
   extends: [
-    "eslint:recommended",
-    "google",
+    'plugin:vue/vue3-essential',
+    '@vue/airbnb',
   ],
-  rules: {
-    "no-restricted-globals": ["error", "name", "length"],
-    "prefer-arrow-callback": "error",
-    "quotes": ["error", "double", { "allowTemplateLiterals": true }],
+  parserOptions: {
+    parser: '@babel/eslint-parser',
   },
-  overrides: [
-    {
-      files: ["**/*.spec.*"],
-      env: {
-        mocha: true,
-      },
-      rules: {},
-    },
-  ],
-  globals: {},
+  rules: {
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'linebreak-style': ['error', 'windows'],
+    'max-len': ['warn', { code: 150 }],
+  },
 };

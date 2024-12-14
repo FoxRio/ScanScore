@@ -27,10 +27,7 @@
 
     <div class="generateDocumentButtonDiv">
       <div v-if="titleError" class="error-message">Title is required.</div>
-      <button v-if="testHasQuestions" @click="generateDocument">Generate Document</button>
-    </div>
-    <div>
-      <button @click="getQuestions">Get questions</button>
+      <button v-if="testHasQuestions" @click="saveToFirebase">Generate Document</button>
     </div>
   </div>
 </template>
@@ -98,12 +95,18 @@ export default {
       console.log('User ID:', userId);
 
       if (userId) {
+        if (this.testFileData.title.trim() === '') {
+          this.titleError = true; // Show error message
+          return;
+        }
+        this.titleError = false;
         this.testFileData.userId = userId;
         this.testFileData.createdAt = new Date();
 
         const db = getFirestore();
         const docRef = await addDoc(collection(db, 'tests'), this.testFileData);
         console.log('Document written with ID: ', docRef.id);
+        this.$router.push('/my-tests');
       } else {
         console.error('User is not authenticated');
       }
@@ -193,7 +196,7 @@ export default {
       }
     },
     generateDocument() {
-      console.log(this.testFileData);
+      console.log('CREATE TEST', this.testFileData);
       if (this.testFileData.title.trim() === '') {
         this.titleError = true; // Show error message
         return;
@@ -278,19 +281,6 @@ export default {
       }
       console.log('Document generated');
       alert('Test created successfully!');
-      this.$router.push('/my-tests');
-    },
-    getQuestions() {
-      console.log('Questions:');
-      for (let i = 0; i < this.questionsArray.length; i += 1) {
-        console.log(this.questionsArray[i].questionText);
-        console.log(this.questionsArray[i].answers.answer1);
-        console.log(this.questionsArray[i].answers.answer2);
-        console.log(this.questionsArray[i].answers.answer3);
-        console.log(this.questionsArray[i].answers.answer4);
-        console.log(this.questionsArray[i].answers.correctAnswer);
-      }
-      return this.questionsArray;
     },
   },
 };

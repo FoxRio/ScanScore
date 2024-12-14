@@ -1,19 +1,42 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
-/* eslint-disable no-unused-vars */
-const { onRequest } = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
-/* eslint-enable no-unused-vars */
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+const functions = require('firebase-functions');
+const express = require('express');
+const cors = require('cors');
+const OpenAI = require('openai'); // Use require to load OpenAI module
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Fetch the OpenAI API key from Firebase environment configuration
+const apiKey = functions.config().openai.key;
+
+// Initialize OpenAI instance
+const openai = new OpenAI({
+  apiKey,
+});
+
+app.post('/call-openai', async (req, res) => {
+  try {
+    const { prompt } = req.body;
+
+    if (!prompt) {
+      return res.status(400).send({ error: 'Prompt is required' });
+    }
+
+    // Use the new chat completion setup
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4', // Ensure correct model
+      messages: [
+        { role: 'system', content: 'You are a helpful assistant.' },
+        { role: 'user', content: prompt }, // Pass user prompt here
+      ],
+    });
+
+    return res.status(200).send(completion);
+  } catch (error) {
+    console.error('Error calling OpenAI API:', error);
+    return res.status(500).send({ error: 'Internal Server Error' });
+  }
+});
+
+exports.api = functions.https.onRequest(app);
