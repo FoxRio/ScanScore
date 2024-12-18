@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Saved Tests</h1>
+    <p v-if="displayName">Hello, {{ displayName }}! Here are your saved tests.</p>
     <div v-for="test in tests" :key="test.id">
       <h2>{{ test.title }}</h2>
       <button @click="editTest(test.id)">Edit</button>
@@ -20,6 +21,7 @@ import { saveAs } from 'file-saver';
 import {
   getFirestore, collection, query, where, getDocs, deleteDoc, doc,
 } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import { auth } from '../firebase';
 
 const QRCode = require('qrcode');
@@ -36,6 +38,10 @@ export default {
     console.log('User ID:', userId);
 
     if (userId) {
+      const user = getAuth().currentUser;
+      if (user) {
+        this.displayName = user.displayName;
+      }
       // Query to get only the tests created by the authenticated user
       const testsQuery = query(collection(db, 'tests'), where('userId', '==', userId));
       const querySnapshot = await getDocs(testsQuery);

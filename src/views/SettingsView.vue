@@ -12,10 +12,19 @@
 
     <div class="password-change">
       <h2>Change Password</h2>
-      <label for="currentPassword">
-        <input id="currentPassword" type="password" v-model="currentPassword" placeholder="Enter current password" />
-      </label>
-      <input type="password" v-model="newPassword" placeholder="Enter new password" />
+
+      <!-- Current Password Field -->
+      <div class="input-container">
+        <label for="currentPassword" class="input-label">Current Password
+        <input id="currentPassword" type="password" v-model="currentPassword" placeholder="Enter current password" class="input-field" /></label>
+      </div>
+
+      <!-- New Password Field -->
+      <div class="input-container">
+        <label for="newPassword" class="input-label">New Password
+        <input id="newPassword" type="password" v-model="newPassword" placeholder="Enter new password" class="input-field" /></label>
+      </div>
+
       <button @click="changePassword">Change Password</button>
     </div>
 
@@ -57,18 +66,22 @@ export default {
       isPopupVisible: false, // Controls popup visibility
     };
   },
+  mounted() {
+    // Fetch current user's display name when component is mounted
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user && user.displayName) {
+      this.newDisplayName = user.displayName; // Prefill the input field
+    }
+  },
   methods: {
-    // Show the delete account confirmation popup
     showDeletePopup() {
       this.isPopupVisible = true;
     },
 
-    // Close the popup
     closePopup() {
       this.isPopupVisible = false;
     },
-
-    // Update Display Name
     async updateDisplayName() {
       const auth = getAuth();
       const user = auth.currentUser;
@@ -136,5 +149,77 @@ export default {
 </script>
 
 <style scoped>
-/* Your existing styles */
+.settings {
+  width: 80%;
+  margin: auto;
+  background-color: #f5fff6; /* Background color */
+  padding: 20px;
+  border-radius: 8px;
+}
+.password-change, .profile-settings, .delete-account {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f5fff6; /* Background color */
+  margin-top: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #0638b8; /* Text color */
+}
+
+h2 {
+  color: #0638b8; /* Text color */
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.input-label {
+  font-size: 1rem;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #0638b8; /* Text color */
+}
+
+.input-field {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #ffffff;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #d44e00; /* Primary color */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #b43e00; /* Darker shade of primary color for hover */
+}
+
+button:focus {
+  outline: none;
+}
+
+.delete-account p {
+  font-size: 0.9em;
+  color: #0638b8; /* Text color */
+}
 </style>
