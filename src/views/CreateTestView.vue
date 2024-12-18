@@ -1,8 +1,11 @@
 <template>
   <div class="createNewTest">
-    <div class="description">
-      <p>Here you can create a new Test that will be outputted as a .docx download</p>
-    </div>
+    <p>
+        Welcome to the Test Creator! Here you can easily create a new test that can be downloaded as a .docx file.
+        Simply add questions, customize your test details, and generate a professional document with a click.
+        You can also leverage the AI Assistant to help you refine and enhance your test content.
+        The AI Assistant offers suggestions for improving the quality of your questions, making it easier to create effective and engaging tests.
+      </p>
     <div class="documentForm">
       <FormComponent @updatedQuestions="updateParent" />
     </div>
@@ -324,9 +327,10 @@ export default {
   cursor: pointer;
 }
 
-.description p{
+.description p {
   margin: 0px;
   color: #0638b8;
+  font-size: 1.1rem;
 }
 
 .createNewTest button:hover {

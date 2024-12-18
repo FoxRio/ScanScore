@@ -13,7 +13,7 @@
     </div>
 
     <!-- User Input Section -->
-    <label for="userPrompt">Ask for suggestions:
+    <label for="userPrompt">Ask our AI assistant for suggestions:
     <textarea v-model="userPrompt" placeholder="Ask for suggestions..." rows="4"></textarea></label>
     <button @click="sendPrompt">Ask AI</button>
 
@@ -52,11 +52,12 @@ export default {
       const testTitle = this.$parent.testFileData.title || 'The user hasn\'t named their test yet, help them as you can with your broad knowledge';
       const testDescription = this.$parent.testFileData.description || 'The user hasn\'t described their test yet, help them as you can with your broad knowledge';
       try {
-        console.log('Sending prompt to AI:', this.userPrompt, testTitle, testDescription);
+        console.log('Sending prompt to AI:', this.userPrompt, testTitle, testDescription, this.chatHistory);
         const response = await axios.post('https://us-central1-scanscore-6cbf7.cloudfunctions.net/api/call-openai', {
           prompt: this.userPrompt,
           title: this.$parent.testFileData.title, // Pass title from the parent
-          description: this.$parent.testFileData.description, // Pass description from the parent
+          description: this.$parent.testFileData.description,
+          conversationHistory: this.chatHistory,
         });
 
         // Add AI response to the last chat exchange
@@ -77,7 +78,7 @@ export default {
 <style scoped>
 .ai-assistant {
   position: fixed;
-  top: 20px;  /* Adjust top position for desired vertical alignment */
+  bottom: 40px;  /* Adjust top position for desired vertical alignment */
   right: 20px;
   width: 600px;
   padding: 20px;
