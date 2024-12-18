@@ -8,7 +8,6 @@ import CreateTest from '../views/CreateTestView.vue';
 import { auth } from '../firebase'; // Import Firebase authentication
 import GetCreatedTests from '../views/GetCreatedTests.vue';
 import EditTest from '../views/EditTestView.vue'; // Import the EditTest component
-import AItestView from '../components/AIGeneratedQuestion.vue';
 import Settings from '../views/SettingsView.vue';
 import Goodbye from '../views/GoodbyeView.vue';
 
@@ -17,22 +16,6 @@ const routes = [
     path: '/my-tests',
     name: 'Mytests',
     component: GetCreatedTests,
-    meta: {
-      requiresAuth: false,
-    },
-  },
-  {
-    path: '/test-view',
-    name: 'TestView',
-    component: AItestView,
-    meta: {
-      requiresAuth: false,
-    },
-  },
-  {
-    path: '/test-view',
-    name: 'TestView',
-    component: AItestView,
     meta: {
       requiresAuth: false,
     },

@@ -7,7 +7,7 @@
       <FormComponent @updatedQuestions="updateParent" />
     </div>
 
-    <h2>Questions</h2>
+    <h2>Questions:</h2>
     <div v-for="(question, index) in testFileData.questions" :key="index">
       <div v-if="editingIndex !== index">
         <DisplayedQuestion
@@ -25,6 +25,12 @@
       </div>
     </div>
 
+    <!-- Add AI Assistant Component -->
+    <AIAssistantComponent
+      :testTitle="testFileData.title"
+      :testDescription="testFileData.description"
+    />
+
     <div class="generateDocumentButtonDiv">
       <div v-if="titleError" class="error-message">Title is required.</div>
       <button v-if="testHasQuestions" @click="saveToFirebase">Generate Document</button>
@@ -40,6 +46,7 @@ import {
 
 import { saveAs } from 'file-saver';
 import { auth } from '../firebase';
+import AIAssistantComponent from '../components/AIAssistantComponent.vue'; // Import the new component
 import FormComponent from '../components/FormComponent.vue';
 import DisplayedQuestion from '../components/DisplayedQuestion.vue';
 import QuestionEditComponent from '../components/QuestionEditComponent.vue'; // Import your edit question component
@@ -48,6 +55,7 @@ const QRCode = require('qrcode');
 
 export default {
   components: {
+    AIAssistantComponent,
     FormComponent,
     DisplayedQuestion,
     QuestionEditComponent,
@@ -286,17 +294,17 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .createNewTest {
   width: 70%;
-  max-width: 600px;
   margin: 20px auto;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  background-color: #f5fff6;
   position: relative;
+  padding-right: 340px; /* Space for AI Assistant */
 }
 
 .createNewTest>div {
@@ -316,8 +324,9 @@ export default {
   cursor: pointer;
 }
 
-.description {
+.description p{
   margin: 0px;
+  color: #0638b8;
 }
 
 .createNewTest button:hover {
