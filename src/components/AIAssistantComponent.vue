@@ -80,7 +80,7 @@ export default {
   position: fixed;
   bottom: 40px;  /* Adjust top position for desired vertical alignment */
   right: 20px;
-  width: 600px;
+  width: 400PX;
   padding: 20px;
   background-color: #f0f0f0;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);

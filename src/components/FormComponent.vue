@@ -102,19 +102,19 @@ export default {
         const question = {
           questionText: this.questionText,
           answers: {
-            answer1: {
+            A: {
               text: this.answer1,
               correct: this.isChecked1,
             },
-            answer2: {
+            B: {
               text: this.answer2,
               correct: this.isChecked2,
             },
-            answer3: {
+            C: {
               text: this.answer3,
               correct: this.isChecked3,
             },
-            answer4: {
+            D: {
               text: this.answer4,
               correct: this.isChecked4,
             },
@@ -126,46 +126,46 @@ export default {
             {
               questionText: 'What is the capital of France?',
               answers: {
-                answer1: { text: 'Paris', correct: true },
-                answer2: { text: 'London', correct: false },
-                answer3: { text: 'Berlin', correct: false },
-                answer4: { text: 'Rome', correct: false },
+                A: { text: 'Paris', correct: true },
+                B: { text: 'London', correct: false },
+                C: { text: 'Berlin', correct: false },
+                D: { text: 'Rome', correct: false },
               },
             },
             {
               questionText: 'Which planet is known as the Red Planet?',
               answers: {
-                answer1: { text: 'Mars', correct: true },
-                answer2: { text: 'Venus', correct: false },
-                answer3: { text: 'Jupiter', correct: false },
-                answer4: { text: 'Saturn', correct: false },
+                A: { text: 'Mars', correct: true },
+                B: { text: 'Venus', correct: false },
+                C: { text: 'Jupiter', correct: false },
+                D: { text: 'Saturn', correct: false },
               },
             },
             {
               questionText: 'Who painted the Mona Lisa?',
               answers: {
-                answer1: { text: 'Leonardo da Vinci', correct: true },
-                answer2: { text: 'Vincent van Gogh', correct: false },
-                answer3: { text: 'Pablo Picasso', correct: false },
-                answer4: { text: 'Michelangelo', correct: false },
+                A: { text: 'Leonardo da Vinci', correct: true },
+                B: { text: 'Vincent van Gogh', correct: false },
+                C: { text: 'Pablo Picasso', correct: false },
+                D: { text: 'Michelangelo', correct: false },
               },
             },
             {
               questionText: 'What is the tallest mountain in the world?',
               answers: {
-                answer1: { text: 'Mount Everest', correct: true },
-                answer2: { text: 'Mount Kilimanjaro', correct: true },
-                answer3: { text: 'K2', correct: false },
-                answer4: { text: 'Mount Fuji', correct: false },
+                A: { text: 'Mount Everest', correct: true },
+                B: { text: 'Mount Kilimanjaro', correct: true },
+                C: { text: 'K2', correct: false },
+                D: { text: 'Mount Fuji', correct: false },
               },
             },
             {
               questionText: 'What is the chemical symbol for water?',
               answers: {
-                answer1: { text: 'H2O', correct: true },
-                answer2: { text: 'CO2', correct: false },
-                answer3: { text: 'O2', correct: false },
-                answer4: { text: 'NaCl', correct: false },
+                A: { text: 'H2O', correct: true },
+                B: { text: 'CO2', correct: false },
+                C: { text: 'O2', correct: false },
+                D: { text: 'NaCl', correct: false },
               },
             },
           );

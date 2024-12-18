@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import checkboxImagePath from '@/assets/checkbox.png';
 import {
   Document, Paragraph, Packer, Table, TableRow, TableCell, Header, HeadingLevel, WidthType, ImageRun, TextRun, TextWrappingType, TextWrappingSide,
 } from 'docx';
@@ -83,28 +84,112 @@ export default {
       const blob = new Blob([ab], { type: mimeString });
       return blob;
     },
-    async generateAnswersSheet(id) {
-      const testToProcess = this.tests.find((test) => test.id === id);
+    createQrCode(testToProcess) {
       const questionsArray = testToProcess.questions;
       let text = `${questionsArray.length}`;
       for (let i = 0; i < questionsArray.length; i += 1) {
         const question = questionsArray[i];
-        console.log('Question:', question);
-        console.log('Question text:', question.questionText);
         const { answers } = question;
-        console.log('Answers:', answers);
         let questionResult = '';
 
         Object.keys(answers).forEach((key) => {
-          console.log(answers[key]);
           questionResult += answers[key].correct ? '1' : '0';
         });
 
         text += `Q${questionResult}`;
       }
-      const base64ImageData = await QRCode.toDataURL(text);
+      return text;
+    },
+    async generateAnswersSheet(id) {
+      const testToProcess = this.tests.find((test) => test.id === id);
+      const questionsArray = testToProcess.questions;
+
+      const docChildren = [];
+
+      // Since Webpack will process the image and return a URL, use it here
+      const checkboxImage = checkboxImagePath;
+
+      for (let i = 0; i < questionsArray.length; i += 1) {
+        const question = questionsArray[i];
+        const { questionText, answers } = question;
+
+        // Convert the answers object into an array
+        const answersArray = Object.values(answers);
+
+        // Create a paragraph for the question
+        const questionParagraph = new Paragraph({
+          text: `Q${i + 1}: ${questionText}`,
+          heading: HeadingLevel.HEADING_2,
+        });
+
+        // Add the question to the document
+        docChildren.push(questionParagraph);
+        const checkboxRow = new Table({
+          rows: [
+            new TableRow({
+              children: answersArray.slice(0, 4).map((answer) => {
+                const checkboxImageRun = new ImageRun({
+                  data: checkboxImage,
+                  transformation: {
+                    width: 100, // Set width of the checkbox image
+                    height: 100, // Set height of the checkbox image
+                  },
+                });
+
+                return new TableCell({
+                  children: [
+                    // The checkbox image
+                    new Paragraph({
+                      children: [checkboxImageRun],
+                      alignment: 'center', // Center the checkbox image in the cell
+                    }),
+
+                    // The answer text below the checkbox
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: `${answer.text}`, // Display the text of the answer
+                          font: { size: 24 }, // Larger text for visibility
+                        }),
+                      ],
+                      alignment: 'center', // Center the text under the checkbox
+                      spacing: { after: 100 }, // Ensure spacing between the checkbox and text
+                    }),
+                  ],
+                  // Removing the borders from the table cell
+                  borders: {
+                    top: { value: 0 }, // Remove top border
+                    bottom: { value: 0 }, // Remove bottom border
+                    left: { value: 0 }, // Remove left border
+                    right: { value: 0 }, // Remove right border
+                  },
+                  width: { size: 25, type: WidthType.PERCENTAGE }, // Adjust the width of the cells
+                  height: { value: 200, type: 'pt' }, // Ensure enough height for text visibility
+                });
+              }),
+            }),
+          ],
+          // Remove borders for the entire table
+          borders: {
+            top: { value: 0 },
+            bottom: { value: 0 },
+            left: { value: 0 },
+            right: { value: 0 },
+          },
+        });
+
+        // Add the checkbox row to the document
+        docChildren.push(checkboxRow);
+
+        // Add some space before the next question
+        docChildren.push(new Paragraph(''));
+      }
+      const qrText = await this.createQrCode(testToProcess);
+      console.log('QR Text:', qrText);
+      const base64ImageData = await QRCode.toDataURL(qrText);
       const QRblob = await fetch(base64ImageData).then((response) => response.blob());
 
+      // Create the document with questions and checkboxes
       const createdDoc = new Document({
         sections: [
           {
@@ -114,10 +199,10 @@ export default {
                   new Paragraph('Prasmju pārbaude'),
                   new Paragraph({ text: 'Name:                            \n Surname:                            \n Class:      ' }),
                 ],
-
               }),
             },
             children: [
+              // Add the QR code
               new Paragraph({
                 children: [
                   new ImageRun({
@@ -141,8 +226,8 @@ export default {
                   }),
                 ],
               }),
-              new Paragraph({ text: 'Please fill in the correct answers in the answer sheet', heading: HeadingLevel.HEADING_2 }),
-              // ...buildParagraph(), // paragraphs are not coming through
+              // Add the questions and checkboxes
+              ...docChildren,
             ],
           },
         ],
@@ -150,7 +235,7 @@ export default {
 
       try {
         Packer.toBlob(createdDoc).then((blob) => {
-          // saveAs from FileSaver will download the file
+          // Save the document
           const answerSheetName = `answersheet_${testToProcess.title}.docx`;
           saveAs(blob, answerSheetName);
         });
@@ -161,8 +246,8 @@ export default {
     generateDocument(id) {
       const testFileData = this.tests.find((test) => test.id === id);
       const questionsArray = testFileData.questions;
-      console.log('TEST', testFileData);
-      console.log('Questions:', questionsArray);
+      // console.log('TEST', testFileData);
+      // console.log('Questions:', questionsArray);
       const buildRows = () => {
         const rowArray = [];
         for (let i = 0; i < questionsArray.length; i += 1) {
