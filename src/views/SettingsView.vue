@@ -5,14 +5,16 @@
     <div class="profile-settings">
       <h2>Change Display Name</h2>
       <label for="displayName">
-      <input id=displayName type="text" v-model="newDisplayName" placeholder="Enter new display name" /></label>
+        <input id="displayName" type="text" v-model="newDisplayName" placeholder="Enter new display name" />
+      </label>
       <button @click="updateDisplayName">Update Display Name</button>
     </div>
 
     <div class="password-change">
       <h2>Change Password</h2>
-      <label for="currentPassowrd">
-      <input id=currentPassowrd type="password" v-model="currentPassword" placeholder="Enter current password" /></label>
+      <label for="currentPassword">
+        <input id="currentPassword" type="password" v-model="currentPassword" placeholder="Enter current password" />
+      </label>
       <input type="password" v-model="newPassword" placeholder="Enter new password" />
       <button @click="changePassword">Change Password</button>
     </div>
@@ -20,29 +22,52 @@
     <div class="delete-account">
       <h2>Delete Account</h2>
       <p>This will delete your account and all the tests you've created. This action is irreversible.</p>
-      <button @click="deleteAccount">Delete My Account</button>
+      <button @click="showDeletePopup">Delete My Account</button>
     </div>
+
+    <!-- Include the popup component -->
+    <PopupComponent
+      v-if="isPopupVisible"
+      :isVisible="isPopupVisible"
+      @close="closePopup"
+      @confirm="deleteAccount"
+    />
   </div>
 </template>
 
 <script>
 import {
-  getFirestore, collection, query, where, getDocs, deleteDoc, doc,
-} from 'firebase/firestore'; // Adjust the import path based on your project structure
-import {
   getAuth, updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider,
 
 } from 'firebase/auth';
+import {
+  getFirestore, collection, query, where, getDocs, deleteDoc, doc,
+} from 'firebase/firestore';
+import PopupComponent from '../components/ConfirmAuthentification.vue';
 
 export default {
+  components: {
+    PopupComponent,
+  },
   data() {
     return {
       newDisplayName: '',
       currentPassword: '',
       newPassword: '',
+      isPopupVisible: false, // Controls popup visibility
     };
   },
   methods: {
+    // Show the delete account confirmation popup
+    showDeletePopup() {
+      this.isPopupVisible = true;
+    },
+
+    // Close the popup
+    closePopup() {
+      this.isPopupVisible = false;
+    },
+
     // Update Display Name
     async updateDisplayName() {
       const auth = getAuth();
@@ -64,48 +89,37 @@ export default {
       const user = auth.currentUser;
       if (user) {
         try {
-          updatePassword(user, this.newPassword);
-          await user.updatePassword(this.newPassword);
+          await updatePassword(user, this.newPassword);
           alert('Password updated successfully!');
         } catch (error) {
-          // const credential = await promptForCredentials();
-          // reauthenticateWithCredential(user, credential);
           console.error('Error changing password:', error);
           alert('Failed to change password.');
         }
       }
     },
-    // async promptForCredentials() {
-    //   const password = this.currentPassword;
-    //   return credential;
-    // },
 
-    async deleteAccount() {
-      const db = getFirestore();
+    // Delete Account
+    async deleteAccount(password) {
       const auth = getAuth();
       const user = auth.currentUser;
-      const userId = user ? user.uid : null;
-
-      if (userId) {
+      if (user) {
         try {
-          const credential = EmailAuthProvider.credential(
-            user.email,
-            this.currentPassword,
-          );
-
+          const credential = EmailAuthProvider.credential(user.email, password);
           await reauthenticateWithCredential(user, credential);
+
+          const db = getFirestore();
+          const userId = user.uid;
 
           // Delete all tests created by this user
           const testsQuery = query(collection(db, 'tests'), where('userId', '==', userId));
           const querySnapshot = await getDocs(testsQuery);
+          querySnapshot.forEach(async (docx) => {
+            await deleteDoc(doc(db, 'tests', docx.id));
+          });
 
-          if (!querySnapshot.empty) {
-            querySnapshot.forEach(async (docx) => {
-              await deleteDoc(doc(db, 'tests', docx.id));
-            });
-            console.log('Deleted all user tests');
-          }
+          // Delete user account
           await user.delete();
+          alert('Account deleted successfully.');
           this.$router.push('/goodbye');
         } catch (error) {
           console.error('Error deleting account:', error);
@@ -122,52 +136,5 @@ export default {
 </script>
 
 <style scoped>
-.settings {
-  width: 80%;
-  margin: auto;
-  background-color: #f5fff6; /* Background color */
-  padding: 20px;
-  border-radius: 8px;
-}
-
-h1 {
-  text-align: center;
-  color: #0638b8; /* Text color */
-}
-
-h2 {
-  color: #0638b8; /* Text color */
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
-
-button {
-  background-color: #d44e00; /* Primary color */
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 5px;
-  width: 100%;
-}
-
-button:hover {
-  background-color: #b43e00; /* Slightly darker primary color for hover */
-}
-
-button:focus {
-  outline: none;
-}
-
-.delete-account p {
-  font-size: 0.9em;
-  color: #0638b8; /* Text color */
-}
+/* Your existing styles */
 </style>
