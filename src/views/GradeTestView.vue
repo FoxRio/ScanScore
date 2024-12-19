@@ -41,17 +41,24 @@
       </div>
     </div>
 
-    <!-- Grading Section -->
+<!-- Grading Section -->
     <div class="grading-section text-center mb-5">
-      <h3 class="mb-4">Grade Test</h3>
-      <button
-        class="btn btn-success btn-lg"
-        :disabled="!uploadedImage"
-        @click="gradeTest"
-      >
-        Grade Test
-      </button>
-    </div>
+          <h3 class="mb-4">Grade Test</h3>
+
+          <!-- Display the list of uploaded files with "Grade Test" buttons -->
+          <div v-if="hasFiles">
+            <div v-for="file in userFiles" :key="file.name" class="mb-3">
+              <p>{{ file.name }}</p>
+              <button
+                class="btn btn-success btn-lg"
+                @click="gradeTest(file)"
+              >
+                Grade Test
+              </button>
+            </div>
+          </div>
+          <p v-else>No files uploaded yet. Please upload a test image.</p>
+        </div>
 
     <!-- Results Section -->
     <div v-if="results" class="results-section mt-5">
@@ -62,7 +69,9 @@
   </div>
 </template>
 <script>
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'; // Firebase Storage
+import {
+  ref, uploadBytesResumable, getDownloadURL, listAll,
+} from 'firebase/storage'; // Firebase Storage
 import { getAuth } from 'firebase/auth'; // Firebase Auth
 import { storage } from '@/firebase'; // Assuming you have Firebase configured
 
@@ -71,8 +80,12 @@ export default {
   data() {
     return {
       uploadedImage: null, // Store the uploaded image
-      results: null, // Store grading results
+      results: null,
+      hasFiles: null, // Store grading results
     };
+  },
+  async mounted() {
+    this.fetchUserFiles(); // Fetch files when the component is mounted
   },
   methods: {
     handleFileUpload(event) {
@@ -80,6 +93,32 @@ export default {
       if (file) {
         this.uploadedImage = file; // Store the file for processing
         console.log('File uploaded:', file.name);
+      }
+    },
+    async fetchUserFiles() {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        const userId = user.uid;
+        const userFolderRef = ref(storage, `userUploads/${userId}/uploaded`);
+        try {
+          const res = await listAll(userFolderRef); // List all files under the user's 'uploaded' folder
+          const files = await Promise.all(
+            res.items.map(async (itemRef) => {
+              const fileUrl = await getDownloadURL(itemRef); // Get the file URL
+              return {
+                name: itemRef.name,
+                url: fileUrl,
+              };
+            }),
+          );
+          this.userFiles = files; // Store the files in the userFiles array
+          if (files.length > 0) {
+            this.hasFiles = true;
+          }
+        } catch (error) {
+          console.error('Error fetching files:', error);
+        }
       }
     },
 
@@ -110,9 +149,9 @@ export default {
         () => {
           // Get the download URL after successful upload
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            console.log('File available at:', downloadURL);
             // Optionally, save this URL to Firestore or elsewhere
             alert('File uploaded successfully!');
+            this.userFiles.push({ name: file.name, url: downloadURL });
             this.uploadedImage = null; // Reset the uploaded image
           });
         },
