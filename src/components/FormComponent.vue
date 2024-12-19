@@ -1,52 +1,78 @@
 <template>
   <div class="createDocumentForm">
     <form @submit.prevent="addNewQuestionPrompt" id="createNewDocumentForm">
-      <label :for="titleId" class="title-label">Title:
-        <input type="text" :id="titleId" v-model="title" required placeholder="Enter the title" />
-      </label>
 
-      <label :for="descriptionId" class="description-label">Description:
-        <textarea :id="descriptionId" v-model="description" required  placeholder="Enter the description"></textarea>
-      </label>
-
-      <label :for="questionId" class="question-label">Please enter Question:
-        <textarea :id="questionId" v-model="questionText" required :placeholder="placeholderQText" class="question-textarea"></textarea>
-      </label>
-
-      <div class="answer-container">
-        <label for="answer1"> Answer:
-          <input type="text" id="answer1" v-model="answer1" :placeholder="placeholderAText" required />
-          <label for="correctanswer1">This is the correct answer
-            <input type="checkbox" id="correctanswer1" v-model="isChecked1" />
-          </label>
-        </label>
-
-        <label for="answer2"> Answer:
-          <input type="text" id="answer2" v-model="answer2" :placeholder="placeholderAText" required />
-          <label for="correctanswer2">This is the correct answer
-            <input type="checkbox" id="correctanswer2" v-model="isChecked2" />
-          </label>
-        </label>
-
-        <label for="answer3"> Answer:
-          <input type="text" id="answer3" v-model="answer3" :placeholder="placeholderAText" required />
-          <label for="correctanswer3">This is the correct answer
-            <input type="checkbox" id="correctanswer3" v-model="isChecked3" />
-          </label>
-        </label>
-
-        <label for="answer4"> Answer:
-          <input type="text" id="answer4" v-model="answer4" :placeholder="placeholderAText" required />
-          <label for="correctanswer4">This is the correct answer
-            <input type="checkbox" id="correctanswer4" v-model="isChecked4" />
-          </label>
-        </label>
+      <!-- Title Field -->
+      <div class="mb-3">
+        <label for="titleId" class="form-label">Title:
+          <input type="text" :id="titleId" v-model="title" class="form-control form-control-lg" required
+            placeholder="Enter the title" /></label>
       </div>
-      <button type="button" @click="addNewQuestionPrompt">Add This Question</button>
+
+      <!-- Description Field -->
+      <div class="mb-3">
+        <label for="descriptionId" class="form-label">Description:
+          <textarea :id="descriptionId" v-model="description" class="form-control form-control-lg" required
+            placeholder="Enter the description"></textarea></label>
+      </div>
+
+      <!-- Question Field -->
+      <div class="mb-3">
+        <label for="questionId" class="form-label">Please enter Question:
+          <textarea :id="questionId" v-model="questionText" class="form-control form-control-lg" required
+            :placeholder="placeholderQText"></textarea></label>
+      </div>
+
+      <!-- Answer Fields -->
+      <div class="mb-4">
+        <!-- Answer 1 -->
+        <div class="mb-3">
+          <label for="answer1" class="form-label">Answer 1:
+            <input type="text" id="answer1" v-model="answer1" class="form-control form-control-lg"
+              :placeholder="placeholderAText" required /></label>
+          <div class="form-check">
+            <label for="correctanswer1" class="form-check-label">This is the correct answer
+              <input type="checkbox" id="correctanswer1" v-model="isChecked1" class="form-check-input" /></label>
+          </div>
+        </div>
+
+        <!-- Answer 2 -->
+        <div class="mb-3">
+          <label for="answer2" class="form-label">Answer 2:
+            <input type="text" id="answer2" v-model="answer2" class="form-control form-control-lg"
+              :placeholder="placeholderAText" required /></label>
+          <div class="form-check">
+            <label for="correctanswer2" class="form-check-label">This is the correct answer
+              <input type="checkbox" id="correctanswer2" v-model="isChecked2" class="form-check-input" /></label>
+          </div>
+        </div>
+
+        <!-- Answer 3 -->
+        <div class="mb-3">
+          <label for="answer3" class="form-label">Answer 3:
+            <input type="text" id="answer3" v-model="answer3" class="form-control form-control-lg"
+              :placeholder="placeholderAText" required /></label>
+          <div class="form-check">
+            <label for="correctanswer3" class="form-check-label">This is the correct answer
+              <input type="checkbox" id="correctanswer3" v-model="isChecked3" class="form-check-input" /></label>
+          </div>
+        </div>
+
+        <!-- Answer 4 -->
+        <div class="mb-3">
+          <label for="answer4" class="form-label">Answer 4:
+            <input type="text" id="answer4" v-model="answer4" class="form-control form-control-lg"
+              :placeholder="placeholderAText" required /></label>
+          <div class="form-check">
+            <label for="correctanswer4" class="form-check-label">This is the correct answer
+              <input type="checkbox" id="correctanswer4" v-model="isChecked4" class="form-check-input" /></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Question Button -->
+      <button type="button" @click="addNewQuestionPrompt" class="btn btn-primary w-100">Add This Question</button>
     </form>
-    <!-- <div v-for="(question, index) in questions" :key="index">
-      <NewQuestion :questionData="question" @deleteEvent="deleteQuestion(index)" />
-    </div> -->
   </div>
 </template>
 
@@ -170,7 +196,6 @@ export default {
             },
           );
         }
-        console.log('question', question);
         this.questions.push(question);
         this.testMetadata = {
           title: this.title,
@@ -178,7 +203,6 @@ export default {
         };
         this.testHasQuestions = true;
         this.$emit('updatedQuestions', true, this.questions, this.testMetadata);
-        console.log('--------AFTER EMIT----------');
         this.questionText = process.env.NODE_ENV === 'production' ? null : 'TEST QUESTION x';
         this.answer1 = process.env.NODE_ENV === 'production' ? null : 'TEST ANSWER 1';
         this.answer2 = process.env.NODE_ENV === 'production' ? null : 'TEST ANSWER 2';
@@ -206,88 +230,47 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .createDocumentForm {
-  max-width: 600px;
+  max-width: 1000px;
   margin: 0 auto;
+  padding: 20px;
   border: 1px solid #ccc;
-  padding: 20px; /* Add padding for better spacing */
-  border-radius: 8px; /* Rounded corners */
-  background-color: #f5fff6; /* Background color updated */
+  border-radius: 8px;
+  background-color: #f5fff6;
 }
 
-.title-label,
-.description-label,
-.question-label {
-  font-weight: bold;
-  margin-bottom: 5px; /* Space below labels */
-  color: #0638b8; /* Text color updated */
+.form-label {
+  color: #0638b8;
 }
 
-input[type="text"],
-textarea {
-  width: calc(100% - 20px); /* Full width minus padding */
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 15px; /* Space below inputs */
-}
-
-.question-textarea {
-  height: 100px; /* Adjust height as needed */
-}
-
-.answer-container {
-  margin-bottom: 20px;
-}
-
-.answer-container label {
-  display: block;
-  margin-bottom: 10px;
-  color: #0638b8; /* Text color updated */
-}
-
-.answer-container input[type="text"] {
-  width: calc(100% - 30px); /* Adjust width as needed */
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.answer-container input[type="checkbox"] {
-  margin-left: 10px;
-}
-
-.add-question-button,
-.submit-button {
-  display: block;
-  width: 100%;
-  margin-top: 15px;
-  padding: 10px;
-  background-color: #d44e00; /* Primary color for buttons */
+button {
+  background-color: #d44e00;
   color: white;
-  border: none;
+  padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-.add-question-button:hover,
-.submit-button:hover {
-  background-color: #ba4300; /* Darkened primary color for hover */
-}
-
-button {
-  padding: 10px 20px;
-  background-color: #d44e00; /* Primary color for buttons */
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-bottom: 20px;
-}
-
 button:hover {
-  background-color: #ba4300; /* Darkened primary color for hover */
+  background-color: #ba4300;
+}
+
+.form-control-lg {
+  font-size: 1.25rem;
+  height: 6rem;
+  width: 600px;
+
+}
+
+textarea.form-control-lg {
+  width: 600px;
+}
+
+input.form-control-lg {
+  height: 3rem;
+  width: 600px;
+
 }
 </style>

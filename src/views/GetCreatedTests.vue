@@ -9,17 +9,21 @@
       <h2 style="color: #d44e00;">{{ test.title }}</h2>
 
       <div class="btn-group mt-3">
-        <button class="btn btn-warning mx-2" @click="editTest(test.id)" style="background-color: #d9601a; color: #fff; border: none;">Edit</button>
-        <button class="btn btn-info mx-2" @click="generateDocument(test.id)" style="background-color: #1c4bc0; color: #fff; border: none;">Generate print copy</button>
-        <button class="btn btn-info mx-2" @click="generateAnswersSheet(test.id)" style="background-color: #1c4bc0; color: #fff; border: none;">Generate print copy (answersheet)</button>
-        <button class="btn btn-danger mx-2" @click="deleteTest(test.id)" style="background-color: #f44336; color: #fff; border: none;">Delete</button>
+        <button class="btn btn-warning mx-2" @click="editTest(test.id)"
+          style="background-color: #d9601a; color: #fff; border: none;">Edit</button>
+        <button class="btn btn-info mx-2" @click="generateDocument(test.id)"
+          style="background-color: #1c4bc0; color: #fff; border: none;">Generate print copy</button>
+        <button class="btn btn-info mx-2" @click="generateAnswersSheet(test.id)"
+          style="background-color: #1c4bc0; color: #fff; border: none;">Generate print copy (answersheet)</button>
+        <button class="btn btn-danger mx-2" @click="deleteTest(test.id)"
+          style="background-color: #f44336; color: #fff; border: none;">Delete</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import checkboxImagePath from '@/assets/checkbox.png';
+import checkboxImagePath from '@/assets/checkboxes1.png';
 import {
   Document, Paragraph, Packer, Table, TableRow, TableCell, Header, HeadingLevel, WidthType, ImageRun, TextRun, TextWrappingType, TextWrappingSide,
 } from 'docx';
@@ -130,15 +134,17 @@ export default {
 
         // Add the question to the document
         docChildren.push(questionParagraph);
+
+        // Create a table to hold the checkboxes and answers
         const checkboxRow = new Table({
           rows: [
             new TableRow({
-              children: answersArray.slice(0, 4).map((answer) => {
+              children: answersArray.slice(0, 4).map(() => {
                 const checkboxImageRun = new ImageRun({
                   data: checkboxImage,
                   transformation: {
-                    width: 100, // Set width of the checkbox image
-                    height: 100, // Set height of the checkbox image
+                    width: 50, // Set width of the checkbox imag
+                    height: 50, // Set height of the checkbox image
                   },
                 });
 
@@ -150,24 +156,13 @@ export default {
                       alignment: 'center', // Center the checkbox image in the cell
                     }),
 
-                    // The answer text below the checkbox
-                    new Paragraph({
-                      children: [
-                        new TextRun({
-                          text: `${answer.text}`, // Display the text of the answer
-                          font: { size: 24 }, // Larger text for visibility
-                        }),
-                      ],
-                      alignment: 'center', // Center the text under the checkbox
-                      spacing: { after: 100 }, // Ensure spacing between the checkbox and text
-                    }),
                   ],
                   // Removing the borders from the table cell
                   borders: {
-                    top: { value: 0 }, // Remove top border
-                    bottom: { value: 0 }, // Remove bottom border
-                    left: { value: 0 }, // Remove left border
-                    right: { value: 0 }, // Remove right border
+                    top: { value: 0 },
+                    bottom: { value: 0 },
+                    left: { value: 0 },
+                    right: { value: 0 },
                   },
                   width: { size: 25, type: WidthType.PERCENTAGE }, // Adjust the width of the cells
                   height: { value: 200, type: 'pt' }, // Ensure enough height for text visibility
@@ -175,7 +170,8 @@ export default {
               }),
             }),
           ],
-          // Remove borders for the entire table
+          // Set the table to take the full width
+          width: { size: 100, type: WidthType.PERCENTAGE }, // Table takes up 100% of the page width
           borders: {
             top: { value: 0 },
             bottom: { value: 0 },
@@ -185,11 +181,13 @@ export default {
         });
 
         // Add the checkbox row to the document
+        docChildren.push(new Paragraph(''));
         docChildren.push(checkboxRow);
 
         // Add some space before the next question
         docChildren.push(new Paragraph(''));
       }
+
       const qrText = await this.createQrCode(testToProcess);
       console.log('QR Text:', qrText);
       const base64ImageData = await QRCode.toDataURL(qrText);
@@ -359,14 +357,17 @@ button.btn {
 }
 
 button.btn-danger {
-  background-color: #f44336; /* Red background for delete button */
+  background-color: #f44336;
+  /* Red background for delete button */
 }
 
 button.btn-warning {
-  background-color: #d9601a; /* Warning background for edit button */
+  background-color: #d9601a;
+  /* Warning background for edit button */
 }
 
 button.btn-info {
-  background-color: #1c4bc0; /* Info color for generate buttons */
+  background-color: #1c4bc0;
+  /* Info color for generate buttons */
 }
 </style>

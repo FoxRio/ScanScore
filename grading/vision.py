@@ -51,7 +51,7 @@ def findCheckedBoxes(image):
         white_pixel_count = np.sum(result == 255)
 
         print("Number of white pixels in the specified contour area:", white_pixel_count)
-        if white_pixel_count > 1100:
+        if white_pixel_count > 1400:
             isChecked.append(True)
             print("Is checked")
             cv2.drawContours(original, [contour], 0, (0, 255, 0), 2)

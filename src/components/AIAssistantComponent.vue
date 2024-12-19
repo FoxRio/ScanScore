@@ -14,7 +14,7 @@
 
     <!-- User Input Section -->
     <label for="userPrompt">Ask our AI assistant for suggestions:
-    <textarea v-model="userPrompt" placeholder="Ask for suggestions..." rows="4"></textarea></label>
+      <textarea v-model="userPrompt" placeholder="Ask for suggestions..." rows="4"></textarea></label>
     <button @click="sendPrompt">Ask AI</button>
 
     <div v-if="loading">Loading...</div>
@@ -28,10 +28,10 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      userPrompt: '', // The input from the user
-      chatHistory: [], // To store user questions and AI responses
-      loading: false, // To track the loading state
-      error: null, // To track any errors
+      userPrompt: '',
+      chatHistory: [],
+      loading: false,
+      error: null,
     };
   },
   methods: {
@@ -78,23 +78,23 @@ export default {
 <style scoped>
 .ai-assistant {
   position: fixed;
-  bottom: 40px;  /* Adjust top position for desired vertical alignment */
+  bottom: 40px;
   right: 20px;
   width: 400PX;
   padding: 20px;
   background-color: #f0f0f0;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  z-index: 9999; /* Ensure it's above other content */
-  max-height: 80vh; /* Ensure it doesn't overflow */
-  overflow-y: auto; /* Enable scrolling if the content overflows */
+  z-index: 9999;
+  max-height: 80vh;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
 .chat-history {
   margin-bottom: 20px;
-  max-height: 70vh; /* Limit the chat history height */
-  overflow-y: auto; /* Enable scrolling for the chat history */
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
 .chat-exchange {
