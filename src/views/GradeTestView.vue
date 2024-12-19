@@ -10,12 +10,9 @@
         and more accurate than manual grading!
       </p>
     </div>
-
     <!-- Upload Section -->
     <div class="upload-section text-center mb-5">
       <h3 class="mb-4">Upload Test Image</h3>
-
-      <!-- File Input visible to the user -->
       <div class="form-group">
         <label for="file" class="btn btn-primary btn-lg mb-3">Select Test Image
         <input
@@ -27,7 +24,6 @@
           style="display: none;"
         /></label>
       </div>
-
       <p v-if="uploadedImage" class="mt-3 text-success">
         <strong>File selected:</strong> {{ uploadedImage.name }}
       </p>
@@ -40,12 +36,9 @@
         </button>
       </div>
     </div>
-
 <!-- Grading Section -->
     <div class="grading-section text-center mb-5">
           <h3 class="mb-4">Grade Test</h3>
-
-          <!-- Display the list of uploaded files with "Grade Test" buttons -->
           <div v-if="hasFiles">
             <div v-for="file in userFiles" :key="file.name" class="mb-3">
               <p>{{ file.name }}</p>
@@ -71,21 +64,21 @@
 <script>
 import {
   ref, uploadBytesResumable, getDownloadURL, listAll,
-} from 'firebase/storage'; // Firebase Storage
-import { getAuth } from 'firebase/auth'; // Firebase Auth
-import { storage } from '@/firebase'; // Assuming you have Firebase configured
+} from 'firebase/storage';
+import { getAuth } from 'firebase/auth';
+import { storage } from '@/firebase';
 
 export default {
   name: 'GradeTestsView',
   data() {
     return {
-      uploadedImage: null, // Store the uploaded image
+      uploadedImage: null,
       results: null,
-      hasFiles: null, // Store grading results
+      hasFiles: null,
     };
   },
   async mounted() {
-    this.fetchUserFiles(); // Fetch files when the component is mounted
+    this.fetchUserFiles();
   },
   methods: {
     handleFileUpload(event) {
@@ -102,17 +95,17 @@ export default {
         const userId = user.uid;
         const userFolderRef = ref(storage, `userUploads/${userId}/uploaded`);
         try {
-          const res = await listAll(userFolderRef); // List all files under the user's 'uploaded' folder
+          const res = await listAll(userFolderRef);
           const files = await Promise.all(
             res.items.map(async (itemRef) => {
-              const fileUrl = await getDownloadURL(itemRef); // Get the file URL
+              const fileUrl = await getDownloadURL(itemRef);
               return {
                 name: itemRef.name,
                 url: fileUrl,
               };
             }),
           );
-          this.userFiles = files; // Store the files in the userFiles array
+          this.userFiles = files;
           if (files.length > 0) {
             this.hasFiles = true;
           }
