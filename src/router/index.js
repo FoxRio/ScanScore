@@ -10,6 +10,7 @@ import GetCreatedTests from '../views/GetCreatedTests.vue';
 import EditTest from '../views/EditTestView.vue'; // Import the EditTest component
 import Settings from '../views/SettingsView.vue';
 import Goodbye from '../views/GoodbyeView.vue';
+import GradeTests from '../views/GradeTestView.vue';
 
 const routes = [
   {
@@ -80,6 +81,14 @@ const routes = [
     path: '/settings',
     name: 'Settings',
     component: Settings,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/grade-tests',
+    name: 'GradeTests',
+    component: GradeTests,
     meta: {
       requiresAuth: true,
     },

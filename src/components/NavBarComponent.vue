@@ -8,16 +8,38 @@
           ScanScore
         </a>
 
-        <!-- Navbar Links -->
         <div class="navbar-nav ml-auto">
-          <RouterLink to="/" class="nav-link" style="color: #0638b8;"> <!-- neutralPrimary -->
+          <RouterLink
+            to="/"
+            class="nav-link"
+            :class="{ active: isActive('/') }"
+            style="color: #0638b8;"
+          >
             Home
           </RouterLink>
-          <RouterLink to="/about" class="nav-link" style="color: #0638b8;"> <!-- neutralPrimary -->
+          <RouterLink
+            to="/about"
+            class="nav-link"
+            :class="{ active: isActive('/about') }"
+            style="color: #0638b8;"
+          >
             About
           </RouterLink>
-          <RouterLink to="/create-test" class="nav-link" style="color: #0638b8;"> <!-- neutralPrimary -->
+          <RouterLink
+            to="/create-test"
+            class="nav-link"
+            :class="{ active: isActive('/create-test') }"
+            style="color: #0638b8;"
+          >
             Create a Test
+          </RouterLink>
+          <RouterLink
+            to="/grade-tests"
+            class="nav-link"
+            :class="{ active: isActive('/grade-tests') }"
+            style="color: #0638b8;"
+          >
+            Grade a Test
           </RouterLink>
         </div>
 
@@ -55,6 +77,7 @@
 
 <script>
 import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import SignOutButton from './SignOutButton.vue';
 import SignInButton from './SignInButton.vue';
@@ -68,9 +91,11 @@ export default {
   setup() {
     const auth = getAuth();
     const isAuthenticated = ref(false);
+    const route = useRoute(); // Reactive route object
+
+    const isActive = (path) => route.path === path; // Compare current path to the provided one
 
     onMounted(() => {
-      // Listen for authentication state changes
       onAuthStateChanged(auth, (user) => {
         isAuthenticated.value = !!user;
       });
@@ -78,13 +103,13 @@ export default {
 
     return {
       isAuthenticated,
+      isActive, // Pass isActive function to template
     };
   },
 };
 </script>
 
 <style scoped>
-  /* Optional: Add custom styling */
   .navbar {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
@@ -97,5 +122,13 @@ export default {
 
   .dropdown-toggle::after {
     border-top-color: #0638b8 !important; /* Change dropdown arrow color */
+  }
+
+  .nav-link.active {
+    font-weight: bold;
+    color: #ffffff !important; /* Active link color */
+    background-color: #0638b8; /* Highlight active link background */
+    border-radius: 5px; /* Optional: Add rounded corners */
+    padding: 5px 10px; /* Optional: Add padding for better UX */
   }
 </style>
