@@ -1,26 +1,61 @@
 <template>
   <div>
-  <nav>
-    <RouterLink to="/">Go to Home</RouterLink>
-    <RouterLink to="/about">Go to About</RouterLink>
-    <RouterLink to="/create-test">Create a Test</RouterLink>
-    <SignInButton />
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #d44e00;"> <!-- themePrimary -->
+      <div class="container">
+        <!-- Logo or Brand -->
+        <a class="navbar-brand" href="/" style="color: #0638b8;"> <!-- neutralPrimary -->
+          ScanScore
+        </a>
 
-  <div class="dropdown">
-        <button class="dropbtn">Profile</button>
-        <div class="dropdown-content">
-          <RouterLink to="/my-tests">My Tests</RouterLink>
-          <RouterLink to="/info">Info</RouterLink>
-          <RouterLink to="/settings">Settings</RouterLink>
-          <SignOutButton />
+        <!-- Navbar Links -->
+        <div class="navbar-nav ml-auto">
+          <RouterLink to="/" class="nav-link" style="color: #0638b8;"> <!-- neutralPrimary -->
+            Home
+          </RouterLink>
+          <RouterLink to="/about" class="nav-link" style="color: #0638b8;"> <!-- neutralPrimary -->
+            About
+          </RouterLink>
+          <RouterLink to="/create-test" class="nav-link" style="color: #0638b8;"> <!-- neutralPrimary -->
+            Create a Test
+          </RouterLink>
+        </div>
+
+        <!-- Sign-In Button (if not signed in) -->
+        <SignInButton v-if="!isAuthenticated" />
+
+        <!-- Profile Dropdown (only if authenticated) -->
+        <div v-if="isAuthenticated" class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #0638b8; background-color: #d44e00; border: none;"> <!-- themePrimary -->
+            Profile
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="background-color: #f5fff6;"> <!-- themeLighter -->
+            <li><RouterLink to="/my-tests" class="dropdown-item" style="color: #0638b8;"> <!-- neutralPrimary -->
+              My Tests
+            </RouterLink></li>
+            <li><RouterLink to="/info" class="dropdown-item" style="color: #0638b8;"> <!-- neutralPrimary -->
+              Info
+            </RouterLink></li>
+            <li><RouterLink to="/settings" class="dropdown-item" style="color: #0638b8;"> <!-- neutralPrimary -->
+              Settings
+            </RouterLink></li>
+            <li><SignOutButton class="dropdown-item" style="color: #0638b8;" /> <!-- neutralPrimary -->
+            </li>
+          </ul>
         </div>
       </div>
     </nav>
-    <div class="content"></div>
+
+    <!-- Main Content -->
+    <div class="content" style="background-color: #f5fff6; padding-top: 60px;"> <!-- themeLighter -->
+      <!-- Your content goes here -->
+    </div>
   </div>
 </template>
 
 <script>
+import { ref, onMounted } from 'vue';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import SignOutButton from './SignOutButton.vue';
 import SignInButton from './SignInButton.vue';
 
@@ -30,96 +65,37 @@ export default {
     SignOutButton,
     SignInButton,
   },
+  setup() {
+    const auth = getAuth();
+    const isAuthenticated = ref(false);
+
+    onMounted(() => {
+      // Listen for authentication state changes
+      onAuthStateChanged(auth, (user) => {
+        isAuthenticated.value = !!user;
+      });
+    });
+
+    return {
+      isAuthenticated,
+    };
+  },
 };
 </script>
 
 <style scoped>
-.navbar {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background-color: #333;
-  padding: 1rem;
-  position: fixed; /* Fixes the navbar to the top */
-  top: 0; /* Positions it at the top of the viewport */
-  width: 100%; /* Makes it span the full width of the screen */
-  z-index: 1000; /* Ensures it's above other content */
-}
+  /* Optional: Add custom styling */
+  .navbar {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
 
-.navbar a {
-  color: white;
-  text-decoration: none;
-  padding: 14px 20px;
-  transition: background-color 0.3s;
-}
+  .nav-link:hover,
+  .dropdown-item:hover {
+    color: #ffffff !important; /* Text color for hover */
+    background-color: #0638b8; /* neutralPrimary hover */
+  }
 
-.navbar a:hover {
-  background-color: #575757;
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropbtn {
-  background-color: #333;
-  color: white;
-  padding: 14px 20px;
-  border: none;
-  cursor: pointer;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
-}
-
-/* Add margin-top to the content to respect the navbar */
-.content {
-  margin-top: 100px; /* Adjust this value based on your navbar height */
-}
-
-a:link {
-  color: green;
-  background-color: transparent;
-  text-decoration: none;
-}
-
-a:visited {
-  color: pink;
-  background-color: transparent;
-  text-decoration: none;
-}
-
-a:hover {
-  color: red;
-  background-color: transparent;
-  text-decoration: underline;
-}
-
-a:active {
-  color: yellow;
-  background-color: transparent;
-  text-decoration: underline;
-}
+  .dropdown-toggle::after {
+    border-top-color: #0638b8 !important; /* Change dropdown arrow color */
+  }
 </style>

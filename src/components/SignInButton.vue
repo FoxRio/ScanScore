@@ -1,6 +1,8 @@
 <template>
   <div v-if="!isAuthenticated">
-    <button @click="redirectToLogin">Sign In</button>
+    <button @click="redirectToLogin" class="btn btn-primary" style="background-color: #d44e00; color: #fff; border: none;">
+      Sign In
+    </button>
   </div>
 </template>
 
@@ -39,15 +41,7 @@ export default {
 </script>
 
 <style scoped>
-button {
-  background-color: #4caf50; /* Green */
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 5px;
-}
 button:hover {
-  background-color: #388e3c; /* Darker Green */
+  background-color: #be4600; /* Darker primary color */
 }
 </style>

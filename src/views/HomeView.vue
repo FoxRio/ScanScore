@@ -2,7 +2,7 @@
   <div class="home-page">
     <!-- Hero Section -->
     <section class="hero">
-      <h1>Welcome to the Test Creation Tool!</h1>
+      <h1>Welcome to ScanScore!</h1>
       <p>Build, save, and grade tests with ease. Designed to help teachers create efficient and accurate assessments for their students.</p>
       <button @click="goToCreatePage">Start Creating Now</button>
     </section>

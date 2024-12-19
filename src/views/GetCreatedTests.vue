@@ -1,13 +1,19 @@
 <template>
-  <div>
-    <h1>Saved Tests</h1>
-    <p v-if="displayName">Hello, {{ displayName }}! Here are your saved tests.</p>
-    <div v-for="test in tests" :key="test.id">
-      <h2>{{ test.title }}</h2>
-      <button @click="editTest(test.id)">Edit</button>
-      <button @click="generateDocument(test.id)">Generate print copy</button>
-      <button @click="generateAnswersSheet(test.id)">Generate print copy (answersheet)</button>
-      <button @click="deleteTest(test.id)">Delete</button>
+  <div class="container mt-5">
+    <!-- Saved Tests Header -->
+    <h1 class="text-primary mb-4" style="color: #0638b8;">Saved Tests</h1>
+    <p v-if="displayName" style="color: #0638b8;">Hello, {{ displayName }}! Here are your saved tests.</p>
+
+    <!-- Loop through each test and display the buttons -->
+    <div v-for="test in tests" :key="test.id" class="mb-4 p-3 border rounded" style="background-color: #eaf4eb;">
+      <h2 style="color: #d44e00;">{{ test.title }}</h2>
+
+      <div class="btn-group mt-3">
+        <button class="btn btn-warning mx-2" @click="editTest(test.id)" style="background-color: #d9601a; color: #fff; border: none;">Edit</button>
+        <button class="btn btn-info mx-2" @click="generateDocument(test.id)" style="background-color: #1c4bc0; color: #fff; border: none;">Generate print copy</button>
+        <button class="btn btn-info mx-2" @click="generateAnswersSheet(test.id)" style="background-color: #1c4bc0; color: #fff; border: none;">Generate print copy (answersheet)</button>
+        <button class="btn btn-danger mx-2" @click="deleteTest(test.id)" style="background-color: #f44336; color: #fff; border: none;">Delete</button>
+      </div>
     </div>
   </div>
 </template>
@@ -329,3 +335,38 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.container {
+  padding-top: 10px;
+}
+
+h2 {
+  color: #d44e00;
+}
+
+.btn-group .btn {
+  background-color: #f5fff6;
+  color: #0638b8;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+button.btn {
+  border-radius: 5px;
+}
+
+button.btn-danger {
+  background-color: #f44336; /* Red background for delete button */
+}
+
+button.btn-warning {
+  background-color: #d9601a; /* Warning background for edit button */
+}
+
+button.btn-info {
+  background-color: #1c4bc0; /* Info color for generate buttons */
+}
+</style>

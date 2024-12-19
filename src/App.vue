@@ -16,9 +16,9 @@
 
 <template>
   <NavBarComponent />
-  <p>
+  <!-- <p>
     <strong>Current route path:</strong> {{ $route.fullPath }}
-  </p>
+  </p> -->
 
   <main>
     <RouterView />

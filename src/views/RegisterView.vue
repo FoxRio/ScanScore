@@ -37,7 +37,7 @@ export default {
       try {
         await createUserWithEmailAndPassword(auth, this.email, this.password);
         // Optionally, redirect or show a success message
-        this.$router.push('/login'); // Redirect to login after registration
+        this.$router.push('/create-test'); // Redirect to login after registration
       } catch (error) {
         this.errorMessage = error.message; // Display error message
       }
