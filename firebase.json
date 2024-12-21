@@ -12,7 +12,9 @@
         ".git",
         "firebase-debug.log",
         "firebase-debug.*.log",
-        "*.local"
+        "*.local",
+        "js_functions",
+        "python_functions"
       ],
       "predeploy": [
         "cd functions && npm run lint"

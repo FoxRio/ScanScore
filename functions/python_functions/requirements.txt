@@ -1,0 +1,6 @@
+opencv-python-headless
+firebase-admin
+functions_framework
+flask
+firebase-functions
+requests

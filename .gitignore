@@ -26,3 +26,5 @@ pnpm-debug.log*
 
 # Ignore npm package lock files
 package-lock.json
+venv
+**/__pycache__/
