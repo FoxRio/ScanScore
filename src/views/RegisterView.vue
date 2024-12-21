@@ -3,12 +3,22 @@
     <h1>Register</h1>
     <form @submit.prevent="registerUser">
       <div class="input-container">
-        <label for="email" class="input-label">Email:
-        <input type="email" id="email" v-model="email" required class="input-field" /></label>
+        <label for="email" class="input-label">
+          Email:
+          <input type="email" id="email" v-model="email" required class="input-field" />
+        </label>
       </div>
       <div class="input-container">
-        <label for="password" class="input-label">Password:
-        <input type="password" id="password" v-model="password" required class="input-field" /></label>
+        <label for="password" class="input-label">
+          Password:
+          <input type="password" id="password" v-model="password" required class="input-field" />
+        </label>
+      </div>
+      <div class="input-container">
+        <label for="confirmPassword" class="input-label">
+          Confirm Password:
+          <input type="password" id="confirmPassword" v-model="confirmPassword" required class="input-field" />
+        </label>
       </div>
       <button type="submit">Register</button>
 
@@ -28,18 +38,23 @@ export default {
     return {
       email: '',
       password: '',
+      confirmPassword: '',
       errorMessage: '',
     };
   },
   methods: {
     async registerUser() {
+      if (this.password !== this.confirmPassword) {
+        this.errorMessage = 'Passwords do not match.';
+        return;
+      }
+
       const auth = getAuth();
       try {
         await createUserWithEmailAndPassword(auth, this.email, this.password);
-        // Optionally, redirect or show a success message
-        this.$router.push('/create-test'); // Redirect to login after registration
+        this.$router.push('/create-test');
       } catch (error) {
-        this.errorMessage = error.message; // Display error message
+        this.errorMessage = error.message;
       }
     },
     goToLogin() {
@@ -56,12 +71,12 @@ export default {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #f5fff6; /* Background color */
+  background-color: #f5fff6;
 }
 
 h1 {
   text-align: center;
-  color: #0638b8; /* Text color */
+  color: #0638b8;
 }
 
 .input-container {
@@ -74,7 +89,7 @@ h1 {
   font-size: 1rem;
   margin-bottom: 5px;
   font-weight: bold;
-  color: #0638b8; /* Text color */
+  color: #0638b8;
 }
 
 .input-field {
@@ -90,7 +105,7 @@ h1 {
 button {
   padding: 10px 20px;
   font-size: 1rem;
-  background-color: #d44e00; /* Primary color */
+  background-color: #d44e00;
   color: white;
   border: none;
   border-radius: 4px;
@@ -99,7 +114,7 @@ button {
 }
 
 button:hover {
-  background-color: #b43e00; /* Darker shade of primary color for hover */
+  background-color: #b43e00;
 }
 
 .error {
@@ -114,13 +129,13 @@ button:hover {
 }
 
 .login a {
-  color: #0638b8; /* Text color */
+  color: #0638b8;
   background-color: transparent;
   text-decoration: none;
 }
 
 .login a:hover {
-  color: #d44e00; /* Primary color for hover */
+  color: #d44e00;
   text-decoration: underline;
 }
 </style>

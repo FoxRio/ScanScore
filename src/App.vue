@@ -41,7 +41,6 @@ export default {
       creatingTest: false,
       gradingTest: false,
       title: 'ScanApp',
-      appDescription: 'Short description of what this is. Short description of what this is.Short description of what this is.Short description of what this is.Short description of what this is.Short description of what this is.Short description of what this is.',
     };
   },
   methods: {
