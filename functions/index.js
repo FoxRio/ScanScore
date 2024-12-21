@@ -80,35 +80,27 @@ app.post('/call-openai', async (req, res) => {
 
 app.post('/grade-test', async (req, res) => {
   const {
-    correctAnswers, userId, fileName,
+    correctAnswers, userId, fileUrl, fileName,
   } = req.body;
 
-  if (!correctAnswers || !userId || !fileName) {
+  if (!correctAnswers || !userId || !fileName || !fileUrl) {
     return res.status(400).json({ error: 'Missing required fields.' });
   }
-  const imageToGradePath = `userUploads/${userId}/uploaded/${fileName}`;
   const pythonApiUrl = 'https://europe-west1-scanscore-6cbf7.cloudfunctions.net/process_image';
 
   try {
-    const bucket = admin.storage().bucket();
-    const file = bucket.file(imageToGradePath);
-
-    const [metadata] = await file.getMetadata();
-    console.log('File Metadata:', JSON.stringify(metadata, null, 2));
-    const downloadTokens = metadata.metadata?.firebaseStorageDownloadTokens;
-    if (!downloadTokens) {
-      return res.status(500).json({ error: 'No download token available for the file.' });
-    }
-    const downloadUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(imageToGradePath)}?alt=media&token=${downloadTokens}`;
-
     const response = await axios.post(pythonApiUrl, {
-      image_url: downloadUrl,
+      image_url: fileUrl,
       correct_answers: correctAnswers,
     });
     console.log('Response:', response.data);
     return res.status(200).send({
       message: 'Test graded successfully',
-      response: response.data,
+      response: {
+        score: response.data[0],
+        maxScore: response.data[1],
+        percentageValue: response.data[2],
+      },
     });
   } catch (err) {
     console.error('Error:', err);

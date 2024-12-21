@@ -40,8 +40,11 @@
     <div class="grading-section text-center mb-5">
           <h3 class="mb-4">Grade Test</h3>
           <div v-if="hasFiles">
+            <label for="answerKey">Enter Answer Key (e.g., 1,0,0,1,...):
+            <input type="text" id="answerKey" v-model="answerKey" /></label>
             <div v-for="file in userFiles" :key="file.name" class="mb-3">
               <p>{{ file.name }}</p>
+
               <button
                 class="btn btn-success btn-lg"
                 @click="gradeTest(file)"
@@ -56,17 +59,18 @@
     <!-- Results Section -->
     <div v-if="results" class="results-section mt-5">
       <h2 class="text-center text-success">Results</h2>
-      <!-- Placeholder for results -->
-      <p>{{ results }}</p>
-    </div>
-  </div>
+      <p>Score: {{ results.response.score }} / {{ results.response.maxScore }}</p>
+      <p>Percentage: {{ results.response.percentageValue }}%</p>
+    </div> </div>
 </template>
+
 <script>
 import {
   ref, uploadBytesResumable, getDownloadURL, listAll,
 } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 import { storage } from '@/firebase';
+import axios from 'axios';
 
 export default {
   name: 'GradeTestsView',
@@ -122,9 +126,8 @@ export default {
       }
 
       const file = this.uploadedImage;
-      const userId = getAuth().currentUser.uid; // Get the user ID from Firebase Auth
+      const userId = getAuth().currentUser.uid;
 
-      // Create reference for the user's 'userUploads/userId/uploaded'
       const storageRef = ref(storage, `userUploads/${userId}/uploaded/${file.name}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -132,7 +135,6 @@ export default {
       uploadTask.on(
         'state_changed',
         (snapshot) => {
-          // You can monitor progress if needed, e.g., by displaying a progress bar
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log(`Upload is ${progress}% done`);
         },
@@ -140,25 +142,39 @@ export default {
           console.error('Upload failed:', error);
         },
         () => {
-          // Get the download URL after successful upload
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            // Optionally, save this URL to Firestore or elsewhere
             alert('File uploaded successfully!');
             this.userFiles.push({ name: file.name, url: downloadURL });
-            this.uploadedImage = null; // Reset the uploaded image
+            this.uploadedImage = null;
           });
         },
       );
     },
 
-    gradeTest() {
-      if (!this.uploadedImage) {
-        alert('Please upload a test image first!');
+    async gradeTest(file) {
+      console.log(file.name);
+      const auth = getAuth();
+      const user = auth.currentUser;
+      const userId = user.uid;
+      const answerKeyInput = document.getElementById('answerKey').value; // Assume this is the input field
+      const answers = answerKeyInput.split(',').map((value) => parseInt(value.trim(), 10));
+      // Check if the answer key is valid
+      if (answers.length === 0 || answers.some((val) => val !== 0 && val !== 1)) {
+        alert('Answer key must be a comma-separated list of 1s and 0s.');
         return;
       }
-
-      // Placeholder for grading logic
-      console.log('Ready to implement grading logic here.');
+      try {
+        const response = await axios.post('https://us-central1-scanscore-6cbf7.cloudfunctions.net/api/grade-test', {
+          correctAnswers: answers,
+          userId,
+          fileName: file.name,
+          fileUrl: file.url,
+        });
+        this.results = response.data;
+        console.log('Grading result:', response.data);
+      } catch (error) {
+        console.error('Error grading the test:', error);
+      }
     },
   },
 };
