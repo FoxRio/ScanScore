@@ -117,7 +117,6 @@ router.beforeEach((to, from, next) => {
   const { currentUser } = auth;
 
   if (requiresAuth && !currentUser) {
-    console.log('Failed authorisation. Insufficient Permisions');
     next('/');
   } else {
     next();

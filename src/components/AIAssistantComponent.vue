@@ -45,11 +45,10 @@ export default {
       const testTitle = this.$parent.testFileData.title || 'The user hasn\'t named their test yet, help them as you can with your broad knowledge';
       const testDescription = this.$parent.testFileData.description || 'The user hasn\'t described their test yet, help them as you can with your broad knowledge';
       try {
-        console.log('Sending prompt to AI:', this.userPrompt, testTitle, testDescription, this.chatHistory);
         const response = await axios.post('https://us-central1-scanscore-6cbf7.cloudfunctions.net/api/call-openai', {
           prompt: this.userPrompt,
-          title: this.$parent.testFileData.title,
-          description: this.$parent.testFileData.description,
+          title: testTitle,
+          description: testDescription,
           conversationHistory: this.chatHistory,
         });
         this.chatHistory[this.chatHistory.length - 1].aiAnswer = response.data.text;

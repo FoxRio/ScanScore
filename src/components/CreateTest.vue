@@ -67,7 +67,6 @@ export default {
         let questionResult = '';
 
         Object.keys(answers).forEach((key) => {
-          console.log(answers[key]);
           questionResult += answers[key].correct ? '1' : '0';
         });
 

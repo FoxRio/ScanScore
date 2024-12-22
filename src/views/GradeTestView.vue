@@ -87,7 +87,6 @@ export default {
       const file = event.target.files[0];
       if (file) {
         this.uploadedImage = file;
-        console.log('File uploaded:', file.name);
       }
     },
     async fetchUserFiles() {
@@ -133,7 +132,7 @@ export default {
         'state_changed',
         (snapshot) => {
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(`Upload is ${progress}% done`);
+          alert(`Upload is ${progress}% done`);
         },
         (error) => {
           console.error('Upload failed:', error);
@@ -149,7 +148,6 @@ export default {
     },
 
     async gradeTest(file) {
-      console.log(file.name);
       const auth = getAuth();
       const user = auth.currentUser;
       const userId = user.uid;
@@ -167,7 +165,6 @@ export default {
           fileUrl: file.url,
         });
         this.results = response.data;
-        console.log('Grading result:', response.data);
       } catch (error) {
         console.error('Error grading the test:', error);
       }

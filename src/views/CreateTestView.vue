@@ -98,8 +98,6 @@ export default {
     },
     async saveToFirebase() {
       const userId = auth.currentUser ? auth.currentUser.uid : null;
-      console.log('User ID:', userId);
-
       if (userId) {
         if (this.testFileData.title.trim() === '') {
           this.titleError = true;
@@ -110,8 +108,7 @@ export default {
         this.testFileData.createdAt = new Date();
 
         const db = getFirestore();
-        const docRef = await addDoc(collection(db, 'tests'), this.testFileData);
-        console.log('Document written with ID: ', docRef.id);
+        await addDoc(collection(db, 'tests'), this.testFileData);
         this.$router.push('/my-tests');
       } else {
         console.error('User is not authenticated');
@@ -140,7 +137,6 @@ export default {
         let questionResult = '';
 
         Object.keys(answers).forEach((key) => {
-          console.log(answers[key]);
           questionResult += answers[key].correct ? '1' : '0';
         });
 
@@ -200,7 +196,6 @@ export default {
       }
     },
     generateDocument() {
-      console.log('CREATE TEST', this.testFileData);
       if (this.testFileData.title.trim() === '') {
         this.titleError = true;
         return;
@@ -276,14 +271,12 @@ export default {
 
       try {
         Packer.toBlob(docx).then((blob) => {
-          console.log('Blob:', blob);
-          saveAs(blob, 'pipebomb.docx');
+          saveAs(blob, `${this.testFileData.title}.docx`);
           this.generateAnswersSheet();
         });
       } catch (error) {
         console.error('Error generating document:', error);
       }
-      console.log('Document generated');
       alert('Test created successfully!');
     },
   },

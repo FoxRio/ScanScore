@@ -23,19 +23,13 @@ export default {
   methods: {
     openCreating() {
       this.creatingTest = true;
-      console.log('creatingTest', this.creatingTest);
-      console.log('gradingTest', this.gradingTest);
     },
     openGrading() {
       this.gradingTest = true;
-      console.log('creatingTest', this.creatingTest);
-      console.log('gradingTest', this.gradingTest);
     },
     handleCollapse() {
       this.creatingTest = false;
       this.gradingTest = false;
-      console.log('creatingTest', this.creatingTest);
-      console.log('gradingTest', this.gradingTest);
     },
   },
 };

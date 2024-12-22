@@ -80,20 +80,18 @@ export default {
       try {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          console.log('Document data:', docSnap.data());
           this.test = { id: docSnap.id, ...docSnap.data() };
         } else {
-          console.error('No such document!');
+          alert('No such document!');
         }
       } catch (error) {
-        console.error('Error fetching test:', error);
+        console.error('Error getting document:', error);
       } finally {
         this.loading = false;
       }
     },
 
     async updateTest() {
-      console.log(this.test);
       const db = getFirestore();
       try {
         const docRef = doc(db, 'tests', this.testId);
@@ -110,7 +108,6 @@ export default {
     },
 
     deleteQuestion(index) {
-      console.log('deleteQuestion', index);
       this.test.questions.splice(index, 1);
     },
 

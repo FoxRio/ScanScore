@@ -42,7 +42,6 @@ export default {
   async mounted() {
     const db = getFirestore();
     const userId = auth.currentUser ? auth.currentUser.uid : null;
-    console.log('User ID:', userId);
 
     if (userId) {
       const user = getAuth().currentUser;
@@ -65,12 +64,10 @@ export default {
       this.$router.push('/');
     },
     async deleteTest(id) {
-      console.log('Deleting test:', id);
       const db = getFirestore();
       // eslint-disable-next-line no-restricted-globals
       if (confirm('Are you sure you want to delete this test?')) {
         await deleteDoc(doc(db, 'tests', id));
-        console.log('Test deleted successfully');
         this.tests = this.tests.filter((test) => test.id !== id);
       }
     },
@@ -170,7 +167,6 @@ export default {
       }
 
       const qrText = await this.createQrCode(testToProcess);
-      console.log('QR Text:', qrText);
       const base64ImageData = await QRCode.toDataURL(qrText);
       const QRblob = await fetch(base64ImageData).then((response) => response.blob());
 
@@ -297,13 +293,11 @@ export default {
 
       try {
         Packer.toBlob(docx).then((blob) => {
-          console.log('Blob:', blob);
-          saveAs(blob, 'pipebomb.docx');
+          saveAs(blob, `${testFileData.title}.docx`);
         });
       } catch (error) {
         console.error('Error generating document:', error);
       }
-      console.log('Document generated');
       alert('Test created successfully!');
       this.$router.push('/my-tests');
     },

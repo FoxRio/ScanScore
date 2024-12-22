@@ -100,7 +100,6 @@ export default {
   },
   methods: {
     deleteQuestion(index) {
-      console.log('deleteQuestion', index);
       this.questions.splice(index, 1);
       this.testHasQuestions = this.questions.length > 0;
       this.$emit('updatedQuestions', this.testHasQuestions, this.questions);
@@ -193,19 +192,10 @@ export default {
         this.isChecked2 = false;
         this.isChecked3 = false;
         this.isChecked4 = false;
-        console.log('questions', this.questions);
         return 0;
       }
       alert('Question Not Added, Please input a question text and at least one answer!');
       return 0;
-    },
-    async handleSubmit() {
-      const formElement = document.getElementById('createNewDocumentForm');
-      console.log('Form submitted with the following data:', formElement);
-      const formData = new FormData(formElement);
-      formData.forEach((value, key) => {
-        console.log(`${key}: ${value}`);
-      });
     },
   },
 };

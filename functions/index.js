@@ -72,7 +72,6 @@ app.post('/grade-test', async (req, res) => {
       image_url: fileUrl,
       correct_answers: correctAnswers,
     });
-    console.log('Response:', response.data);
     return res.status(200).send({
       message: 'Test graded successfully',
       response: {
