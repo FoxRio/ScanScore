@@ -1,40 +1,17 @@
-<!-- <template>
-  <div>
-    <h1> {{ title }}</h1>
-    <h2>WELL EAT MY BEANS, RUB MY BUTT AND CALL ME A GENIE, THAT THERES SUSSY FEEF</h2>
-  </div>
-  <div class="description">
-    <p>{{ appDescription }}</p>
-  </div>
-  <div>
-    <button @click="openCreating" v-if="!creatingTest && !gradingTest">Create new test</button>
-    <button @click="openGrading" v-if="!gradingTest && !creatingTest">Grade existing test</button>
-  </div>
-  <CreateTest v-if="creatingTest && !gradingTest" @collapse="handleCollapse" />
-  <GradeTest v-if="gradingTest && !creatingTest" @collapse="handleCollapse" />
-</template> -->
-
 <template>
   <NavBarComponent />
-  <!-- <p>
-    <strong>Current route path:</strong> {{ $route.fullPath }}
-  </p> -->
-
   <main>
     <RouterView />
   </main>
 </template>
 
 <script>
-// import Modal from './components/Modal-component.vue';
 import NavBarComponent from './components/NavBarComponent.vue';
-// import SignOutButton from './components/SignOutButton.vue';
 
 export default {
   name: 'App',
   components: {
     NavBarComponent,
-    // SignOutButton,
   },
   data() {
     return {

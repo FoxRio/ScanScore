@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 
 # Load image, convert to grayscale, Gaussian blur, Otsu's threshold
-# image = cv2.imread('checkboxes2.png')
 def findCheckedBoxes(image):
     original = image.copy()
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -47,7 +46,7 @@ def findCheckedBoxes(image):
         # Apply the mask to the original image
         result = cv2.bitwise_and(repair, mask)
         # cv2.imshow('result', result)
-        # Count the number of white pixels in the masked area
+        # Count the number of white pixels in the masked area -- White because the colors are reversed
         white_pixel_count = np.sum(result == 255)
 
         print("Number of white pixels in the specified contour area:", white_pixel_count)
@@ -63,10 +62,8 @@ def findCheckedBoxes(image):
     # cv2.imshow('thresh', thresh)
     # cv2.imshow('repair', repair)
     # cv2.imshow('original', original)
-    #     print(f"Pe
     cv2.imshow('Result', original)
     cv2.waitKey()
     return isChecked
 #
 # print(findCheckedBoxes(image))
-

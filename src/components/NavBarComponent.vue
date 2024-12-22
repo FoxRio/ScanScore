@@ -1,10 +1,8 @@
 <template>
   <div>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #d44e00;"> <!-- themePrimary -->
+    <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #d44e00;">
       <div class="container">
-        <!-- Logo or Brand -->
-        <a class="navbar-brand" href="/" style="color: #0638b8;"> <!-- neutralPrimary -->
+        <a class="navbar-brand" href="/" style="color: #0638b8;">
           ScanScore
         </a>
 
@@ -51,26 +49,23 @@
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: #0638b8; background-color: #d44e00; border: none;"> <!-- themePrimary -->
             Profile
           </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="background-color: #f5fff6;"> <!-- themeLighter -->
-            <li><RouterLink to="/my-tests" class="dropdown-item" style="color: #0638b8;"> <!-- neutralPrimary -->
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="background-color: #f5fff6;">
+            <li><RouterLink to="/my-tests" class="dropdown-item" style="color: #0638b8;">
               My Tests
             </RouterLink></li>
-            <li><RouterLink to="/info" class="dropdown-item" style="color: #0638b8;"> <!-- neutralPrimary -->
+            <li><RouterLink to="/info" class="dropdown-item" style="color: #0638b8;">
               Info
             </RouterLink></li>
-            <li><RouterLink to="/settings" class="dropdown-item" style="color: #0638b8;"> <!-- neutralPrimary -->
+            <li><RouterLink to="/settings" class="dropdown-item" style="color: #0638b8;">
               Settings
             </RouterLink></li>
-            <li><SignOutButton class="dropdown-item" style="color: #0638b8;" /> <!-- neutralPrimary -->
+            <li><SignOutButton class="dropdown-item" style="color: #0638b8;" />
             </li>
           </ul>
         </div>
       </div>
     </nav>
-
-    <!-- Main Content -->
-    <div class="content" style="background-color: #f5fff6; padding-top: 60px;"> <!-- themeLighter -->
-      <!-- Your content goes here -->
+    <div class="content" style="background-color: #f5fff6; padding-top: 60px;">
     </div>
   </div>
 </template>
@@ -91,9 +86,9 @@ export default {
   setup() {
     const auth = getAuth();
     const isAuthenticated = ref(false);
-    const route = useRoute(); // Reactive route object
+    const route = useRoute();
 
-    const isActive = (path) => route.path === path; // Compare current path to the provided one
+    const isActive = (path) => route.path === path;
 
     onMounted(() => {
       onAuthStateChanged(auth, (user) => {
@@ -103,7 +98,7 @@ export default {
 
     return {
       isAuthenticated,
-      isActive, // Pass isActive function to template
+      isActive,
     };
   },
 };
@@ -116,19 +111,19 @@ export default {
 
   .nav-link:hover,
   .dropdown-item:hover {
-    color: #ffffff !important; /* Text color for hover */
-    background-color: #0638b8; /* neutralPrimary hover */
+    color: #ffffff !important;
+    background-color: #0638b8;
   }
 
   .dropdown-toggle::after {
-    border-top-color: #0638b8 !important; /* Change dropdown arrow color */
+    border-top-color: #0638b8 !important;
   }
 
   .nav-link.active {
     font-weight: bold;
-    color: #ffffff !important; /* Active link color */
-    background-color: #0638b8; /* Highlight active link background */
-    border-radius: 5px; /* Optional: Add rounded corners */
-    padding: 5px 10px; /* Optional: Add padding for better UX */
+    color: #ffffff !important;
+    background-color: #0638b8;
+    border-radius: 5px;
+    padding: 5px 10px;
   }
 </style>

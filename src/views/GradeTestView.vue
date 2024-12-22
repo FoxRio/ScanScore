@@ -44,7 +44,6 @@
             <input type="text" id="answerKey" v-model="answerKey" /></label>
             <div v-for="file in userFiles" :key="file.name" class="mb-3">
               <p>{{ file.name }}</p>
-
               <button
                 class="btn btn-success btn-lg"
                 @click="gradeTest(file)"
@@ -55,7 +54,6 @@
           </div>
           <p v-else>No files uploaded yet. Please upload a test image.</p>
         </div>
-
     <!-- Results Section -->
     <div v-if="results" class="results-section mt-5">
       <h2 class="text-center text-success">Results</h2>
@@ -88,7 +86,7 @@ export default {
     handleFileUpload(event) {
       const file = event.target.files[0];
       if (file) {
-        this.uploadedImage = file; // Store the file for processing
+        this.uploadedImage = file;
         console.log('File uploaded:', file.name);
       }
     },
@@ -131,7 +129,6 @@ export default {
       const storageRef = ref(storage, `userUploads/${userId}/uploaded/${file.name}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
 
-      // Monitor the upload task for progress or errors
       uploadTask.on(
         'state_changed',
         (snapshot) => {
@@ -156,9 +153,8 @@ export default {
       const auth = getAuth();
       const user = auth.currentUser;
       const userId = user.uid;
-      const answerKeyInput = document.getElementById('answerKey').value; // Assume this is the input field
+      const answerKeyInput = document.getElementById('answerKey').value;
       const answers = answerKeyInput.split(',').map((value) => parseInt(value.trim(), 10));
-      // Check if the answer key is valid
       if (answers.length === 0 || answers.some((val) => val !== 0 && val !== 1)) {
         alert('Answer key must be a comma-separated list of 1s and 0s.');
         return;
@@ -183,11 +179,11 @@ export default {
 <style scoped>
 .grade-tests-view {
   padding: 40px 15px;
-  background-color: #f5fff6; /* themeLighter */
+  background-color: #f5fff6;
 }
 
 .header h1 {
-  color: #d44e00; /* themePrimary */
+  color: #d44e00;
 }
 
 .header p {
@@ -202,8 +198,8 @@ export default {
 .results-section {
   margin-top: 30px;
   padding: 20px;
-  background-color: #eaf4eb; /* neutralLighter */
-  border: 1px solid #d1dad2; /* neutralQuaternaryAlt */
+  background-color: #eaf4eb;
+  border: 1px solid #d1dad2;
   border-radius: 5px;
 }
 </style>

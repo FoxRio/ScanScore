@@ -9,7 +9,6 @@
     <div class="documentForm">
       <FormComponent @updatedQuestions="updateParent" />
     </div>
-    <!-- <button @click="addNewQuestionPromt">Add new question</button> -->
   </div>
   <div class="genereateDocumentButtonDiv">
     <button v-if="testHasQuestions" @click="generateDocument">Generate Document</button>
@@ -26,7 +25,6 @@ import {
 
 import { saveAs } from 'file-saver';
 
-// import NewQuestionComponent from './NewQuestion.vue';
 import FormComponent from './FormComponent.vue';
 
 const QRCode = require('qrcode');
@@ -115,7 +113,6 @@ export default {
                 ],
               }),
               new Paragraph({ text: 'Please fill in the correct answers in the answer sheet', heading: HeadingLevel.HEADING_2 }),
-              // ...buildParagraph(), // paragraphs are not coming through
             ],
           },
         ],
@@ -123,7 +120,6 @@ export default {
 
       try {
         Packer.toBlob(doc).then((blob) => {
-          // saveAs from FileSaver will download the file
           saveAs(blob, 'panswers.docx');
         });
       } catch (error) {
@@ -144,7 +140,7 @@ export default {
               ],
               width: {
                 size: 100,
-                type: WidthType.PERCENTAGE, // Set the table width to be a percentage of the page width
+                type: WidthType.PERCENTAGE,
               },
             }),
             new TableRow({
@@ -188,7 +184,6 @@ export default {
                 ],
               }),
               new Paragraph({ text: 'Please fill in the correct answers in the answer sheet', heading: HeadingLevel.HEADING_2 }),
-              // ...buildParagraph(), // paragraphs are not coming through
             ],
           },
         ],
@@ -196,8 +191,6 @@ export default {
 
       try {
         Packer.toBlob(doc).then(() => {
-          // saveAs from FileSaver will download the file
-          // saveAs(blob, 'pipebomb.docx');
           this.generateAnswersSheet();
         });
       } catch (error) {
@@ -222,7 +215,7 @@ export default {
   border: 1px solid #ddd;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  background-color: #f5fff6; /* Updated background color */
+  background-color: #f5fff6;
   position: relative;
 }
 
@@ -231,11 +224,11 @@ export default {
 }
 
 .createNewTest p {
-  color: #0638b8; /* Updated text color */
+  color: #0638b8;
 }
 
 .createNewTest button {
-  background-color: #d44e00; /* Primary color */
+  background-color: #d44e00;
   color: #fff;
   padding: 10px 15px;
   border: none;
@@ -244,7 +237,7 @@ export default {
 }
 
 .createNewTest button:hover {
-  background-color: #b43e00; /* Darker shade for hover */
+  background-color: #b43e00;
 }
 
 .generateDocumentButtonDiv {

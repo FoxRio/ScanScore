@@ -17,7 +17,7 @@ export default {
 .goodbye {
   width: 80%;
   margin: auto;
-  background-color: #f5fff6; /* Background color */
+  background-color: #f5fff6;
   padding: 40px;
   text-align: center;
   border-radius: 8px;
@@ -25,13 +25,13 @@ export default {
 }
 
 h1 {
-  color: #0638b8; /* Text color */
+  color: #0638b8;
   font-size: 2rem;
   margin-bottom: 20px;
 }
 
 p {
-  color: #0638b8; /* Text color */
+  color: #0638b8;
   font-size: 1.1rem;
   margin: 10px 0;
 }
@@ -40,13 +40,13 @@ p {
   display: inline-block;
   margin-top: 20px;
   padding: 10px 20px;
-  background-color: #d44e00; /* Primary color */
+  background-color: #d44e00;
   color: white;
   text-decoration: none;
   border-radius: 5px;
 }
 
 .home-link:hover {
-  background-color: #b43e00; /* Darker shade of primary color for hover */
+  background-color: #b43e00;
 }
 </style>

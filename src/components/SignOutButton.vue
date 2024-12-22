@@ -9,12 +9,12 @@ import { useRouter } from 'vue-router';
 export default {
   setup() {
     const auth = getAuth();
-    const router = useRouter(); // Get the router instance
+    const router = useRouter();
 
     const signOutUser = async () => {
       try {
-        await signOut(auth); // Sign out the user
-        router.push('/'); // Redirect to home page after sign out
+        await signOut(auth);
+        router.push('/');
       } catch (error) {
         console.error('Sign out error:', error);
       }
@@ -29,8 +29,8 @@ export default {
 
 <style scoped>
 button {
-  background-color: #d44e00; /* Primary color */
-  color: #0638b8; /* Foreground color */
+  background-color: #d44e00;
+  color: #0638b8;
   border: none;
   padding: 10px 15px;
   cursor: pointer;
@@ -39,7 +39,7 @@ button {
 }
 
 button:hover {
-  background-color: #be4600; /* Darker primary color for hover */
-  color: white; /* Change text color on hover for contrast */
+  background-color: #be4600;
+  color: white;
 }
 </style>

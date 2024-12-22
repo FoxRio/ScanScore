@@ -1,7 +1,6 @@
 <template>
   <div class="settings">
     <h1>Account Settings</h1>
-
     <div class="profile-settings">
       <h2>Change Display Name</h2>
       <label for="displayName">
@@ -9,32 +8,23 @@
       </label>
       <button @click="updateDisplayName">Update Display Name</button>
     </div>
-
     <div class="password-change">
       <h2>Change Password</h2>
-
-      <!-- Current Password Field -->
       <div class="input-container">
         <label for="currentPassword" class="input-label">Current Password
         <input id="currentPassword" type="password" v-model="currentPassword" placeholder="Enter current password" class="input-field" /></label>
       </div>
-
-      <!-- New Password Field -->
       <div class="input-container">
         <label for="newPassword" class="input-label">New Password
         <input id="newPassword" type="password" v-model="newPassword" placeholder="Enter new password" class="input-field" /></label>
       </div>
-
       <button @click="changePassword">Change Password</button>
     </div>
-
     <div class="delete-account">
       <h2>Delete Account</h2>
       <p>This will delete your account and all the tests you've created. This action is irreversible.</p>
       <button @click="showDeletePopup">Delete My Account</button>
     </div>
-
-    <!-- Include the popup component -->
     <PopupComponent
       v-if="isPopupVisible"
       :isVisible="isPopupVisible"
@@ -63,11 +53,10 @@ export default {
       newDisplayName: '',
       currentPassword: '',
       newPassword: '',
-      isPopupVisible: false, // Controls popup visibility
+      isPopupVisible: false,
     };
   },
   mounted() {
-    // Fetch current user's display name when component is mounted
     const auth = getAuth();
     const user = auth.currentUser;
     if (user && user.displayName) {
@@ -110,8 +99,7 @@ export default {
         }
       }
     },
-
-    // Delete Account
+    // Delete Account and all tests that the user has created
     async deleteAccount(password) {
       const auth = getAuth();
       const user = auth.currentUser;
@@ -119,18 +107,13 @@ export default {
         try {
           const credential = EmailAuthProvider.credential(user.email, password);
           await reauthenticateWithCredential(user, credential);
-
           const db = getFirestore();
           const userId = user.uid;
-
-          // Delete all tests created by this user
           const testsQuery = query(collection(db, 'tests'), where('userId', '==', userId));
           const querySnapshot = await getDocs(testsQuery);
           querySnapshot.forEach(async (docx) => {
             await deleteDoc(doc(db, 'tests', docx.id));
           });
-
-          // Delete user account
           await user.delete();
           alert('Account deleted successfully.');
           this.$router.push('/goodbye');
@@ -152,7 +135,7 @@ export default {
 .settings {
   width: 80%;
   margin: auto;
-  background-color: #f5fff6; /* Background color */
+  background-color: #f5fff6;
   padding: 20px;
   border-radius: 8px;
 }
@@ -162,17 +145,17 @@ export default {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #f5fff6; /* Background color */
+  background-color: #f5fff6;
   margin-top: 20px;
 }
 
 h1 {
   text-align: center;
-  color: #0638b8; /* Text color */
+  color: #0638b8;
 }
 
 h2 {
-  color: #0638b8; /* Text color */
+  color: #0638b8;
 }
 
 .input-container {
@@ -185,7 +168,7 @@ h2 {
   font-size: 1rem;
   margin-bottom: 5px;
   font-weight: bold;
-  color: #0638b8; /* Text color */
+  color: #0638b8;
 }
 
 .input-field {
@@ -201,7 +184,7 @@ h2 {
 button {
   padding: 10px 20px;
   font-size: 1rem;
-  background-color: #d44e00; /* Primary color */
+  background-color: #d44e00;
   color: white;
   border: none;
   border-radius: 4px;
@@ -211,7 +194,7 @@ button {
 }
 
 button:hover {
-  background-color: #b43e00; /* Darker shade of primary color for hover */
+  background-color: #b43e00;
 }
 
 button:focus {
@@ -220,6 +203,6 @@ button:focus {
 
 .delete-account p {
   font-size: 0.9em;
-  color: #0638b8; /* Text color */
+  color: #0638b8;
 }
 </style>

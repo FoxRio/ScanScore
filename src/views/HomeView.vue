@@ -6,7 +6,6 @@
       <p>Build, save, and grade tests with ease. Designed to help teachers create efficient and accurate assessments for their students.</p>
       <button @click="goToCreatePage">Start Creating Now</button>
     </section>
-
     <!-- Features Section -->
     <section class="features">
       <h2>Key Features</h2>
@@ -29,8 +28,6 @@
         </div>
       </div>
     </section>
-
-    <!-- Testimonials Section -->
     <section class="testimonials">
       <h2>What Our Users Are Saying</h2>
       <div class="testimonial">
@@ -42,8 +39,6 @@
         <cite>- John, Middle School Teacher</cite>
       </div>
     </section>
-
-    <!-- Call to Action Section -->
     <section class="cta" v-if="!isLoggedIn">
       <h2>Ready to Get Started?</h2>
       <p>Sign up today and start creating your first test!</p>
@@ -53,7 +48,7 @@
 </template>
 
 <script>
-import { auth } from '../firebase'; // Import Firebase authentication
+import { auth } from '../firebase';
 
 export default {
   data() {
@@ -62,20 +57,17 @@ export default {
     };
   },
   created() {
-    // Check if the user is logged in
     this.checkLoginStatus();
   },
   methods: {
-    // Check if the user is logged in
     checkLoginStatus() {
-      const user = auth.currentUser; // Get the current user from Firebase authentication
+      const user = auth.currentUser;
       if (user) {
-        this.isLoggedIn = true; // User is logged in
+        this.isLoggedIn = true;
       } else {
-        this.isLoggedIn = false; // User is not logged in
+        this.isLoggedIn = false;
       }
     },
-    // Redirect to the test creation page
     goToCreatePage() {
       if (this.isLoggedIn) {
         this.$router.push('/create-test'); // Redirect logged-in users directly to /create-test
@@ -83,7 +75,6 @@ export default {
         this.$router.push('/register'); // Redirect to register if not logged in
       }
     },
-    // Redirect to the registration page
     goToSignUp() {
       this.$router.push('/register');
     },
@@ -96,11 +87,11 @@ export default {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f5fff6; /* Background color */
+  background-color: #f5fff6;
 }
 
 .hero {
-  background-color: #d44e00; /* Primary color */
+  background-color: #d44e00;
   color: white;
   padding: 50px 20px;
   text-align: center;
@@ -119,7 +110,7 @@ export default {
 
 .hero button {
   padding: 10px 20px;
-  background-color: #0638b8; /* Text color for buttons */
+  background-color: #0638b8;
   color: white;
   border: none;
   border-radius: 5px;
@@ -127,7 +118,7 @@ export default {
 }
 
 .hero button:hover {
-  background-color: #052d7a; /* Darker shade of the text color for hover */
+  background-color: #052d7a;
 }
 
 .features {
@@ -138,7 +129,7 @@ export default {
 .features h2 {
   font-size: 2rem;
   margin-bottom: 20px;
-  color: #0638b8; /* Text color */
+  color: #0638b8;
 }
 
 .feature-list {
@@ -154,7 +145,7 @@ export default {
   margin: 10px;
   width: 22%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  color: #0638b8; /* Text color */
+  color: #0638b8;
 }
 
 .feature h3 {
@@ -165,13 +156,13 @@ export default {
 .testimonials {
   padding: 40px 20px;
   text-align: center;
-  background-color: #f5fff6; /* Background color */
+  background-color: #f5fff6;
 }
 
 .testimonials h2 {
   font-size: 2rem;
   margin-bottom: 20px;
-  color: #0638b8; /* Text color */
+  color: #0638b8;
 }
 
 .testimonial {
@@ -187,7 +178,7 @@ export default {
 
 .cta {
   padding: 40px 20px;
-  background-color: #d44e00; /* Primary color */
+  background-color: #d44e00;
   color: white;
   text-align: center;
 }
@@ -204,7 +195,7 @@ export default {
 
 .cta button {
   padding: 10px 20px;
-  background-color: #0638b8; /* Text color for buttons */
+  background-color: #0638b8;
   color: white;
   border: none;
   border-radius: 5px;
@@ -212,6 +203,6 @@ export default {
 }
 
 .cta button:hover {
-  background-color: #052d7a; /* Darker shade of text color for hover */
+  background-color: #052d7a;
 }
 </style>

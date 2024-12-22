@@ -47,7 +47,7 @@
 export default {
   methods: {
     goToHome() {
-      this.$router.push('/'); // Redirect to the home page when the button is clicked
+      this.$router.push('/');
     },
   },
 };
@@ -59,19 +59,19 @@ export default {
   margin: auto;
   padding: 20px;
   font-family: Arial, sans-serif;
-  background-color: #f5fff6; /* Light background color */
-  color: #0638b8; /* Text color */
+  background-color: #f5fff6;
+  color: #0638b8;
   border-radius: 10px;
 }
 
 h1 {
   text-align: center;
-  color: #0638b8; /* Text color for heading */
+  color: #0638b8;
 }
 
 .feature {
   margin-bottom: 30px;
-  background-color: #ffffff; /* White background for the feature sections */
+  background-color: #ffffff;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -79,13 +79,13 @@ h1 {
 
 .feature h2 {
   font-size: 1.5rem;
-  color: #d44e00; /* Primary color for subheadings */
+  color: #d44e00;
   margin-bottom: 10px;
 }
 
 .feature p {
   font-size: 1rem;
-  color: #0638b8; /* Text color for paragraphs */
+  color: #0638b8;
   line-height: 1.6;
 }
 
@@ -96,19 +96,19 @@ h1 {
 
 .call-to-action h2 {
   font-size: 1.5rem;
-  color: #d44e00; /* Primary color for the call-to-action heading */
+  color: #d44e00;
 }
 
 .call-to-action p {
   font-size: 1.2rem;
-  color: #0638b8; /* Text color for call-to-action paragraph */
+  color: #0638b8;
   margin-bottom: 20px;
 }
 
 button {
   padding: 10px 20px;
   font-size: 1rem;
-  background-color: #d44e00; /* Primary color for the button */
+  background-color: #d44e00;
   color: white;
   border: none;
   border-radius: 4px;
@@ -116,6 +116,6 @@ button {
 }
 
 button:hover {
-  background-color: #b43e00; /* Darker shade of primary color on hover */
+  background-color: #b43e00;
 }
 </style>

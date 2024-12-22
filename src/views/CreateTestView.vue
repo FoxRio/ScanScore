@@ -9,7 +9,6 @@
     <div class="documentForm">
       <FormComponent @updatedQuestions="updateParent" />
     </div>
-
     <h2>Questions:</h2>
     <div v-for="(question, index) in testFileData.questions" :key="index">
       <div v-if="editingIndex !== index">
@@ -27,8 +26,6 @@
         />
       </div>
     </div>
-
-    <!-- Add AI Assistant Component -->
     <AIAssistantComponent
       :testTitle="testFileData.title"
       :testDescription="testFileData.description"
@@ -49,10 +46,10 @@ import {
 
 import { saveAs } from 'file-saver';
 import { auth } from '../firebase';
-import AIAssistantComponent from '../components/AIAssistantComponent.vue'; // Import the new component
+import AIAssistantComponent from '../components/AIAssistantComponent.vue';
 import FormComponent from '../components/FormComponent.vue';
 import DisplayedQuestion from '../components/DisplayedQuestion.vue';
-import QuestionEditComponent from '../components/QuestionEditComponent.vue'; // Import your edit question component
+import QuestionEditComponent from '../components/QuestionEditComponent.vue';
 
 const QRCode = require('qrcode');
 
@@ -72,7 +69,7 @@ export default {
         questions: [],
       },
       questionsArray: [],
-      editingIndex: null, // Track the index of the question being edited
+      editingIndex: null,
       titleError: false,
     };
   },
@@ -86,20 +83,18 @@ export default {
     },
     deleteQuestion(index) {
       this.testFileData.questions.splice(index, 1);
-      this.testHasQuestions = this.testFileData.questions.length > 0; // Update state if there are questions
+      this.testHasQuestions = this.testFileData.questions.length > 0;
     },
     editQuestion(index) {
-      this.editingIndex = index; // Set the index of the question to edit
+      this.editingIndex = index;
     },
     updateQuestion(index, updatedQuestion) {
-      // Update the specific question in the array directly
       this.testFileData.questions[index] = updatedQuestion;
 
-      // Reset editing index after the update
       this.editingIndex = null;
     },
     cancelEdit() {
-      this.editingIndex = null; // Reset editing index on cancel
+      this.editingIndex = null;
     },
     async saveToFirebase() {
       const userId = auth.currentUser ? auth.currentUser.uid : null;
@@ -107,7 +102,7 @@ export default {
 
       if (userId) {
         if (this.testFileData.title.trim() === '') {
-          this.titleError = true; // Show error message
+          this.titleError = true;
           return;
         }
         this.titleError = false;
@@ -191,7 +186,6 @@ export default {
                 ],
               }),
               new Paragraph({ text: 'Please fill in the correct answers in the answer sheet', heading: HeadingLevel.HEADING_2 }),
-              // ...buildParagraph(), // paragraphs are not coming through
             ],
           },
         ],
@@ -199,7 +193,6 @@ export default {
 
       try {
         Packer.toBlob(doc).then((blob) => {
-          // saveAs from FileSaver will download the file
           saveAs(blob, 'panswers.docx');
         });
       } catch (error) {
@@ -209,7 +202,7 @@ export default {
     generateDocument() {
       console.log('CREATE TEST', this.testFileData);
       if (this.testFileData.title.trim() === '') {
-        this.titleError = true; // Show error message
+        this.titleError = true;
         return;
       }
       this.titleError = false;
@@ -307,7 +300,7 @@ export default {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   background-color: #f5fff6;
   position: relative;
-  padding-right: 340px; /* Space for AI Assistant */
+  padding-right: 340px; /* Space for AI Assistant module */
 }
 
 .createNewTest>div {

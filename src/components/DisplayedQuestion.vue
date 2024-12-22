@@ -30,7 +30,6 @@ export default {
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f5fff6;
-  /* Background color */
 }
 
 .question-container p {
@@ -90,7 +89,6 @@ export default {
 .cancel-button {
   padding: 8px 16px;
   background-color: #ffc107;
-  /* Yellow for Cancel */
   color: #fff;
   border: none;
   border-radius: 5px;

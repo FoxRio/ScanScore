@@ -1,21 +1,18 @@
 <template>
   <div class="createDocumentForm">
     <form @submit.prevent="addNewQuestionPrompt" id="createNewDocumentForm">
-
       <!-- Title Field -->
       <div class="mb-3">
         <label for="titleId" class="form-label">Title:
           <input type="text" :id="titleId" v-model="title" class="form-control form-control-lg" required
             placeholder="Enter the title" /></label>
       </div>
-
       <!-- Description Field -->
       <div class="mb-3">
         <label for="descriptionId" class="form-label">Description:
           <textarea :id="descriptionId" v-model="description" class="form-control form-control-lg" required
             placeholder="Enter the description"></textarea></label>
       </div>
-
       <!-- Question Field -->
       <div class="mb-3">
         <label for="questionId" class="form-label">Please enter Question:
@@ -23,9 +20,7 @@
             :placeholder="placeholderQText"></textarea></label>
       </div>
 
-      <!-- Answer Fields -->
       <div class="mb-4">
-        <!-- Answer 1 -->
         <div class="mb-3">
           <label for="answer1" class="form-label">Answer 1:
             <input type="text" id="answer1" v-model="answer1" class="form-control form-control-lg"
@@ -35,8 +30,6 @@
               <input type="checkbox" id="correctanswer1" v-model="isChecked1" class="form-check-input" /></label>
           </div>
         </div>
-
-        <!-- Answer 2 -->
         <div class="mb-3">
           <label for="answer2" class="form-label">Answer 2:
             <input type="text" id="answer2" v-model="answer2" class="form-control form-control-lg"
@@ -46,8 +39,6 @@
               <input type="checkbox" id="correctanswer2" v-model="isChecked2" class="form-check-input" /></label>
           </div>
         </div>
-
-        <!-- Answer 3 -->
         <div class="mb-3">
           <label for="answer3" class="form-label">Answer 3:
             <input type="text" id="answer3" v-model="answer3" class="form-control form-control-lg"
@@ -57,8 +48,6 @@
               <input type="checkbox" id="correctanswer3" v-model="isChecked3" class="form-check-input" /></label>
           </div>
         </div>
-
-        <!-- Answer 4 -->
         <div class="mb-3">
           <label for="answer4" class="form-label">Answer 4:
             <input type="text" id="answer4" v-model="answer4" class="form-control form-control-lg"
@@ -69,15 +58,12 @@
           </div>
         </div>
       </div>
-
-      <!-- Add Question Button -->
       <button type="button" @click="addNewQuestionPrompt" class="btn btn-primary w-100">Add This Question</button>
     </form>
   </div>
 </template>
 
 <script setup>
-// import NewQuestion from './DisplayedQuestion.vue';
 
 const emit = defineEmits(['updatedQuestions']);
 
@@ -91,7 +77,6 @@ defineExpose({ updateHasQuestions });
 
 export default {
   components: {
-    // NewQuestion,
   },
   data() {
     return {
@@ -115,16 +100,13 @@ export default {
   },
   methods: {
     deleteQuestion(index) {
-      // Remove the question at the specified index from the questions array
       console.log('deleteQuestion', index);
       this.questions.splice(index, 1);
       this.testHasQuestions = this.questions.length > 0;
       this.$emit('updatedQuestions', this.testHasQuestions, this.questions);
     },
     addNewQuestionPrompt() {
-      // Add a new question component to the array when the button is clicked
       if (this.questionText && (this.answer1 || this.answer2 || this.answer3 || this.answer4)) {
-        // console.log('--------BEFORE CREATING QUESTION----------');
         const question = {
           questionText: this.questionText,
           answers: {
@@ -146,7 +128,6 @@ export default {
             },
           },
         };
-        // console.log('--------Pushing to questions array----------');
         if (process.env.NODE_ENV !== 'production') {
           this.questions.push(
             {

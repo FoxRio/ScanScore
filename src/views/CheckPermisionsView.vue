@@ -8,7 +8,7 @@
 
 <script>
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { auth } from '../firebase'; // Adjust the path as needed
+import { auth } from '../firebase';
 
 export default {
   data() {
@@ -22,7 +22,7 @@ export default {
       const userId = auth.currentUser ? auth.currentUser.uid : null;
 
       if (userId) {
-        const docRef = doc(db, 'tests', 'HeMpC5TDNhIxWfxq5O8t'); // Replace with your actual document ID
+        const docRef = doc(db, 'tests', 'HeMpC5TDNhIxWfxq5O8t');
 
         try {
           const docSnap = await getDoc(docRef);

@@ -1,6 +1,5 @@
 <template>
   <div class="ai-assistant">
-    <!-- Chat History -->
     <div class="chat-history">
       <div v-for="(exchange, index) in chatHistory" :key="index" class="chat-exchange">
         <div class="user-message">
@@ -11,12 +10,9 @@
         </div>
       </div>
     </div>
-
-    <!-- User Input Section -->
     <label for="userPrompt">Ask our AI assistant for suggestions:
       <textarea v-model="userPrompt" placeholder="Ask for suggestions..." rows="4"></textarea></label>
     <button @click="sendPrompt">Ask AI</button>
-
     <div v-if="loading">Loading...</div>
     <div v-if="error" class="error">{{ error }}</div>
   </div>
@@ -40,14 +36,11 @@ export default {
         this.error = 'Prompt cannot be empty';
         return;
       }
-
       this.loading = true;
       this.error = null;
-
-      // Store the user's question in the chat history
       this.chatHistory.push({ userQuestion: this.userPrompt, aiAnswer: null });
       if (this.chatHistory.length > 10) {
-        this.chatHistory.shift(); // Remove the oldest chat exchange if there are more than 10
+        this.chatHistory.shift(); // Remove the oldest chat exchange if there are more than 10 to save tokens
       }
       const testTitle = this.$parent.testFileData.title || 'The user hasn\'t named their test yet, help them as you can with your broad knowledge';
       const testDescription = this.$parent.testFileData.description || 'The user hasn\'t described their test yet, help them as you can with your broad knowledge';
@@ -55,20 +48,16 @@ export default {
         console.log('Sending prompt to AI:', this.userPrompt, testTitle, testDescription, this.chatHistory);
         const response = await axios.post('https://us-central1-scanscore-6cbf7.cloudfunctions.net/api/call-openai', {
           prompt: this.userPrompt,
-          title: this.$parent.testFileData.title, // Pass title from the parent
+          title: this.$parent.testFileData.title,
           description: this.$parent.testFileData.description,
           conversationHistory: this.chatHistory,
         });
-
-        // Add AI response to the last chat exchange
         this.chatHistory[this.chatHistory.length - 1].aiAnswer = response.data.text;
       } catch (error) {
         this.error = `Error fetching AI response: ${error.message}`;
       } finally {
         this.loading = false;
       }
-
-      // Clear the user input after submission
       this.userPrompt = '';
     },
   },

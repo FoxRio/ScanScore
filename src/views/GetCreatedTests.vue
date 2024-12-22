@@ -1,13 +1,9 @@
 <template>
   <div class="container mt-5">
-    <!-- Saved Tests Header -->
     <h1 class="text-primary mb-4" style="color: #0638b8;">Saved Tests</h1>
     <p v-if="displayName" style="color: #0638b8;">Hello, {{ displayName }}! Here are your saved tests.</p>
-
-    <!-- Loop through each test and display the buttons -->
     <div v-for="test in tests" :key="test.id" class="mb-4 p-3 border rounded" style="background-color: #eaf4eb;">
       <h2 style="color: #d44e00;">{{ test.title }}</h2>
-
       <div class="btn-group mt-3">
         <button class="btn btn-warning mx-2" @click="editTest(test.id)"
           style="background-color: #d9601a; color: #fff; border: none;">Edit</button>
@@ -53,7 +49,6 @@ export default {
       if (user) {
         this.displayName = user.displayName;
       }
-      // Query to get only the tests created by the authenticated user
       const testsQuery = query(collection(db, 'tests'), where('userId', '==', userId));
       const querySnapshot = await getDocs(testsQuery);
       this.tests = querySnapshot.docs.map((docx) => ({ id: docx.id, ...docx.data() }));
@@ -64,7 +59,6 @@ export default {
   },
   methods: {
     editTest(id) {
-      // Redirect to edit page or load test for editing
       this.$router.push({ name: 'EditTest', params: { id } });
     },
     goToHome() {
@@ -113,29 +107,22 @@ export default {
     async generateAnswersSheet(id) {
       const testToProcess = this.tests.find((test) => test.id === id);
       const questionsArray = testToProcess.questions;
-
       const docChildren = [];
-
-      // Since Webpack will process the image and return a URL, use it here
       const checkboxImage = checkboxImagePath;
 
       for (let i = 0; i < questionsArray.length; i += 1) {
         const question = questionsArray[i];
         const { questionText, answers } = question;
 
-        // Convert the answers object into an array
         const answersArray = Object.values(answers);
 
-        // Create a paragraph for the question
         const questionParagraph = new Paragraph({
           text: `Q${i + 1}: ${questionText}`,
           heading: HeadingLevel.HEADING_2,
         });
 
-        // Add the question to the document
         docChildren.push(questionParagraph);
 
-        // Create a table to hold the checkboxes and answers
         const checkboxRow = new Table({
           rows: [
             new TableRow({
@@ -143,8 +130,8 @@ export default {
                 const checkboxImageRun = new ImageRun({
                   data: checkboxImage,
                   transformation: {
-                    width: 50, // Set width of the checkbox imag
-                    height: 50, // Set height of the checkbox image
+                    width: 50,
+                    height: 50,
                   },
                 });
 
@@ -153,24 +140,22 @@ export default {
                     // The checkbox image
                     new Paragraph({
                       children: [checkboxImageRun],
-                      alignment: 'center', // Center the checkbox image in the cell
+                      alignment: 'center',
                     }),
 
                   ],
-                  // Removing the borders from the table cell
                   borders: {
                     top: { value: 0 },
                     bottom: { value: 0 },
                     left: { value: 0 },
                     right: { value: 0 },
                   },
-                  width: { size: 25, type: WidthType.PERCENTAGE }, // Adjust the width of the cells
-                  height: { value: 200, type: 'pt' }, // Ensure enough height for text visibility
+                  width: { size: 25, type: WidthType.PERCENTAGE },
+                  height: { value: 200, type: 'pt' },
                 });
               }),
             }),
           ],
-          // Set the table to take the full width
           width: { size: 100, type: WidthType.PERCENTAGE }, // Table takes up 100% of the page width
           borders: {
             top: { value: 0 },
@@ -179,12 +164,8 @@ export default {
             right: { value: 0 },
           },
         });
-
-        // Add the checkbox row to the document
         docChildren.push(new Paragraph(''));
         docChildren.push(checkboxRow);
-
-        // Add some space before the next question
         docChildren.push(new Paragraph(''));
       }
 
@@ -193,7 +174,6 @@ export default {
       const base64ImageData = await QRCode.toDataURL(qrText);
       const QRblob = await fetch(base64ImageData).then((response) => response.blob());
 
-      // Create the document with questions and checkboxes
       const createdDoc = new Document({
         sections: [
           {
@@ -239,7 +219,6 @@ export default {
 
       try {
         Packer.toBlob(createdDoc).then((blob) => {
-          // Save the document
           const answerSheetName = `answersheet_${testToProcess.title}.docx`;
           saveAs(blob, answerSheetName);
         });
@@ -250,8 +229,6 @@ export default {
     generateDocument(id) {
       const testFileData = this.tests.find((test) => test.id === id);
       const questionsArray = testFileData.questions;
-      // console.log('TEST', testFileData);
-      // console.log('Questions:', questionsArray);
       const buildRows = () => {
         const rowArray = [];
         for (let i = 0; i < questionsArray.length; i += 1) {
@@ -358,16 +335,13 @@ button.btn {
 
 button.btn-danger {
   background-color: #f44336;
-  /* Red background for delete button */
 }
 
 button.btn-warning {
   background-color: #d9601a;
-  /* Warning background for edit button */
 }
 
 button.btn-info {
   background-color: #1c4bc0;
-  /* Info color for generate buttons */
 }
 </style>

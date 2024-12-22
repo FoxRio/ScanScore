@@ -26,7 +26,6 @@ export default {
     };
 
     onMounted(() => {
-      // Listen for authentication state changes
       onAuthStateChanged(auth, (user) => {
         isAuthenticated.value = !!user;
       });
@@ -42,6 +41,6 @@ export default {
 
 <style scoped>
 button:hover {
-  background-color: #be4600; /* Darker primary color */
+  background-color: #be4600;
 }
 </style>

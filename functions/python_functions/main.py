@@ -121,7 +121,6 @@ def process_image(request):
     if image is None:
         return jsonify({"error": "Failed to download image from URL"}), 400
 
-    # Proceed with image processing
     evaluation = findCheckedBoxes(image)
 
     return jsonify(gradeFile(evaluation, correct_answers))

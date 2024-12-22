@@ -24,7 +24,6 @@
 
         <h2>Questions</h2>
         <div v-for="(question, index) in test.questions" :key="index">
-          <!-- Display question or edit form based on editingIndex -->
           <div v-if="editingIndex !== index">
             <NewQuestion
               :questionData="question"
@@ -54,7 +53,7 @@ import {
   getFirestore, doc, getDoc, updateDoc,
 } from 'firebase/firestore';
 import NewQuestion from '../components/DisplayedQuestion.vue';
-import QuestionEditComponent from '../components/QuestionEditComponent.vue'; // Import the edit component
+import QuestionEditComponent from '../components/QuestionEditComponent.vue';
 
 export default {
   name: 'EditTest',
@@ -100,14 +99,14 @@ export default {
         const docRef = doc(db, 'tests', this.testId);
         await updateDoc(docRef, this.test);
         alert('Test updated successfully!');
-        this.$router.push({ name: 'Mytests' }); // Redirect after updating
+        this.$router.push({ name: 'Mytests' });
       } catch (error) {
         console.error('Error updating test:', error);
       }
     },
 
     cancelEdit() {
-      this.$router.push({ name: 'Mytests' }); // Redirect to the My Tests page
+      this.$router.push({ name: 'Mytests' });
     },
 
     deleteQuestion(index) {
@@ -116,7 +115,6 @@ export default {
     },
 
     addQuestion() {
-      // Logic to add a new question
       this.test.questions.push({
         questionText: '',
         answers: [
@@ -126,29 +124,24 @@ export default {
           { text: '', correct: false },
         ],
       });
-      this.editQuestion(this.test.questions.length - 1); // Edit the newly added question
+      this.editQuestion(this.test.questions.length - 1);
     },
     editQuestion(index) {
-      this.editingIndex = index; // Set the index of the question to edit
+      this.editingIndex = index;
     },
     updateQuestion(index, updatedQuestion) {
-      // Update the specific question in the array directly
       this.test.questions[index] = updatedQuestion;
-
-      // Reset editing index after the update
       this.editingIndex = null;
     },
   },
   mounted() {
-    // Get the test ID from the route parameters
     this.testId = this.$route.params.id;
-    this.fetchTest(); // Fetch the test data when the component is mounted
+    this.fetchTest();
   },
 };
 </script>
 
 <style scoped>
-/* Add any styles you want for your EditTest component */
 form {
   max-width: 400px;
   margin: auto;

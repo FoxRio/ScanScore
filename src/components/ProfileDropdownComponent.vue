@@ -7,7 +7,7 @@
       <li><RouterLink to="/my-tests" class="dropdown-item" style="color: #0638b8;">My Tests</RouterLink></li>
       <li><RouterLink to="/info" class="dropdown-item" style="color: #0638b8;">Info</RouterLink></li>
       <li><RouterLink to="/settings" class="dropdown-item" style="color: #0638b8;">Settings</RouterLink></li>
-      <li><SignOutButton /></li> <!-- Sign out button inside the dropdown -->
+      <li><SignOutButton /></li>
     </ul>
   </div>
 </template>
@@ -15,18 +15,17 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import SignOutButton from './SignOutButton.vue'; // Import SignOutButton component
+import SignOutButton from './SignOutButton.vue';
 
 export default {
   components: {
-    SignOutButton, // Register the SignOutButton component
+    SignOutButton,
   },
   setup() {
     const auth = getAuth();
     const isAuthenticated = ref(false);
 
     onMounted(() => {
-      // Listen for authentication state changes
       onAuthStateChanged(auth, (user) => {
         isAuthenticated.value = !!user;
       });

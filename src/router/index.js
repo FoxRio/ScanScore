@@ -5,9 +5,9 @@ import Register from '../views/RegisterView.vue';
 import Login from '../views/LoginView.vue';
 import Landing from '../views/LandingView.vue';
 import CreateTest from '../views/CreateTestView.vue';
-import { auth } from '../firebase'; // Import Firebase authentication
+import { auth } from '../firebase';
 import GetCreatedTests from '../views/GetCreatedTests.vue';
-import EditTest from '../views/EditTestView.vue'; // Import the EditTest component
+import EditTest from '../views/EditTestView.vue';
 import Settings from '../views/SettingsView.vue';
 import Goodbye from '../views/GoodbyeView.vue';
 import GradeTests from '../views/GradeTestView.vue';

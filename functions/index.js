@@ -19,27 +19,6 @@ app.use(express.json());
 const apiKey = functions.config().openai.key;
 const openai = new OpenAI({ apiKey });
 
-// async function checkDownloadToken(bucketName, filePath) {
-//   const bucket = admin.storage().bucket(bucketName);
-//   const file = bucket.file(filePath);
-
-//   try {
-//     const [metadata] = await file.getMetadata();
-//     const downloadTokens = metadata.metadata?.firebaseStorageDownloadTokens;
-
-//     if (downloadTokens) {
-//       console.log('Download token exists:', downloadTokens);
-//     } else {
-//       console.log('No download token available for the file.');
-//     }
-
-//     return downloadTokens || null;
-//   } catch (error) {
-//     console.error('Error fetching metadata:', error);
-//     return null;
-//   }
-// }
-
 app.post('/call-openai', async (req, res) => {
   try {
     const {
@@ -63,7 +42,7 @@ app.post('/call-openai', async (req, res) => {
     The conversation history is as follows: {${conversationHistory.join(' ')}}.`;
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4', // Ensure correct model
+      model: 'gpt-4',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt },

@@ -6,9 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ScanScore!</title>
 
-  <!-- update the version number as needed -->
   <script defer src="/__/firebase/10.13.1/firebase-app-compat.js"></script>
-  <!-- include only the Firebase features as you need -->
   <script defer src="/__/firebase/10.13.1/firebase-auth-compat.js"></script>
   <script defer src="/__/firebase/10.13.1/firebase-database-compat.js"></script>
   <script defer src="/__/firebase/10.13.1/firebase-firestore-compat.js"></script>
@@ -43,7 +41,6 @@
   <div id="app" style="display: none;"></div>
   <script type="module" src="/src/main.js"></script>
   <script>
-    // Remove the loading screen when the app is mounted
     window.addEventListener('firebase-initialized', () => {
       document.getElementById('loading-screen').style.display = 'none';
       document.getElementById('app').style.display = 'block';
