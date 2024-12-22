@@ -14,6 +14,8 @@
 
       <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
     </form>
+    <div class="forgot-password">
+    <button @click="resetPassword" class="forgot-password">Forgot Password?</button></div>
   </div>
   <div class="register">
     <router-link to="/register">Don't have an account? Register</router-link>
@@ -21,7 +23,7 @@
 </template>
 
 <script>
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 
 export default {
   data() {
@@ -36,10 +38,22 @@ export default {
       const auth = getAuth();
       try {
         await signInWithEmailAndPassword(auth, this.email, this.password);
-        // Redirect to home or another page upon successful login
-        this.$router.push('/about'); // Adjust the redirect as needed
+        this.$router.push('/about');
       } catch (error) {
-        this.errorMessage = error.message; // Display error message
+        this.errorMessage = error.message;
+      }
+    },
+    async resetPassword() {
+      const auth = getAuth();
+      if (!this.email) {
+        this.errorMessage = 'Please enter your email to reset the password.';
+        return;
+      }
+      try {
+        await sendPasswordResetEmail(auth, this.email);
+        this.errorMessage = 'Password reset email sent. Please check your inbox.';
+      } catch (error) {
+        this.errorMessage = error.message;
       }
     },
   },
@@ -53,12 +67,12 @@ export default {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #f5fff6; /* Background color */
+  background-color: #f5fff6;
 }
 
 h1 {
   text-align: center;
-  color: #0638b8; /* Text color */
+  color: #0638b8;
 }
 
 .input-container {
@@ -71,7 +85,7 @@ h1 {
   font-size: 1rem;
   margin-bottom: 5px;
   font-weight: bold;
-  color: #0638b8; /* Text color */
+  color: #0638b8;
 }
 
 .input-field {
@@ -87,7 +101,7 @@ h1 {
 button {
   padding: 10px 20px;
   font-size: 1rem;
-  background-color: #d44e00; /* Primary color */
+  background-color: #d44e00;
   color: white;
   border: none;
   border-radius: 4px;
@@ -96,7 +110,23 @@ button {
 }
 
 button:hover {
-  background-color: #b43e00; /* Darker shade of primary color for hover */
+  background-color: #b43e00;
+}
+
+.forgot-password {
+  margin-top: 10px;
+  background-color: transparent;
+  color: #0638b8;
+  text-decoration: none;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+}
+
+button.forgot-password:hover {
+  color: #d44e00;
+  text-decoration: underline;
+  background-color: transparent;
 }
 
 .error {
@@ -111,13 +141,13 @@ button:hover {
 }
 
 .register a {
-  color: #0638b8; /* Text color */
+  color: #0638b8;
   background-color: transparent;
   text-decoration: none;
 }
 
 .register a:hover {
-  color: #d44e00; /* Primary color for hover */
+  color: #d44e00;
   text-decoration: underline;
 }
 </style>
