@@ -64,7 +64,6 @@
 </template>
 
 <script setup>
-
 const emit = defineEmits(['updatedQuestions']);
 
 function updateHasQuestions(value) {

@@ -4,17 +4,22 @@ import requests
 import numpy as np
 from flask import jsonify, request
 import os
-import firebase_functions
+import firebase_admin
+from firebase_admin import credentials, storage
 import logging
 
-logging.basicConfig(level=logging.DEBUG)  # You can change to INFO, WARNING, ERROR based on need
+# Initialize Firebase Admin SDK
+firebase_key_path = "/secrets/firebase-admin-key"
+if not firebase_admin._apps:
+    cred = credentials.Certificate(firebase_key_path)
+    firebase_admin.initialize_app(cred, {'storageBucket': 'scanscore-6cbf7.appspot.com'})
+
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
 
 def download_image(image_url):
-    # Send a GET request to fetch the image from the URL
     response = requests.get(image_url)
     if response.status_code == 200:
-        # Convert the image data to an array and then decode it to an OpenCV image
         image_array = np.frombuffer(response.content, np.uint8)
         image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
         return image
@@ -82,14 +87,12 @@ def findCheckedBoxes(image):
     # cv2.imshow('repair', repair)
     # cv2.imshow('original', original)
     # In your Python script (findCheckedBoxes function)
-    cv2.imwrite('graded_image.jpg', original)  # Save the graded image
+    cv2.imwrite('/tmp/graded_image.jpg', original)  # Save the graded image
     return isChecked
 
 def gradeFile(actualInput, expectedInput):
     maxScore = len(expectedInput)
     score = 0
-
-    # Print the actual input for debugging
 
     # Reverse actualInput using slicing and compare with expectedInput
     for actual, expected in zip(actualInput[::-1], expectedInput):
@@ -99,22 +102,31 @@ def gradeFile(actualInput, expectedInput):
     result = [score, maxScore, score/maxScore * 100]
     return result
 
+def upload_to_firebase(userId, file_name, score_metadata):
+    bucket = storage.bucket()
+    blob = bucket.blob(f"userUploads/{userId}/graded/{file_name}")
+    blob.upload_from_filename('/tmp/graded_image.jpg')
+
+    # Add metadata
+    blob.metadata = {'score': str(score_metadata[0]), 'maxScore': str(score_metadata[1]), 'percentage': f"{score_metadata[2]:.2f}"}
+    blob.patch()
+
+    return blob.public_url
+
 # Read the image using OpenCV
 @functions_framework.http
 def process_image(request):
-    print(f"Received full request: {request}")
-
+    logger.info("Received full request: %s", request)
     request_json = request.get_json()
-
-    print(f"Received request JSON: {request_json}")
 
     if not request_json:
         return jsonify({"error": "Invalid JSON"}), 400
 
     image_url = request_json.get('image_url')
     correct_answers = request_json.get('correct_answers')
+    user_id = request_json.get('user_id')
 
-    if not image_url or not correct_answers:
+    if not image_url or not correct_answers or not user_id:
         return jsonify({"error": "Missing required parameters"}), 400
 
     image = download_image(image_url)
@@ -122,5 +134,8 @@ def process_image(request):
         return jsonify({"error": "Failed to download image from URL"}), 400
 
     evaluation = findCheckedBoxes(image)
+    grade = gradeFile(evaluation, correct_answers)
 
-    return jsonify(gradeFile(evaluation, correct_answers))
+    public_url = upload_to_firebase(user_id, 'graded_image.jpg', grade)
+
+    return jsonify({"score": grade[0], "maxScore": grade[1], "percentage": grade[2], "graded_image_url": public_url})

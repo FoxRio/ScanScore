@@ -7,6 +7,7 @@
         </a>
 
         <div class="navbar-nav ml-auto">
+          <div>
           <RouterLink
             to="/"
             class="nav-link"
@@ -14,7 +15,8 @@
             style="color: #0638b8;"
           >
             Home
-          </RouterLink>
+          </RouterLink></div>
+          <div>
           <RouterLink
             to="/about"
             class="nav-link"
@@ -22,7 +24,8 @@
             style="color: #0638b8;"
           >
             About
-          </RouterLink>
+          </RouterLink></div>
+          <div v-if="isAuthenticated">
           <RouterLink
             to="/create-test"
             class="nav-link"
@@ -30,7 +33,8 @@
             style="color: #0638b8;"
           >
             Create a Test
-          </RouterLink>
+          </RouterLink></div>
+          <div v-if="isAuthenticated">
           <RouterLink
             to="/grade-tests"
             class="nav-link"
@@ -38,7 +42,7 @@
             style="color: #0638b8;"
           >
             Grade a Test
-          </RouterLink>
+          </RouterLink></div>
         </div>
 
         <!-- Sign-In Button (if not signed in) -->

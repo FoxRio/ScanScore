@@ -44,10 +44,32 @@
 </template>
 
 <script>
+import { auth } from '../firebase';
+
 export default {
+  data() {
+    return {
+      isLoggedIn: false,
+    };
+  },
+  created() {
+    this.checkLoginStatus();
+  },
   methods: {
+    checkLoginStatus() {
+      const user = auth.currentUser;
+      if (user) {
+        this.isLoggedIn = true;
+      } else {
+        this.isLoggedIn = false;
+      }
+    },
     goToHome() {
-      this.$router.push('/');
+      if (this.isLoggedIn) {
+        this.$router.push('/create-test');
+      } else {
+        this.$router.push('/signup');
+      }
     },
   },
 };

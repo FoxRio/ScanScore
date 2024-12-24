@@ -31,12 +31,12 @@
     <section class="testimonials">
       <h2>What Our Users Are Saying</h2>
       <div class="testimonial">
-        <p>"This tool has saved me so much time! The AI assistant helps me come up with great questions, and the automated grading is a game-changer!"</p>
-        <cite>- Sarah, High School Teacher</cite>
+        <p>"This tool has saved me so much time, the AI assistant helps me come up with great questions, and the automated grading is a game-changer!"</p>
+        <cite>- Rolands, Middle School Teacher</cite>
       </div>
       <div class="testimonial">
-        <p>"I love how easy it is to create and save tests. The interface is user-friendly and the AI features are incredibly helpful."</p>
-        <cite>- John, Middle School Teacher</cite>
+        <p>"We use standartised testing a lot and this tool will save me a lot of time. I spend way too much of my time doing the repetitive taks and can't fully focus on the students."</p>
+        <cite>- Marcus, Madison Elementary School Teacher</cite>
       </div>
     </section>
     <section class="cta" v-if="!isLoggedIn">

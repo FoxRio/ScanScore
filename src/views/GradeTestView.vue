@@ -10,6 +10,7 @@
         and more accurate than manual grading!
       </p>
     </div>
+
     <!-- Upload Section -->
     <div class="upload-section text-center mb-5">
       <h3 class="mb-4">Upload Test Image</h3>
@@ -21,8 +22,8 @@
           id="file"
           class="form-control-file"
           @change="handleFileUpload"
-          style="display: none;"
-        /></label>
+          style="display: none;"/>
+        </label>
       </div>
       <p v-if="uploadedImage" class="mt-3 text-success">
         <strong>File selected:</strong> {{ uploadedImage.name }}
@@ -35,31 +36,43 @@
           Upload to Firebase
         </button>
       </div>
-    </div>
-<!-- Grading Section -->
-    <div class="grading-section text-center mb-5">
-          <h3 class="mb-4">Grade Test</h3>
-          <div v-if="hasFiles">
-            <label for="answerKey">Enter Answer Key (e.g., 1,0,0,1,...):
-            <input type="text" id="answerKey" v-model="answerKey" /></label>
-            <div v-for="file in userFiles" :key="file.name" class="mb-3">
-              <p>{{ file.name }}</p>
-              <button
-                class="btn btn-success btn-lg"
-                @click="gradeTest(file)"
-              >
-                Grade Test
-              </button>
-            </div>
-          </div>
-          <p v-else>No files uploaded yet. Please upload a test image.</p>
+
+      <!-- Progress Section -->
+      <div v-if="uploading" class="mt-3">
+        <p>Upload Progress: {{ uploadProgress }}%</p>
+        <div class="progress" style="height: 20px;">
+          <div class="progress-bar" role="progressbar" :style="{ width: uploadProgress + '%' }" aria-valuenow="uploadProgress" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- Grading Section -->
+    <div class="grading-section text-center mb-5">
+      <h3 class="mb-4">Grade Test</h3>
+      <div v-if="hasFiles">
+        <label for="answerKey">Enter Answer Key (e.g., 1,0,0,1,...):
+          <input type="text" id="answerKey" v-model="answerKey" />
+        </label>
+        <div v-for="file in userFiles" :key="file.name" class="mb-3">
+          <p>{{ file.name }}</p>
+          <button
+            class="btn btn-success btn-lg"
+            @click="gradeTest(file)"
+          >
+            Grade Test
+          </button>
+        </div>
+      </div>
+      <p v-else>No files uploaded yet. Please upload a test image.</p>
+    </div>
+
     <!-- Results Section -->
     <div v-if="results" class="results-section mt-5">
       <h2 class="text-center text-success">Results</h2>
       <p>Score: {{ results.response.score }} / {{ results.response.maxScore }}</p>
       <p>Percentage: {{ results.response.percentageValue }}%</p>
-    </div> </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -75,6 +88,8 @@ export default {
   data() {
     return {
       uploadedImage: null,
+      uploadProgress: 0,
+      uploading: false,
       results: null,
       hasFiles: null,
     };
@@ -124,29 +139,31 @@ export default {
 
       const file = this.uploadedImage;
       const userId = getAuth().currentUser.uid;
+      const timestamp = new Date().getTime();
+      const folderName = `${file.name.replace(/\.[^/.]+$/, '')}_${timestamp}`;
+      const storageRef = ref(storage, `userUploads/${userId}/${folderName}/${file.name}`);
 
-      const storageRef = ref(storage, `userUploads/${userId}/uploaded/${file.name}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
+      this.uploading = true;
 
       uploadTask.on(
         'state_changed',
         (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          alert(`Upload is ${progress}% done`);
+          this.uploadProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         },
         (error) => {
           console.error('Upload failed:', error);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            alert('File uploaded successfully!');
-            this.userFiles.push({ name: file.name, url: downloadURL });
+            this.userFiles.push({ name: file.name, url: downloadURL, folder: folderName });
+            this.uploading = false;
+            this.uploadProgress = 0;
             this.uploadedImage = null;
           });
         },
       );
     },
-
     async gradeTest(file) {
       const auth = getAuth();
       const user = auth.currentUser;
