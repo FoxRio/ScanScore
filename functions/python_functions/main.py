@@ -122,7 +122,7 @@ def upload_to_firebase(userId, folderName, file_name, metadata=None):
                 'percentage': f"{metadata[2]:.2f}"
             }
         elif isinstance(metadata, str):
-            blob.metadata = {'qrCodeData': metadata, 'answerKey': True}
+            blob.metadata = {'qrCodeData': metadata, 'answerKey': True, 'type': 'answerKey'}
 
     blob.patch()
     return blob.public_url

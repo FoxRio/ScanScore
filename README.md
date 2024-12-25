@@ -28,7 +28,10 @@ npm run lint
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-for deploying
-gcloud functions deploy read_qrcode --runtime python312 --trigger-http --allow-unauthenticated --region europe-west1 --set-secrets "/secrets/firebase-admin-key=firebase-admin-key:latest" --verbosity debug
+### For deploying cloud functions
 
-make sure there is no venv folder left
+```
+gcloud functions deploy read_qrcode --runtime python312 --trigger-http --allow-unauthenticated --region europe-west1 --set-secrets "/secrets/firebase-admin-key=firebase-admin-key:latest" --verbosity debug
+```
+
+# make sure there is no venv folder left

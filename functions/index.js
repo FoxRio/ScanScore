@@ -59,10 +59,10 @@ app.post('/call-openai', async (req, res) => {
 
 app.post('/grade-test', async (req, res) => {
   const {
-    correctAnswers, userId, fileUrl, fileName,
+    correctAnswers, userId, fileUrl, folderName,
   } = req.body;
 
-  if (!correctAnswers || !userId || !fileName || !fileUrl) {
+  if (!correctAnswers || !userId || !folderName || !fileUrl) {
     return res.status(400).json({ error: 'Missing required fields.' });
   }
   const pythonApiUrl = 'https://europe-west1-scanscore-6cbf7.cloudfunctions.net/process_image';
@@ -71,13 +71,16 @@ app.post('/grade-test', async (req, res) => {
     const response = await axios.post(pythonApiUrl, {
       image_url: fileUrl,
       correct_answers: correctAnswers,
+      user_id: userId,
+      folder_name: folderName,
     });
     return res.status(200).send({
       message: 'Test graded successfully',
       response: {
-        score: response.data[0],
-        maxScore: response.data[1],
-        percentageValue: response.data[2],
+        gradedImageUrl: response.data[0],
+        score: response.data[1],
+        maxScore: response.data[2],
+        percentageValue: response.data[3],
       },
     });
   } catch (err) {

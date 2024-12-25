@@ -233,8 +233,19 @@ export default {
       );
     },
     async getAnswerKey(folder) {
+      console.log(folder);
+      const auth = getAuth();
+      const user = auth.currentUser;
+      const userId = user.uid;
       const userUploadFile = folder.files.find((file) => file.metadata?.customMetadata?.type === 'userUpload');
-
+      console.log(userUploadFile.url);
+      const response = await axios.post('https://europe-west1-scanscore-6cbf7.cloudfunctions.net/read_qrcode', {
+        userId,
+        fileName: userUploadFile.name,
+        fileUrl: userUploadFile.url,
+        folder_name: folder.folderMetadata.folderName,
+      });
+      console.log(response.data);
       if (userUploadFile) {
         console.log('Found user upload file:', userUploadFile);
         console.log('File URL:', userUploadFile.url);
@@ -242,12 +253,26 @@ export default {
         console.log('No user upload file found.');
       }
     },
-    async gradeTest(file) {
+    parseQrCodeData(qrCodeData) {
+      const parts = qrCodeData.split('Q').slice(1); // Discard the first element
+      const answers = parts.join('').split('').map((char) => parseInt(char, 10));
+      console.log('answerrs: ', answers);
+      return answers;
+    },
+    async gradeTest(folder) {
+      console.log('Passed folder: ', folder);
       const auth = getAuth();
       const user = auth.currentUser;
       const userId = user.uid;
-      const answerKeyInput = document.getElementById('answerKey').value;
-      const answers = answerKeyInput.split(',').map((value) => parseInt(value.trim(), 10));
+      const userUploadFile = folder.files.find((file) => file.metadata?.customMetadata?.type === 'userUpload');
+      const answerKeyFile = folder.files.find((file) => file.metadata?.customMetadata?.type === 'answerKey');
+      if (answerKeyFile === undefined) {
+        alert('No answer key found for this test.');
+        return;
+      }
+      const { qrCodeData } = answerKeyFile.metadata.customMetadata;
+      const answers = this.parseQrCodeData(qrCodeData);
+      console.log(answers, answers.length);
       if (answers.length === 0 || answers.some((val) => val !== 0 && val !== 1)) {
         alert('Answer key must be a comma-separated list of 1s and 0s.');
         return;
@@ -256,10 +281,13 @@ export default {
         const response = await axios.post('https://us-central1-scanscore-6cbf7.cloudfunctions.net/api/grade-test', {
           correctAnswers: answers,
           userId,
-          fileName: file.name,
-          fileUrl: file.url,
+          fileName: userUploadFile.name,
+          fileUrl: userUploadFile.url,
+          folderName: folder.folderMetadata.folderName,
         });
         this.results = response.data;
+        console.log('Results:', this.results);
+        this.fetchUserFiles();
       } catch (error) {
         console.error('Error grading the test:', error);
       }
@@ -344,7 +372,6 @@ button.btn-success:hover {
   border-color: #46b6b2;
 }
 
-/* File Information Section */
 .file-info {
   margin-bottom: 15px;
   padding: 15px;
@@ -379,5 +406,4 @@ button.btn-success:hover {
 .file-info strong {
   color: #d44e00;
 }
-
 </style>
