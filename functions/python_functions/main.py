@@ -53,6 +53,9 @@ def findCheckedBoxes(image):
         peri = cv2.arcLength(c, True)
         approx = cv2.approxPolyDP(c, 0.035 * peri, True)
         x,y,w,h = cv2.boundingRect(approx)
+        if x < 100 and y < 100 and w > 50 and h > 50:
+            print("Excluding potential QR code checkbox as qrcode")
+            continue
         aspect_ratio = w / float(h)
         if len(approx) == 4 and (0.8 <= aspect_ratio <= 1.2):
             cv2.rectangle(original, (x, y), (x + w, y + h), (0, 0, 255), 1)
@@ -63,7 +66,7 @@ def findCheckedBoxes(image):
     checkedBoxes = 0
     isChecked = []
     for contour in checkbox_contours:
-        # Create a binary mask for the specified contour
+
         mask = np.zeros_like(repair)
         cv2.drawContours(mask, [contour], 0, 255, thickness=cv2.FILLED)
 
@@ -102,15 +105,26 @@ def gradeFile(actualInput, expectedInput):
     result = [score, maxScore, score/maxScore * 100]
     return result
 
-def upload_to_firebase(userId, file_name, score_metadata):
+def upload_to_firebase(userId, folderName, file_name, metadata=None):
     bucket = storage.bucket()
-    blob = bucket.blob(f"userUploads/{userId}/graded/{file_name}")
-    blob.upload_from_filename('/tmp/graded_image.jpg')
+    blob = bucket.blob(f"userUploads/{userId}/{folderName}/{file_name}")
 
-    # Add metadata
-    blob.metadata = {'score': str(score_metadata[0]), 'maxScore': str(score_metadata[1]), 'percentage': f"{score_metadata[2]:.2f}"}
+    temp_file_path = '/tmp/' + file_name
+    print("Saving image to", temp_file_path)
+    blob.upload_from_filename(temp_file_path)
+
+    if metadata:
+        if isinstance(metadata, list):
+            blob.metadata = {
+                'gradedImage': True,
+                'score': str(metadata[0]),
+                'maxScore': str(metadata[1]),
+                'percentage': f"{metadata[2]:.2f}"
+            }
+        elif isinstance(metadata, str):
+            blob.metadata = {'qrCodeData': metadata, 'answerKey': True}
+
     blob.patch()
-
     return blob.public_url
 
 # Read the image using OpenCV
@@ -125,8 +139,9 @@ def process_image(request):
     image_url = request_json.get('image_url')
     correct_answers = request_json.get('correct_answers')
     user_id = request_json.get('user_id')
+    folder_name = request_json.get('folder_name')
 
-    if not image_url or not correct_answers or not user_id:
+    if not image_url or not correct_answers or not user_id or not folder_name:
         return jsonify({"error": "Missing required parameters"}), 400
 
     image = download_image(image_url)
@@ -136,6 +151,47 @@ def process_image(request):
     evaluation = findCheckedBoxes(image)
     grade = gradeFile(evaluation, correct_answers)
 
-    public_url = upload_to_firebase(user_id, 'graded_image.jpg', grade)
+    public_url = upload_to_firebase(user_id, folder_name, 'graded_image.jpg', grade)
 
     return jsonify({"score": grade[0], "maxScore": grade[1], "percentage": grade[2], "graded_image_url": public_url})
+
+def process_qr_code(image):
+    original = image.copy()
+    detector = cv2.QRCodeDetector()
+
+    data, bbox, _ = detector.detectAndDecode(image)
+
+    if bbox is not None:
+        bbox = np.int32(bbox)
+        cv2.polylines(original, [bbox], isClosed=True, color=(0, 0, 255), thickness=2)
+
+    # Return the data and the bounding box
+    cv2.imwrite('/tmp/qr_code.jpg', original)
+    return data, bbox
+
+@functions_framework.http
+def read_qrcode(request):
+    request_json = request.get_json()
+
+    if not request_json:
+        return jsonify({"error": "Invalid JSON"}), 400
+    user_id = request_json.get('user_id')
+    image_url = request_json.get('image_url')
+    folder_name = request_json.get('folder_name')
+
+    if not image_url or not user_id or not folder_name:
+        return jsonify({"error": "Missing required parameters"}), 400
+
+    image = download_image(image_url)
+    if image is None:
+        return jsonify({"error": "Failed to download image from URL"}), 400
+    data, bbox = process_qr_code(image)
+    public_url = upload_to_firebase(user_id, folder_name, 'qr_code.jpg', data)
+
+
+
+    logger.info(data)
+    if bbox is not None:
+        return jsonify({"data": data, "answer_key_url": public_url})
+    else:
+        return jsonify({"error": "No QR code found in the image"}), 400

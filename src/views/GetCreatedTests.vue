@@ -188,8 +188,8 @@ export default {
                   new ImageRun({
                     data: QRblob,
                     transformation: {
-                      width: 50,
-                      height: 50,
+                      width: 100,
+                      height: 100,
                     },
                     floating: {
                       horizontalPosition: {

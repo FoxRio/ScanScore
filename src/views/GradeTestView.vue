@@ -1,6 +1,5 @@
 <template>
   <div class="grade-tests-view container">
-    <!-- Header Section -->
     <div class="header text-center mb-5">
       <h1 class="text-danger">Grade Tests</h1>
       <p>
@@ -10,7 +9,6 @@
         and more accurate than manual grading!
       </p>
     </div>
-
     <!-- Upload Section -->
     <div class="upload-section text-center mb-5">
       <h3 class="mb-4">Upload Test Image</h3>
@@ -36,7 +34,6 @@
           Upload to Firebase
         </button>
       </div>
-
       <!-- Progress Section -->
       <div v-if="uploading" class="mt-3">
         <p>Upload Progress: {{ uploadProgress }}%</p>
@@ -45,39 +42,53 @@
         </div>
       </div>
     </div>
-
     <!-- Grading Section -->
     <div class="grading-section text-center mb-5">
-      <h3 class="mb-4">Grade Test</h3>
-      <div v-if="hasFiles">
-        <label for="answerKey">Enter Answer Key (e.g., 1,0,0,1,...):
-          <input type="text" id="answerKey" v-model="answerKey" />
-        </label>
-        <div v-for="file in userFiles" :key="file.name" class="mb-3">
-          <p>{{ file.name }}</p>
-          <button
-            class="btn btn-success btn-lg"
-            @click="gradeTest(file)"
-          >
-            Grade Test
-          </button>
+    <h3 class="mb-4">Grade Test</h3>
+    <div v-if="hasFiles">
+      <div v-for="folder in userFiles" :key="folder?.folderName" class="folder-container">
+        <h4>{{ folder?.folderMetadata?.folderName.split('_')[0] }}</h4>
+        <div v-if="!folder.folderMetadata.answerKey && !folder.folderMetadata.gradedImage" class="mb-3">
+          <div class="btn-group mt-3">
+            <button @click="getAnswerKey(folder)" class="btn btn-warning mx-2">Get Answer Key</button>
+            <button @click="gradeTest(folder)" class="btn btn-success mx-2">Grade Test</button>
+          </div>
+        </div>
+        <div v-if="!folder?.folderMetadata.gradedImage && folder.folderMetadata.answerKey" class="mb-3">
+          <div class="btn-group mt-3">
+            <button @click="gradeTest(folder)" class="btn btn-success mx-2">Grade Test</button>
+          </div>
+        </div>
+        <div v-if="folder?.folderMetadata.gradedImage && !folder.folderMetadata.answerKey" class="mb-3">
+          <div class="btn-group mt-3">
+            <button @click="getAnswerKey(folder)" class="btn btn-warning mx-2">Get Answer Key</button>
+          </div>
+        </div>
+        <div v-for="file in folder.files" :key="file.name" class="file-info mb-3">
+          <h5><a :href="file.url" target="_blank">{{ file.name }}</a></h5>
+          <p v-if="file.metadata && file.metadata.customMetadata">
+            <span v-if="file.metadata.customMetadata.answerKey">
+              <strong>Answer Key:</strong> {{ file.metadata.customMetadata.answerKey }}
+            </span>
+            <span v-if="file.metadata.customMetadata.qrCodeData">
+              <strong>Qr code data:</strong> {{ file.metadata.customMetadata.qrCodeData }}
+            </span>
+            <span v-if="file.metadata.customMetadata.gradedImage">
+              <strong>Score:</strong> {{ file.metadata.customMetadata.score }} / {{ file.metadata.customMetadata.maxScore }}
+              <br />
+              <strong>Percentage:</strong> {{ file.metadata.customMetadata.percentage }}%
+            </span>
+          </p>
         </div>
       </div>
-      <p v-else>No files uploaded yet. Please upload a test image.</p>
     </div>
-
-    <!-- Results Section -->
-    <div v-if="results" class="results-section mt-5">
-      <h2 class="text-center text-success">Results</h2>
-      <p>Score: {{ results.response.score }} / {{ results.response.maxScore }}</p>
-      <p>Percentage: {{ results.response.percentageValue }}%</p>
-    </div>
+  </div>
   </div>
 </template>
 
 <script>
 import {
-  ref, uploadBytesResumable, getDownloadURL, listAll,
+  ref, uploadBytesResumable, getDownloadURL, listAll, getMetadata, updateMetadata,
 } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 import { storage } from '@/firebase';
@@ -109,28 +120,67 @@ export default {
       const user = auth.currentUser;
       if (user) {
         const userId = user.uid;
-        const userFolderRef = ref(storage, `userUploads/${userId}/uploaded`);
+        console.log('Fetching files for user:', userId);
+
+        const userFolderRef = ref(storage, `userUploads/${userId}`);
         try {
           const res = await listAll(userFolderRef);
-          const files = await Promise.all(
-            res.items.map(async (itemRef) => {
-              const fileUrl = await getDownloadURL(itemRef);
-              return {
-                name: itemRef.name,
-                url: fileUrl,
+          const subfolderFiles = await Promise.all(
+            res.prefixes.map(async (folderRef) => {
+              const folderName = folderRef.name.split('/').slice(-2, -1)[0];
+              const folderFiles = await listAll(folderRef);
+
+              const fileDetails = await Promise.all(
+                folderFiles.items.map(async (itemRef) => {
+                  const metadata = await getMetadata(itemRef);
+                  const fileUrl = await getDownloadURL(itemRef);
+                  const fileInfo = {
+                    name: itemRef.name,
+                    url: fileUrl,
+                    metadata,
+                    folder: folderName,
+                  };
+
+                  return fileInfo;
+                }),
+              );
+              const folderMetadata = {
+                userUpload: false,
+                answerKey: false,
+                gradedImage: false,
+                folderName: folderRef.name,
               };
+
+              await Promise.all(
+                folderFiles.items.map(async (itemRef) => {
+                  try {
+                    const metadata = await getMetadata(itemRef);
+                    if (metadata.customMetadata?.type === 'userUpload') {
+                      folderMetadata.userUpload = true;
+                    }
+                    if (metadata.customMetadata?.type === 'answerKey') {
+                      folderMetadata.answerKey = true;
+                    }
+                    if (metadata.customMetadata?.type === 'gradedImage') {
+                      folderMetadata.gradedImage = true;
+                    }
+                  } catch (error) {
+                    console.error('Error fetching metadata:', error);
+                  }
+                }),
+              );
+
+              return { folderName, files: fileDetails, folderMetadata };
             }),
           );
-          this.userFiles = files;
-          if (files.length > 0) {
-            this.hasFiles = true;
-          }
+
+          this.userFiles = subfolderFiles; // Structure: [{ folderName: 'folder1', files: [...], folderMetadata: {...} }, { ... }]
+          this.hasFiles = this.userFiles.length > 0;
         } catch (error) {
           console.error('Error fetching files:', error);
         }
       }
     },
-
     async uploadFileToFirebase() {
       if (!this.uploadedImage) {
         alert('No file selected for upload!');
@@ -143,9 +193,13 @@ export default {
       const folderName = `${file.name.replace(/\.[^/.]+$/, '')}_${timestamp}`;
       const storageRef = ref(storage, `userUploads/${userId}/${folderName}/${file.name}`);
 
-      const uploadTask = uploadBytesResumable(storageRef, file);
+      const customMetadata = {
+        customMetadata: {
+          type: 'userUpload',
+        },
+      };
       this.uploading = true;
-
+      const uploadTask = uploadBytesResumable(storageRef, file);
       uploadTask.on(
         'state_changed',
         (snapshot) => {
@@ -154,15 +208,39 @@ export default {
         (error) => {
           console.error('Upload failed:', error);
         },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            this.userFiles.push({ name: file.name, url: downloadURL, folder: folderName });
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            const fileRef = ref(storage, `userUploads/${userId}/${folderName}/${file.name}`);
+            await updateMetadata(fileRef, customMetadata);
+            const metadata = await getMetadata(fileRef);
+            this.userFiles.push({
+              name: file.name,
+              url: downloadURL,
+              metadata,
+              folder: folderName,
+            });
+            await this.fetchUserFiles();
             this.uploading = false;
             this.uploadProgress = 0;
             this.uploadedImage = null;
-          });
+          } catch (error) {
+            console.error('Error updating metadata:', error);
+            this.uploading = false;
+            this.uploadProgress = 0;
+          }
         },
       );
+    },
+    async getAnswerKey(folder) {
+      const userUploadFile = folder.files.find((file) => file.metadata?.customMetadata?.type === 'userUpload');
+
+      if (userUploadFile) {
+        console.log('Found user upload file:', userUploadFile);
+        console.log('File URL:', userUploadFile.url);
+      } else {
+        console.log('No user upload file found.');
+      }
     },
     async gradeTest(file) {
       const auth = getAuth();
@@ -216,4 +294,90 @@ export default {
   border: 1px solid #d1dad2;
   border-radius: 5px;
 }
+
+.folder-container {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #c8d0c9;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.folder-container h4 {
+  color: #0638b8;
+  margin-bottom: 15px;
+}
+
+.button-container {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+button {
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 5px;
+}
+
+button.btn-warning {
+  background-color: #d44e00;
+  border-color: #d44e00;
+  color: white;
+}
+
+button.btn-success {
+  background-color: #5bc0de;
+  border-color: #5bc0de;
+  color: white;
+}
+
+button.btn-warning:hover {
+  background-color: #be4600;
+  border-color: #be4600;
+}
+
+button.btn-success:hover {
+  background-color: #46b6b2;
+  border-color: #46b6b2;
+}
+
+/* File Information Section */
+.file-info {
+  margin-bottom: 15px;
+  padding: 15px;
+  border: 1px solid #e1eae2;
+  border-radius: 8px;
+  background-color: #eef8ef;
+}
+
+.file-info h5 {
+  color: #0638b8;
+}
+
+.file-info a {
+  color: #0638b8;
+  text-decoration: none;
+}
+
+.file-info a:hover {
+  text-decoration: underline;
+}
+
+.file-info p {
+  font-size: 14px;
+  color: #042b8c;
+}
+
+.file-info span {
+  display: block;
+  margin-top: 10px;
+}
+
+.file-info strong {
+  color: #d44e00;
+}
+
 </style>
