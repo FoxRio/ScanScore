@@ -2,7 +2,7 @@ import functions_framework
 import cv2
 import requests
 import numpy as np
-from flask import jsonify, request
+from flask import jsonify, request, make_response
 import os
 import firebase_admin
 from firebase_admin import credentials, storage
@@ -16,14 +16,19 @@ if not firebase_admin._apps:
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
 
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
+
 def download_image(image_url):
     response = requests.get(image_url)
     if response.status_code == 200:
         image_array = np.frombuffer(response.content, np.uint8)
         image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
         return image
-    else:
-        return None
+    return None
 
 def findCheckedBoxes(image):
     original = image.copy()
@@ -113,14 +118,20 @@ def upload_to_firebase(userId, folderName, file_name, metadata=None):
     blob.patch()
     return blob.public_url
 
-# Read the image using OpenCV
 @functions_framework.http
 def process_image(request):
+    # Handle preflight OPTIONS requests
+    if request.method == 'OPTIONS':
+        response = make_response()
+        response.status_code = 204
+        return add_cors_headers(response)
+
     logger.info("Received full request: %s", request)
     request_json = request.get_json()
 
     if not request_json:
-        return jsonify({"error": "Invalid JSON"}), 400
+        response = jsonify({"error": "Invalid JSON"}), 400
+        return add_cors_headers(response)
 
     image_url = request_json.get('image_url')
     correct_answers = request_json.get('correct_answers')
@@ -128,18 +139,21 @@ def process_image(request):
     folder_name = request_json.get('folder_name')
 
     if not image_url or not correct_answers or not user_id or not folder_name:
-        return jsonify({"error": "Missing required parameters"}), 400
+        response = jsonify({"error": "Missing required parameters"}), 400
+        return add_cors_headers(response)
 
     image = download_image(image_url)
     if image is None:
-        return jsonify({"error": "Failed to download image from URL"}), 400
+        response = jsonify({"error": "Failed to download image from URL"}), 400
+        return add_cors_headers(response)
 
     evaluation = findCheckedBoxes(image)
     grade = gradeFile(evaluation, correct_answers)
 
     public_url = upload_to_firebase(user_id, folder_name, 'graded_image.jpg', grade)
 
-    return jsonify({"score": grade[0], "maxScore": grade[1], "percentage": grade[2], "graded_image_url": public_url})
+    response = jsonify({"score": grade[0], "maxScore": grade[1], "percentage": grade[2], "graded_image_url": public_url})
+    return add_cors_headers(response)
 
 def process_qr_code(image):
     original = image.copy()
@@ -157,27 +171,49 @@ def process_qr_code(image):
 
 @functions_framework.http
 def read_qrcode(request):
+    # Handle preflight OPTIONS requests
+    if request.method == 'OPTIONS':
+        response = make_response('', 204)
+        return add_cors_headers(response)
+
     request_json = request.get_json()
 
     if not request_json:
-        return jsonify({"error": "Invalid JSON"}), 400
+        response = jsonify({"error": "Invalid JSON"})
+        response.status_code = 400
+        return add_cors_headers(response)
+
     user_id = request_json.get('user_id')
     image_url = request_json.get('image_url')
     folder_name = request_json.get('folder_name')
 
-    if not image_url or not user_id or not folder_name:
-        return jsonify({"error": "Missing required parameters"}), 400
+    missing_params = []
+
+    if not user_id:
+        missing_params.append("user_id")
+    if not image_url:
+        missing_params.append("image_url")
+    if not folder_name:
+        missing_params.append("folder_name")
+
+    if missing_params:
+        response = jsonify({"error": f"Missing required parameter(s): {', '.join(missing_params)}"})
+        response.status_code = 400
+        return add_cors_headers(response)
 
     image = download_image(image_url)
     if image is None:
-        return jsonify({"error": "Failed to download image from URL"}), 400
+        response = jsonify({"error": "Failed to download image from URL"})
+        response.status_code = 400
+        return add_cors_headers(response)
+
     data, bbox = process_qr_code(image)
     public_url = upload_to_firebase(user_id, folder_name, 'qr_code.jpg', data)
 
-
-
-    logger.info(data)
     if bbox is not None:
-        return jsonify({"data": data, "answer_key_url": public_url})
+        response = jsonify({"data": data, "answer_key_url": public_url})
     else:
-        return jsonify({"error": "No QR code found in the image"}), 400
+        response = jsonify({"error": "No QR code found in the image"})
+        response.status_code = 400
+
+    return add_cors_headers(response)

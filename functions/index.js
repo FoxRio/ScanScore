@@ -86,4 +86,27 @@ app.post('/grade-test', async (req, res) => {
   }
 });
 
+app.post('/get-answerkey', async (req, res) => {
+  const {
+    userId, folderName, fileName, fileUrl,
+  } = req.body;
+
+  const pythonApiUrl = 'https://europe-west1-scanscore-6cbf7.cloudfunctions.net/read_qrcode';
+  if (!userId || !folderName || !fileName || !fileUrl) {
+    return res.status(400).json({ error: 'Missing required fields.' });
+  }
+  try {
+    const response = await axios.post(pythonApiUrl, {
+      user_id: userId,
+      file_name: fileName,
+      image_url: fileUrl,
+      folder_name: folderName,
+    });
+    return res.status(200).send({ message: 'Answer key extracted successfully', response: response.data });
+  } catch (err) {
+    console.error('Error:', err);
+    return res.status(500).send({ error: 'Error processing the request', msg: err });
+  }
+});
+
 exports.api = functions.https.onRequest(app);

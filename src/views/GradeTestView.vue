@@ -103,6 +103,7 @@ export default {
       uploading: false,
       results: null,
       hasFiles: null,
+      userFiles: [],
     };
   },
   async mounted() {
@@ -239,16 +240,22 @@ export default {
       const userId = user.uid;
       const userUploadFile = folder.files.find((file) => file.metadata?.customMetadata?.type === 'userUpload');
       console.log(userUploadFile.url);
-      const response = await axios.post('https://europe-west1-scanscore-6cbf7.cloudfunctions.net/read_qrcode', {
-        userId,
-        fileName: userUploadFile.name,
-        fileUrl: userUploadFile.url,
-        folder_name: folder.folderMetadata.folderName,
-      });
-      console.log(response.data);
       if (userUploadFile) {
-        console.log('Found user upload file:', userUploadFile);
+        console.log('Found user upload file:', userUploadFile.name);
+        console.log('Folder name:', folder.folderMetadata.folderName);
         console.log('File URL:', userUploadFile.url);
+        try {
+          const response = await axios.post('https://us-central1-scanscore-6cbf7.cloudfunctions.net/api/get-answerkey', {
+            userId,
+            fileName: userUploadFile.name,
+            fileUrl: userUploadFile.url,
+            folderName: folder.folderMetadata.folderName,
+          });
+          console.log(response.data);
+          this.fetchUserFiles();
+        } catch (error) {
+          alert('Error getting answer key:', error);
+        }
       } else {
         console.log('No user upload file found.');
       }
