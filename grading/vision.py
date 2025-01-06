@@ -22,7 +22,6 @@ def findCheckedBoxes(image):
     repair_kernel2 = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 5))
     repair = cv2.morphologyEx(repair, cv2.MORPH_CLOSE, repair_kernel2, iterations=1)
 
-    # Detect checkboxes using shape approximation and aspect ratio filtering
     checkbox_contours = []
     cnts, _ = cv2.findContours(repair, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2:]
     for c in cnts:
@@ -39,11 +38,8 @@ def findCheckedBoxes(image):
     checkedBoxes = 0
     isChecked = []
     for contour in checkbox_contours:
-        # Create a binary mask for the specified contour
         mask = np.zeros_like(repair)
         cv2.drawContours(mask, [contour], 0, 255, thickness=cv2.FILLED)
-
-        # Apply the mask to the original image
         result = cv2.bitwise_and(repair, mask)
         # cv2.imshow('result', result)
         # Count the number of white pixels in the masked area -- White because the colors are reversed
@@ -57,13 +53,6 @@ def findCheckedBoxes(image):
             checkedBoxes += 1
             continue
         isChecked.append(False)
-    # print(checkedBoxes)
-    # print(isChecked)
-    # cv2.imshow('thresh', thresh)
-    # cv2.imshow('repair', repair)
-    # cv2.imshow('original', original)
     cv2.imshow('Result', original)
     cv2.waitKey()
     return isChecked
-#
-# print(findCheckedBoxes(image))

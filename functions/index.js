@@ -6,7 +6,6 @@ const admin = require('firebase-admin');
 const axios = require('axios');
 // const os = require('os');
 
-// Initialize Firebase Admin SDK if not already done
 if (!admin.apps.length) {
   admin.initializeApp();
 }
@@ -27,8 +26,6 @@ app.post('/call-openai', async (req, res) => {
       description = 'no description',
       conversationHistory = [],
     } = req.body;
-    // const MAX_TOKENS = 3000;
-    // const trimmedHistory = conversationHistory.join(' ').split(' ').slice(-MAX_TOKENS).join(' ');
 
     if (!prompt) {
       return res.status(400).json({ error: 'Prompt is required' });

@@ -23,5 +23,4 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// Export the services for use in your components
 export { auth, db, storage };

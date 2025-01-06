@@ -8,7 +8,6 @@ import firebase_admin
 from firebase_admin import credentials, storage
 import logging
 
-# Initialize Firebase Admin SDK
 firebase_key_path = "/secrets/firebase-admin-key"
 if not firebase_admin._apps:
     cred = credentials.Certificate(firebase_key_path)
@@ -39,8 +38,6 @@ def findCheckedBoxes(image):
         area = cv2.contourArea(c)
         if area < AREA_THRESHOLD:
             cv2.drawContours(thresh, [c], -1, 0, -1)
-
-    # Repair checkbox horizontal and vertical walls
     repair_kernel1 = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 1))
     repair = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, repair_kernel1, iterations=1)
     repair_kernel2 = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 5))
@@ -61,8 +58,6 @@ def findCheckedBoxes(image):
             cv2.rectangle(original, (x, y), (x + w, y + h), (0, 0, 255), 1)
             checkbox_contours.append(c)
 
-    # print('Checkboxes:', len(checkbox_contours))
-
     checkedBoxes = 0
     isChecked = []
     for contour in checkbox_contours:
@@ -72,25 +67,16 @@ def findCheckedBoxes(image):
 
         # Apply the mask to the original image
         result = cv2.bitwise_and(repair, mask)
-        # cv2.imshow('result', result)
-        # Count the number of white pixels in the masked area
         white_pixel_count = np.sum(result == 255)
 
         # print("Number of white pixels in the specified contour area:", white_pixel_count)
         if white_pixel_count > 800:
             isChecked.append(1)
-            # print("Is checked")
             cv2.drawContours(original, [contour], 0, (0, 255, 0), 2)
             checkedBoxes += 1
             continue
         isChecked.append(0)
-    # print(checkedBoxes)
-    # print(isChecked)
-    # cv2.imshow('thresh', thresh)
-    # cv2.imshow('repair', repair)
-    # cv2.imshow('original', original)
-    # In your Python script (findCheckedBoxes function)
-    cv2.imwrite('/tmp/graded_image.jpg', original)  # Save the graded image
+    cv2.imwrite('/tmp/graded_image.jpg', original)
     return isChecked
 
 def gradeFile(actualInput, expectedInput):
