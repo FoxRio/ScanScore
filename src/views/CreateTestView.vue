@@ -201,7 +201,7 @@ export default {
         return;
       }
       this.titleError = false;
-
+      console.log(this.questionsArray[0].answers);
       this.saveToFirebase();
       const buildRows = () => {
         const rowArray = [];

@@ -242,10 +242,10 @@ export default {
             }),
             new TableRow({
               children: [
-                new TableCell({ children: [new Paragraph({ text: questionsArray[i].answers.answer1 })] }),
-                new TableCell({ children: [new Paragraph({ text: questionsArray[i].answers.answer2 })] }),
-                new TableCell({ children: [new Paragraph({ text: questionsArray[i].answers.answer3 })] }),
-                new TableCell({ children: [new Paragraph({ text: questionsArray[i].answers.answer4 })] }),
+                new TableCell({ children: [new Paragraph({ text: questionsArray[i].answers.A.text })] }),
+                new TableCell({ children: [new Paragraph({ text: questionsArray[i].answers.B.text })] }),
+                new TableCell({ children: [new Paragraph({ text: questionsArray[i].answers.C.text })] }),
+                new TableCell({ children: [new Paragraph({ text: questionsArray[i].answers.D.text })] }),
               ],
               width: {
                 size: 25,

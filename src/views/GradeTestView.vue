@@ -234,16 +234,11 @@ export default {
       );
     },
     async getAnswerKey(folder) {
-      console.log(folder);
       const auth = getAuth();
       const user = auth.currentUser;
       const userId = user.uid;
       const userUploadFile = folder.files.find((file) => file.metadata?.customMetadata?.type === 'userUpload');
-      console.log(userUploadFile.url);
       if (userUploadFile) {
-        console.log('Found user upload file:', userUploadFile.name);
-        console.log('Folder name:', folder.folderMetadata.folderName);
-        console.log('File URL:', userUploadFile.url);
         try {
           const response = await axios.post('https://us-central1-scanscore-6cbf7.cloudfunctions.net/api/get-answerkey', {
             userId,
@@ -251,7 +246,6 @@ export default {
             fileUrl: userUploadFile.url,
             folderName: folder.folderMetadata.folderName,
           });
-          console.log(response.data);
           this.fetchUserFiles();
         } catch (error) {
           alert('Error getting answer key:', error);
@@ -263,11 +257,9 @@ export default {
     parseQrCodeData(qrCodeData) {
       const parts = qrCodeData.split('Q').slice(1); // Discard the first element
       const answers = parts.join('').split('').map((char) => parseInt(char, 10));
-      console.log('answerrs: ', answers);
       return answers;
     },
     async gradeTest(folder) {
-      console.log('Passed folder: ', folder);
       const auth = getAuth();
       const user = auth.currentUser;
       const userId = user.uid;
@@ -279,7 +271,6 @@ export default {
       }
       const { qrCodeData } = answerKeyFile.metadata.customMetadata;
       const answers = this.parseQrCodeData(qrCodeData);
-      console.log(answers, answers.length);
       if (answers.length === 0 || answers.some((val) => val !== 0 && val !== 1)) {
         alert('Answer key must be a comma-separated list of 1s and 0s.');
         return;
@@ -293,7 +284,6 @@ export default {
           folderName: folder.folderMetadata.folderName,
         });
         this.results = response.data;
-        console.log('Results:', this.results);
         this.fetchUserFiles();
       } catch (error) {
         console.error('Error grading the test:', error);
