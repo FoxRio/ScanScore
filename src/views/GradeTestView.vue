@@ -253,6 +253,7 @@ export default {
           });
           this.fetchUserFiles();
         } catch (error) {
+          console.error('Error getting answer key:', error.data);
           alert('Error getting answer key:', error);
         }
       } else {

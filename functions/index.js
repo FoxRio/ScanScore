@@ -110,7 +110,7 @@ app.post('/get-answerkey', async (req, res) => {
     return res.status(200).send({ message: 'Answer key extracted successfully', response: response.data });
   } catch (err) {
     console.error('Error:', err);
-    log.error('Error:', err);
+    log('Error:', err.data);
     return res.status(500).send({ error: 'Error processing the request', msg: err });
   }
 });
