@@ -54,7 +54,15 @@ export default {
         await createUserWithEmailAndPassword(auth, this.email, this.password);
         this.$router.push('/create-test');
       } catch (error) {
-        this.errorMessage = error.message;
+        const regex = /\[(.*?)\]/;
+        const match = this.errorMessage.match(regex);
+
+        if (match) {
+          const requirements = match[1].split(',').map((item) => item.trim()).join(' and ');
+          this.errorMessage = requirements;
+        } else {
+          this.errorMessage = error;
+        }
       }
     },
     goToLogin() {

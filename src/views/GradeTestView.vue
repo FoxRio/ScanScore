@@ -48,18 +48,18 @@
     <div v-if="hasFiles">
       <div v-for="folder in userFiles" :key="folder?.folderName" class="folder-container">
         <h4>{{ folder?.folderMetadata?.folderName.split('_')[0] }}</h4>
-        <div v-if="!folder.folderMetadata.answerKey && !folder.folderMetadata.gradedImage" class="mb-3">
+        <div v-if="!folder.folderMetadata?.answerKey && !folder.folderMetadata?.gradedImage" class="mb-3">
           <div class="btn-group mt-3">
             <button @click="getAnswerKey(folder)" class="btn btn-warning mx-2">Get Answer Key</button>
             <button @click="gradeTest(folder)" class="btn btn-success mx-2">Grade Test</button>
           </div>
         </div>
-        <div v-if="!folder?.folderMetadata.gradedImage && folder.folderMetadata.answerKey" class="mb-3">
+        <div v-if="!folder?.folderMetadata?.gradedImage && folder.folderMetadata?.answerKey" class="mb-3">
           <div class="btn-group mt-3">
             <button @click="gradeTest(folder)" class="btn btn-success mx-2">Grade Test</button>
           </div>
         </div>
-        <div v-if="folder?.folderMetadata.gradedImage && !folder.folderMetadata.answerKey" class="mb-3">
+        <div v-if="folder?.folderMetadata?.gradedImage && !folder.folderMetadata?.answerKey" class="mb-3">
           <div class="btn-group mt-3">
             <button @click="getAnswerKey(folder)" class="btn btn-warning mx-2">Get Answer Key</button>
           </div>
@@ -67,16 +67,16 @@
         <div v-for="file in folder.files" :key="file.name" class="file-info mb-3">
           <h5><a :href="file.url" target="_blank">{{ file.name }}</a></h5>
           <p v-if="file.metadata && file.metadata.customMetadata">
-            <span v-if="file.metadata.customMetadata.answerKey">
-              <strong>Answer Key:</strong> {{ file.metadata.customMetadata.answerKey }}
+            <span v-if="file.metadata.customMetadata?.answerKey">
+              <strong>Answer Key:</strong> {{ file.metadata.customMetadata?.answerKey }}
             </span>
             <span v-if="file.metadata.customMetadata.qrCodeData">
-              <strong>Qr code data:</strong> {{ file.metadata.customMetadata.qrCodeData }}
+              <strong>Qr code data:</strong> {{ file.metadata.customMetadata?.qrCodeData }}
             </span>
             <span v-if="file.metadata.customMetadata.gradedImage">
-              <strong>Score:</strong> {{ file.metadata.customMetadata.score }} / {{ file.metadata.customMetadata.maxScore }}
+              <strong>Score:</strong> {{ file.metadata.customMetadata?.score }} / {{ file.metadata.customMetadata?.maxScore }}
               <br />
-              <strong>Percentage:</strong> {{ file.metadata.customMetadata.percentage }}%
+              <strong>Percentage:</strong> {{ file.metadata.customMetadata?.percentage }}%
             </span>
           </p>
         </div>
@@ -189,6 +189,11 @@ export default {
       }
 
       const file = this.uploadedImage;
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file.');
+        return;
+      }
+
       const userId = getAuth().currentUser.uid;
       const timestamp = new Date().getTime();
       const folderName = `${file.name.replace(/\.[^/.]+$/, '')}_${timestamp}`;
@@ -240,7 +245,7 @@ export default {
       const userUploadFile = folder.files.find((file) => file.metadata?.customMetadata?.type === 'userUpload');
       if (userUploadFile) {
         try {
-          const response = await axios.post('https://us-central1-scanscore-6cbf7.cloudfunctions.net/api/get-answerkey', {
+          await axios.post('https://us-central1-scanscore-6cbf7.cloudfunctions.net/api/get-answerkey', {
             userId,
             fileName: userUploadFile.name,
             fileUrl: userUploadFile.url,

@@ -4,6 +4,10 @@ const cors = require('cors');
 const OpenAI = require('openai');
 const admin = require('firebase-admin');
 const axios = require('axios');
+const {
+  log,
+} = require('firebase-functions/logger');
+
 // const os = require('os');
 
 if (!admin.apps.length) {
@@ -102,9 +106,11 @@ app.post('/get-answerkey', async (req, res) => {
       image_url: fileUrl,
       folder_name: folderName,
     });
+    log('Response:', response.data);
     return res.status(200).send({ message: 'Answer key extracted successfully', response: response.data });
   } catch (err) {
     console.error('Error:', err);
+    log.error('Error:', err);
     return res.status(500).send({ error: 'Error processing the request', msg: err });
   }
 });

@@ -18,7 +18,12 @@
         <label for="newPassword" class="input-label">New Password
         <input id="newPassword" type="password" v-model="newPassword" placeholder="Enter new password" class="input-field" /></label>
       </div>
+      <div class="input-container">
+        <label for="confirmNewPassword" class="input-label">New Password
+        <input id="confirmNewPassword" type="password" v-model="confirmNewPassword" placeholder="Confirm new password" class="input-field" /></label>
+      </div>
       <button @click="changePassword">Change Password</button>
+      <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
     </div>
     <div class="delete-account">
       <h2>Delete Account</h2>
@@ -53,7 +58,9 @@ export default {
       newDisplayName: '',
       currentPassword: '',
       newPassword: '',
+      confirmNewPassword: '',
       isPopupVisible: false,
+      errorMessage: '',
     };
   },
   mounted() {
@@ -87,16 +94,40 @@ export default {
 
     // Change Password
     async changePassword() {
+      if (!this.currentPassword) {
+        this.errorMessage = 'Please enter your current password.';
+        return;
+      }
+      if (this.newPassword !== this.confirmNewPassword) {
+        this.errorMessage = 'Passwords do not match.';
+        return;
+      }
+      this.errorMessage = '';
+
       const auth = getAuth();
       const user = auth.currentUser;
       if (user) {
         try {
+          const credential = EmailAuthProvider.credential(user.email, this.currentPassword);
+          await reauthenticateWithCredential(user, credential);
           await updatePassword(user, this.newPassword);
           alert('Password updated successfully!');
+          this.currentPassword = '';
+          this.newPassword = '';
+          this.confirmNewPassword = '';
         } catch (error) {
-          console.error('Error changing password:', error);
-          alert('Failed to change password.');
+          const regex = /\[(.*?)\]/;
+          const match = this.errorMessage.match(regex);
+
+          if (match) {
+            const requirements = match[1].split(',').map((item) => item.trim()).join(' and ');
+            this.errorMessage = requirements;
+          } else {
+            alert(`Failed to change password: ${error}}`);
+          }
         }
+      } else {
+        alert('You need to fill in your current password.');
       }
     },
     // Delete Account and all tests that the user has created
@@ -191,6 +222,12 @@ button {
   cursor: pointer;
   width: 100%;
   margin-top: 10px;
+}
+
+.error {
+  color: red;
+  font-size: 0.875rem;
+  text-align: center;
 }
 
 button:hover {
