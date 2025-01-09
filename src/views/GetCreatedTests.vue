@@ -101,6 +101,8 @@ export default {
       }
       return text;
     },
+    // Function for generating the answersheet with qr code that holds the correct answers
+    // The file is generated and downloaded as a .docx so the user can still make changes to it if needed
     async generateAnswersSheet(id) {
       const testToProcess = this.tests.find((test) => test.id === id);
       const questionsArray = testToProcess.questions;

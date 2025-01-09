@@ -8,6 +8,9 @@
         to detect answers and compare them against the answer key. It's much faster
         and more accurate than manual grading!
       </p>
+      <p>
+        Please upload an image file. For example jpeg, png.
+      </p>
     </div>
     <!-- Upload Section -->
     <div class="upload-section text-center mb-5">
@@ -281,6 +284,10 @@ export default {
         alert('Answer key must be a comma-separated list of 1s and 0s.');
         return;
       }
+      setTimeout(() => {
+        alert('Grading the test... Please wait');
+      }, 1);
+
       try {
         const response = await axios.post('https://us-central1-scanscore-6cbf7.cloudfunctions.net/api/grade-test', {
           correctAnswers: answers,
