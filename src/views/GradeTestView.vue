@@ -240,7 +240,7 @@ export default {
       const userUploadFile = folder.files.find((file) => file.metadata?.customMetadata?.type === 'userUpload');
       if (userUploadFile) {
         try {
-          const response = await axios.post('https://us-central1-scanscore-6cbf7.cloudfunctions.net/api/get-answerkey', {
+          await axios.post('https://us-central1-scanscore-6cbf7.cloudfunctions.net/api/get-answerkey', {
             userId,
             fileName: userUploadFile.name,
             fileUrl: userUploadFile.url,

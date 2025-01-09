@@ -176,8 +176,8 @@ export default {
             headers: {
               default: new Header({
                 children: [
-                  new Paragraph('Prasmju pārbaude'),
-                  new Paragraph({ text: 'Name:                            \n Surname:                            \n Class:      ' }),
+                  new Paragraph('         Prasmju pārbaude'),
+                  new Paragraph({ text: '         Name:                            \n Surname:                            \n Class:      ' }),
                 ],
               }),
             },
@@ -217,6 +217,7 @@ export default {
         Packer.toBlob(createdDoc).then((blob) => {
           const answerSheetName = `answersheet_${testToProcess.title}.docx`;
           saveAs(blob, answerSheetName);
+          alert('Test created successfully! Download should be starting right now!');
         });
       } catch (error) {
         console.error('Error generating document:', error);
