@@ -35,7 +35,7 @@
         <cite>- Rolands, Middle School Teacher</cite>
       </div>
       <div class="testimonial">
-        <p>"We use standartised testing a lot and this tool will save me a lot of time. I spend way too much of my time doing the repetitive taks and can't fully focus on the students."</p>
+        <p>"We use standartised testing a lot and this tool will save me a lot of time. I spend way too much of my time doing the repetitive tasks and can't fully focus on the students."</p>
         <cite>- Marcus, Madison Elementary School Teacher</cite>
       </div>
     </section>
